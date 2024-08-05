@@ -7,17 +7,24 @@ require("module-alias/register");
 // Imports
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const getFeatured_1 = __importDefault(require("@api/get/getFeatured"));
 // Basic fields declaration and initialization
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8443;
+class LikeId {
+    constructor() {
+        return new Proxy(this, {
+            get: (target, p, receiver) => {
+                return 0;
+            }
+        });
+    }
+}
+const like = new LikeId();
+console.log(like);
 // Middleware connection
 app.use((0, cors_1.default)());
-app.get("/", (_, res) => {
+app.get("/", async (_, res) => {
     res.send("Hello world!");
-});
-app.get("/get", async (_, res) => {
-    res.send(await (0, getFeatured_1.default)(0));
 });
 // Starting server
 app.listen(port, () => {

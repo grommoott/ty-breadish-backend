@@ -1,17 +1,19 @@
+import { Rate } from "@enums"
+
 /** IBDReview's interface. IBDReview can be only under product or recipe
  *
  * id: Id<Review>
  * target: ItemId
  * from: Id<User>
  * content: string
- * rate: number (between 1 and 5)
+ * rate: Rate
  */
 interface IBDReview {
     id: number,
     target: number,
     from: number,
     content: string,
-    rate: number
+    rate: Rate
 }
 
 /** Review's interface. Review can be only under product or recipe
@@ -20,14 +22,14 @@ interface IBDReview {
  * target: ItemId
  * from: Id<User>
  * content: string
- * rate: number (between 1 and 5)
+ * rate: Rate
  */
 interface IReview {
     id: number,
     target: number,
     from: number,
     content: string,
-    rate: number
+    rate: Rate
 }
 
 export { IBDReview, IReview }

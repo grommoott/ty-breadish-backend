@@ -3,17 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = getUser;
+exports.default = getUserByEmail;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
-async function getUser(userId, check = false) {
+async function getUserByEmail(email, check = false) {
     try {
-        const response = await bdClient_1.default.query(`select * from users where id='${userId}'`);
+        const response = await bdClient_1.default.query(`select * from users where email='${email}'`);
         const user = response.rows[0];
         if (!user) {
             if (check) {
                 return null;
             }
-            return new Error(`User with such userId(${userId}) isn't found`, { cause: 400 });
+            return new Error(`User with such email(${email}) isn't found`, { cause: 400 });
         }
         return {
             id: user.id,
@@ -24,7 +24,7 @@ async function getUser(userId, check = false) {
         };
     }
     catch (e) {
-        const msg = "Error in getUser request:" + e;
+        const msg = "Error in getUserByEmail request: " + e;
         console.error(msg);
         return new Error(msg, { cause: 500 });
     }

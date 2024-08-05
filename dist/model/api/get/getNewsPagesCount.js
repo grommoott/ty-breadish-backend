@@ -3,16 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = getLikesCount;
+exports.default = getNewsPagesCount;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
-const _enums_1 = require("@enums");
-async function getLikesCount(parentId, type) {
+const config_1 = __importDefault(require("@api/config"));
+async function getNewsPagesCount() {
     try {
-        const response = await bdClient_1.default.query(`select count(*) from likes where target=${parentId} and type='${_enums_1.LikeType}'`);
-        return response.rows[0].count;
+        const response = await bdClient_1.default.query('select count(*) from news');
+        return Math.ceil(response.rows[0].count / config_1.default.newsPageSize);
     }
     catch (e) {
-        const msg = "Error in getLikesCount request: " + e;
+        const msg = "Error in getNewsPagesCount request: " + e;
         console.error(msg);
         return new Error(msg, { cause: 500 });
     }

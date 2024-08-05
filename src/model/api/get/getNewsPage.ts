@@ -3,7 +3,7 @@ import config from "@api/config";
 import { IBDNew } from "@interfaces/new";
 import { QueryResult } from "pg";
 
-export default async function getNewsPage(page: number): Promise<Array<IBDNew> | null> {
+export default async function getNewsPage(page: number): Promise<Array<IBDNew> | Error> {
     try {
         const response: QueryResult = await bdClient.query(`select * from news order by moment desc limit ${config.newsPageSize} offset ${config.newsPageSize * page}`)
 
@@ -17,7 +17,8 @@ export default async function getNewsPage(page: number): Promise<Array<IBDNew> |
             }
         })
     } catch (e) {
-        console.error("Error in getNewsPage request:", e)
-        return null
+        const msg = "Error in getNewsPage request: " + e
+        console.error(msg)
+        return new Error(msg, { cause: 500 })
     }
 }

@@ -1,4 +1,8 @@
 import { ItemType } from "./itemType"
-import { CommentSortOrder } from "./commentSortOrder"
+import { CommentsSortOrder } from "./commentsSortOrder"
+import { LikeType } from "./likeType"
+import { ReviewsSortOrder } from "./reviewsSortOrder"
+import { Rate } from "./rate"
+import { ItemsSortOrder } from "./itemsSortOrder"
 
-export { ItemType, CommentSortOrder }
+export { ItemType, CommentsSortOrder, LikeType, ReviewsSortOrder, Rate, ItemsSortOrder }

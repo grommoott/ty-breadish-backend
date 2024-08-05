@@ -1,21 +1,21 @@
 import bdClient from "@api/bdClient";
 import config from "@api/config";
-import { CommentSortOrder } from "@enums";
+import { CommentsSortOrder } from "@enums";
 import { IBDComment } from "@interfaces/comment";
 import { QueryResult } from "pg";
 
-export default async function getCommentsPage(mediaId: number, sortOrder: CommentSortOrder, page: number): Promise<Array<IBDComment> | null> {
+export default async function getCommentsPage(mediaId: number, sortOrder: CommentsSortOrder, page: number): Promise<Array<IBDComment> | Error> {
     try {
         const response: QueryResult = await (() => {
             switch (sortOrder) {
-                case CommentSortOrder.NewFirst:
+                case CommentsSortOrder.NewFirst:
                     return bdClient.query(`select * from comments where target=${mediaId} order by moment desc limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
 
-                case CommentSortOrder.OldFirst:
+                case CommentsSortOrder.OldFirst:
                     return bdClient.query(`select * from comments where target=${mediaId} order by moment limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
 
-                case CommentSortOrder.LikesCount:
-                    return bdClient.query(`select * from comments where target=${mediaId} order by (select count(*) from likes where target=${mediaId}) limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
+                case CommentsSortOrder.LikedFirst:
+                    return bdClient.query(`select * from comments where target=${mediaId} order by (select count(*) from likes where target=${mediaId}) desc limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
             }
         })()
 
@@ -30,7 +30,8 @@ export default async function getCommentsPage(mediaId: number, sortOrder: Commen
             }
         })
     } catch (e) {
-        console.error("Error in getCommentsPage request:", e)
-        return null
+        const msg = "Error in getCommentsPage request: " + e
+        console.error(msg)
+        return new Error(msg, { cause: 500 })
     }
 }

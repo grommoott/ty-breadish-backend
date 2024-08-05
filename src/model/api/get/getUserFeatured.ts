@@ -3,7 +3,7 @@ import bdClient from "@api/bdClient.js";
 import { IBDFeatured } from "@interfaces/featured";
 import { ItemType } from "@enums";
 
-export default async function getFeatured(userId: number): Promise<Array<IBDFeatured> | null> {
+export default async function getUserFeatured(userId: number): Promise<Array<IBDFeatured> | Error> {
     try {
         const response: QueryResult = await bdClient.query(`select * from featured where "from"=${userId}`)
 
@@ -31,7 +31,8 @@ export default async function getFeatured(userId: number): Promise<Array<IBDFeat
         return result
 
     } catch (e) {
-        console.error("Error in getFeatured request:", e)
-        return null
+        const msg = "Error in getUserFeatured request: " + e
+        console.error(msg)
+        return new Error(msg, { cause: 500 })
     }
 }
