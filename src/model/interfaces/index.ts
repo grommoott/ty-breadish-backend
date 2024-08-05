@@ -1,11 +1,11 @@
-import { IBDComment, IComment } from "./comment.js";
-import { IBDLike, ILike } from "./like.js"
-import { IBDNew, INew } from "./new.js";
-import { IBDProduct, IProduct } from "./product.js";
-import { IBDRecipe, IRecipe } from "./recipe.js";
-import { IBDReview, IReview } from "./review.js"
-import { IBDUser, IUser } from "./user.js"
-import { IBDFeatured, IFeatured } from "./featured.js";
+import { IBDComment, IComment } from "./comment";
+import { IBDLike, ILike } from "./like"
+import { IBDNew, INew } from "./new";
+import { IBDProduct, IProduct } from "./product";
+import { IBDRecipe, IRecipe } from "./recipe";
+import { IBDReview, IReview } from "./review"
+import { IBDUser, IUser } from "./user"
+import { IBDFeatured, IFeatured } from "./featured";
 
 export {
     IBDComment,

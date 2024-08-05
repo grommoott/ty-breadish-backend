@@ -6,9 +6,8 @@
     "repository": "https://github.com/grommoott/ty-breadish-backend.git",
     "author": "grommoott",
     "license": "MIT",
-    "type": "module",
     "scripts": {
-        "run": "node --trace-deprecation --loader ts-node/esm src/index.ts"
+        "run": "tsc && node dist/index.js"
     },
     "dependencies": {
         "@types/cors": "^2.8.17",
@@ -17,11 +16,21 @@
         "@types/pg": "^8.11.6",
         "cors": "^2.8.5",
         "express": "^4.19.2",
+        "module-alias": "^2.2.3",
         "nodemon": "^3.1.4",
         "pg": "^8.12.0",
         "supabase": "^1.187.10",
         "ts-node": "^10.9.2",
+        "ts-patch": "^3.2.1",
         "tsconfig-paths": "^4.2.0",
-        "typescript": "^5.5.4"
+        "typescript": "^5.5.4",
+        "typescript-transform-paths": "^3.4.7"
+    },
+    "_moduleAliases": {
+        "@api": "./dist/model/api",
+        "@interfaces": "./dist/model/interfaces",
+        "@entities": "./dist/model/entities",
+        "@enums": "./dist/model/enums",
+        "@root": "./dist"
     }
 }

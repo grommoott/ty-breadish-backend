@@ -1,4 +1,4 @@
-import { IReview } from "./index.js"
+import { IReview } from "./review"
 
 /** Interface for BDProduct
  *
@@ -24,7 +24,7 @@ interface IBDProduct {
  * price: Price
  * avgRate: number
  * getReviewsCount: () => number
- * loadReviews: () => void
+ * loadNextReviewPage: () => void
  * loadedReviews: Array<Review>
  * */
 interface IProduct {
@@ -34,7 +34,7 @@ interface IProduct {
     price: number,
     avgRate: number,
     getReviewsCount: () => Promise<number>,
-    loadReviews: () => Promise<void>,
+    loadNextReviewPage: () => Promise<void>,
     loadedReviews: Array<IReview>
 }
 

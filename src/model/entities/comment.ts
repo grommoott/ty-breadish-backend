@@ -1,5 +1,5 @@
-import { IComment } from "model/interfaces/comment.js"
-import Media from "./media.js"
+import { IComment } from "@interfaces/comment.js"
+import Media from "./media"
 
 class Comment extends Media implements IComment {
     private _id: number

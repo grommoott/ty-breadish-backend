@@ -19,7 +19,7 @@ interface IBDRecipe {
  * name: string
  * avgRate: number 
  * getReviewsCount: () => Promise<number>
- * loadReviews: () => Promise<void>
+ * loadNextReviewPage: () => Promise<void>
  * loadedReviews: Array<Recipe>
  * */
 interface IRecipe {
@@ -28,7 +28,7 @@ interface IRecipe {
     name: string,
     avgRate: number,
     getReviewsCount: () => Promise<number>,
-    loadReviews: () => Promise<void>,
+    loadNextReviewPage: () => Promise<void>,
     loadedReviews: Array<IRecipe>
 }
 

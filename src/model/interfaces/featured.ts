@@ -1,3 +1,5 @@
+import { ItemType } from "@enums"
+
 /** Interface for BDFeatured
  * 
  * id: Id<Feature>
@@ -7,7 +9,8 @@
 interface IBDFeatured {
     id: number,
     from: number,
-    target: number
+    target: number,
+    itemType: ItemType
 }
 
 /** Interface for Featured
@@ -19,7 +22,8 @@ interface IBDFeatured {
 interface IFeatured {
     id: number,
     from: number,
-    target: number
+    target: number,
+    itemType: ItemType
 }
 
 export { IBDFeatured, IFeatured }

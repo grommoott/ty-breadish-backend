@@ -1,9 +1,10 @@
 import { QueryResult, QueryResultRow } from "pg";
-import bdClient from "../bdClient.js";
-import { IBDUser } from "model/interfaces/user.js";
+import bdClient from "@api/bdClient";
+import { IBDUser } from "@interfaces/user";
 
 export default async function getUser(userId: number): Promise<IBDUser | null> {
     try {
+        console.log("Starting query")
         const response: QueryResult = await bdClient.query(`select * from users where id='${userId}'`)
         const user: QueryResultRow = response.rows[0]
 

@@ -1,30 +1,35 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-import bdClient from "../bdClient.js";
-export default function getFeatured(userId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const response = yield bdClient.query(`select * from featured where from=${userId}`);
-            const result = new Array();
-            for (let featured of response.rows) {
-                result.push({
-                    id: featured.id,
-                    from: featured.from,
-                    target: featured.target
-                });
-            }
-            return result;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = getFeatured;
+const bdClient_js_1 = __importDefault(require("@api/bdClient.js"));
+const _enums_1 = require("@enums");
+async function getFeatured(userId) {
+    try {
+        const response = await bdClient_js_1.default.query(`select * from featured where "from"=${userId}`);
+        const result = new Array();
+        for (let featured of response.rows) {
+            result.push({
+                id: featured.id,
+                from: featured.from,
+                target: featured.target,
+                itemType: (() => {
+                    switch (featured.item_type) {
+                        case "product":
+                            return _enums_1.ItemType.Product;
+                        case "recipe":
+                            return _enums_1.ItemType.Recipe;
+                    }
+                    return _enums_1.ItemType.Product;
+                })()
+            });
         }
-        catch (e) {
-            console.error("Error in getFeatured request:", e);
-            return null;
-        }
-    });
+        return result;
+    }
+    catch (e) {
+        console.error("Error in getFeatured request:", e);
+        return null;
+    }
 }

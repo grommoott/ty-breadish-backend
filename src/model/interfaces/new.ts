@@ -1,4 +1,4 @@
-import { IComment } from "./comment.js"
+import { IComment } from "./comment"
 
 /** Interface for a BDNew
  *
@@ -23,8 +23,9 @@ interface IBDNew {
  * title: string,
  * content: string,
  * moment: Moment
- * getComments: (page:number) => Id<Comment>
  * getCommentsCount: () => number (prefer to use when only likes count needed)
+ * loadNextCommentPage: () => Promise<void>
+ * loadedComments: Array<IComment>
  * getLikesCount: () => number
  * */
 interface INew {
@@ -34,7 +35,7 @@ interface INew {
     content: string,
     moment: number,
     getCommentsCount: () => Promise<number>,
-    loadComments: () => Promise<void>,
+    loadNextCommentPage: () => Promise<void>,
     loadedComments: Array<IComment>,
     getLikesCount: () => Promise<number>,
 }

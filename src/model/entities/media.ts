@@ -1,4 +1,4 @@
-import { IComment } from "model/interfaces/comment.js"
+import { IComment } from "@interfaces/comment"
 
 class Media {
     private _mediaId: number
@@ -13,7 +13,7 @@ class Media {
 
     private _pagesLoaded: number = 0
 
-    public async loadComments(): Promise<void> {
+    public async loadNextCommentPage(): Promise<void> {
         return new Promise((resolve, _) => resolve())
     }
 

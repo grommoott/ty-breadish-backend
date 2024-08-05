@@ -1,5 +1,5 @@
-import { IProduct } from "./index.js"
-import { IRecipe } from "./index.js"
+import { IProduct } from "./product"
+import { IRecipe } from "./recipe"
 
 /** Every "Ty Breadish" user... 
  * id: Id<User>
@@ -22,9 +22,9 @@ interface IBDUser {
  * passwordHash: Hash
  * email: Email
  * moment: Moment
- * favourites: Array<Product>
- * favouriteRecipes: Array<Recipe>
- * liked: Array<MediaId>
+ * featured: Array<Product>
+ * featuredRecipes: Array<Recipe>
+ * likes: Array<MediaId>
  * */
 interface IUser {
     id: number,
@@ -32,9 +32,9 @@ interface IUser {
     passwordHash: string,
     email: string,
     moment: number,
-    favourites: Array<IProduct>,
-    favouriteRecipes: Array<IRecipe>,
-    liked: Array<string>
+    featured: Array<IProduct>,
+    featuredRecipes: Array<IRecipe>,
+    likes: Array<string>
 }
 
 export { IBDUser, IUser }
