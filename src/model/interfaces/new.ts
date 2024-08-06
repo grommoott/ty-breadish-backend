@@ -1,24 +1,25 @@
+import { MediaId, Moment, NewId } from "@primitives"
 import { IComment } from "./comment"
 
 /** Interface for a BDNew
  *
- * id: Id<New>
+ * id: NewId
  * mediaId: MediaId
  * title: string,
  * content: string,
  * moment: Moment
  * */
 interface IBDNew {
-    id: number,
-    mediaId: number,
+    id: NewId,
+    mediaId: MediaId,
     title: string,
     content: string,
-    moment: number
+    moment: Moment
 }
 
 /** Interface for a New
  *
- * id: Id<New>
+ * id: NewId
  * mediaId: MediaId
  * title: string,
  * content: string,

@@ -7,24 +7,15 @@ require("module-alias/register");
 // Imports
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const getUser_1 = __importDefault(require("@api/get/getUser"));
+const _primitives_1 = require("@primitives");
 // Basic fields declaration and initialization
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8443;
-class LikeId {
-    constructor() {
-        return new Proxy(this, {
-            get: (target, p, receiver) => {
-                return 0;
-            }
-        });
-    }
-}
-const like = new LikeId();
-console.log(like);
 // Middleware connection
 app.use((0, cors_1.default)());
 app.get("/", async (_, res) => {
-    res.send("Hello world!");
+    res.send(await (0, getUser_1.default)(new _primitives_1.UserId(0)));
 });
 // Starting server
 app.listen(port, () => {

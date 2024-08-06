@@ -5,15 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getRecipes;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
+const _primitives_1 = require("@primitives");
 async function getRecipes() {
     try {
         const response = await bdClient_1.default.query("select * from recipes");
-        return response.rows.map(product => {
+        return response.rows.map((product) => {
             return {
-                id: product.id,
-                itemId: product.item_id,
+                id: new _primitives_1.RecipeId(product.id),
+                itemId: new _primitives_1.ItemId(product.item_id),
                 name: product.name,
-                avgRate: product.avg_rate
+                avgRate: new _primitives_1.AvgRate(product.avg_rate)
             };
         });
     }

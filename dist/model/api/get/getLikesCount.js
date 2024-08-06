@@ -5,10 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getLikesCount;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
-const _enums_1 = require("@enums");
 async function getLikesCount(parentId, type) {
     try {
-        const response = await bdClient_1.default.query(`select count(*) from likes where target=${parentId} and type='${_enums_1.LikeType}'`);
+        const response = await bdClient_1.default.query(`select count(*) from likes where target=${parentId} and type='${type}'`);
         return response.rows[0].count;
     }
     catch (e) {

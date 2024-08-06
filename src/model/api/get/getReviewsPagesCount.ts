@@ -1,8 +1,9 @@
 import bdClient from "@api/bdClient"
 import config from "@api/config"
+import { ItemId } from "@primitives"
 import { QueryResult } from "pg"
 
-export default async function getReviewsPagesCount(itemId: number): Promise<number | Error> {
+export default async function getReviewsPagesCount(itemId: ItemId): Promise<number | Error> {
     try {
         const response: QueryResult = await bdClient.query(`select count(*) from reviews where target=${itemId}`)
 

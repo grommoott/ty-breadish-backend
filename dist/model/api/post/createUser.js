@@ -8,7 +8,7 @@ const bdClient_1 = __importDefault(require("@api/bdClient"));
 async function createUser(username, passwordHash, email, id = null, moment = null) {
     try {
         const _id = (() => {
-            if (id == null) {
+            if (id === null) {
                 return "(select count(*) from users)";
             }
             else {

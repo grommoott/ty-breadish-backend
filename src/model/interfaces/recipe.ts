@@ -1,20 +1,22 @@
+import { AvgRate, ItemId, RecipeId } from "@primitives"
+
 /** Interface for BDRecipe. IRecipe itseft loading as raw html
  *
- * id: Id<Recipe>
+ * id: RecipeId
  * itemId: ItemId
  * name: string
  * avgRate: number
  * */
 interface IBDRecipe {
-    id: number,
-    itemId: number,
+    id: RecipeId,
+    itemId: ItemId,
     name: string,
-    avgRate: number
+    avgRate: AvgRate
 }
 
 /** Interface for IRecipe
  * 
- * id: Id<Recipe>
+ * id: RecipeId
  * itemId: ItemId
  * name: string
  * avgRate: number 
@@ -23,10 +25,10 @@ interface IBDRecipe {
  * loadedReviews: Array<Recipe>
  * */
 interface IRecipe {
-    id: number,
-    itemId: number,
+    id: RecipeId,
+    itemId: ItemId,
     name: string,
-    avgRate: number,
+    avgRate: AvgRate
     getReviewsCount: () => Promise<number>,
     loadNextReviewPage: () => Promise<void>,
     loadedReviews: Array<IRecipe>

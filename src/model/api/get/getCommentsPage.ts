@@ -1,32 +1,33 @@
 import bdClient from "@api/bdClient";
 import config from "@api/config";
-import { CommentsSortOrder } from "@enums";
+import { CommentsSortOrder, CommentsSortOrders } from "@enums";
 import { IBDComment } from "@interfaces/comment";
+import { CommentId, MediaId, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function getCommentsPage(mediaId: number, sortOrder: CommentsSortOrder, page: number): Promise<Array<IBDComment> | Error> {
+export default async function getCommentsPage(mediaId: MediaId, sortOrder: CommentsSortOrder, page: number): Promise<Array<IBDComment> | Error> {
     try {
         const response: QueryResult = await (() => {
             switch (sortOrder) {
-                case CommentsSortOrder.NewFirst:
+                case CommentsSortOrders.NewFirst:
                     return bdClient.query(`select * from comments where target=${mediaId} order by moment desc limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
 
-                case CommentsSortOrder.OldFirst:
+                case CommentsSortOrders.OldFirst:
                     return bdClient.query(`select * from comments where target=${mediaId} order by moment limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
 
-                case CommentsSortOrder.LikedFirst:
+                case CommentsSortOrders.LikedFirst:
                     return bdClient.query(`select * from comments where target=${mediaId} order by (select count(*) from likes where target=${mediaId}) desc limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
             }
         })()
 
-        return response.rows.map(comment => {
+        return response.rows.map((comment): IBDComment => {
             return {
-                id: comment.id,
-                mediaId: comment.media_id,
-                from: comment.from,
-                target: comment.target,
+                id: new CommentId(comment.id),
+                mediaId: new MediaId(comment.media_id),
+                from: new UserId(comment.from),
+                target: new MediaId(comment.target),
                 content: comment.content,
-                moment: comment.moment
+                moment: new Moment(comment.moment)
             }
         })
     } catch (e) {

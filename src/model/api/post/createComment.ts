@@ -6,7 +6,7 @@ import { QueryResult } from "pg";
 export default async function createComment(from: number, target: number, content: string, id: number | null = null, moment: number | null = null): Promise<IBDComment | Error> {
     try {
         const _id: string | number = (() => {
-            if (id == null) {
+            if (id === null) {
                 return "(select count(*) from comments)"
             } else {
                 return id

@@ -1,38 +1,38 @@
+import { AvgRate, ItemId, Price, ProductId } from "@primitives"
 import { IReview } from "./review"
 
 /** Interface for BDProduct
  *
- * id: Id<Product>
+ * id: ProductId
  * itemId: ItemId
  * name: string
  * price: Price
  * avgRate: number
  * */
 interface IBDProduct {
-    id: number,
-    itemId: number,
+    id: ProductId,
+    itemId: ItemId,
     name: string,
-    price: number,
-    avgRate: number
+    price: Price,
+    avgRate: AvgRate
 }
 
 /** Interface for Product
  *
- * id: Id<Product>
+ * id: ProductId
  * itemId: ItemId
  * name: string
  * price: Price
  * avgRate: number
  * getReviewsCount: () => number
  * loadNextReviewPage: () => void
- * loadedReviews: Array<Review>
- * */
+ * loadedReviews: Array<Review> */
 interface IProduct {
-    id: number,
-    itemId: number,
+    id: ProductId,
+    itemId: ItemId,
     name: string,
-    price: number,
-    avgRate: number,
+    price: Price,
+    avgRate: AvgRate
     getReviewsCount: () => Promise<number>,
     loadNextReviewPage: () => Promise<void>,
     loadedReviews: Array<IReview>

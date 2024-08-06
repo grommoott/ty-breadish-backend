@@ -9,7 +9,7 @@ const config_1 = __importDefault(require("@api/config"));
 async function createComment(from, target, content, id = null, moment = null) {
     try {
         const _id = (() => {
-            if (id == null) {
+            if (id === null) {
                 return "(select count(*) from comments)";
             }
             else {

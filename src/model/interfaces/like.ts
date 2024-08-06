@@ -1,25 +1,33 @@
+import { LikeType } from "@enums"
+import { Id, LikeId, UserId } from "@primitives"
+
+
 /** Interface for BDLike 
  *
- * id: Id<Like>
- * from: Id<User>
+ * id: LikeId
+ * from: UserId
  * target: MediaId
+ * type: LikeType
  * */
 interface IBDLike {
-    id: number,
-    from: number,
-    target: number,
+    id: LikeId,
+    from: UserId,
+    target: Id,
+    type: LikeType
 }
 
 /** Interface for Like
  * 
- * id: Id<Like>
- * from: Id<User>
+ * id: LikeId
+ * from: UserId
  * target: MediaId
+ * type: LikeType
  * */
 interface ILike {
-    id: number,
-    from: number,
-    target: number,
+    id: LikeId,
+    from: UserId,
+    target: Id,
+    type: LikeType
 }
 
 export { IBDLike, ILike }

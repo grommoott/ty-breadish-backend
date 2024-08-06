@@ -7,27 +7,28 @@ exports.default = getReviewsPage;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const _enums_1 = require("@enums");
 const config_1 = __importDefault(require("@api/config"));
+const _primitives_1 = require("@primitives");
 async function getReviewsPage(itemId, sortOrder, page) {
     try {
         const response = await (() => {
             switch (sortOrder) {
-                case _enums_1.ReviewsSortOrder.OldFirst:
+                case _enums_1.ReviewsSortOrders.OldFirst:
                     return bdClient_1.default.query(`select * from reviews order by moment limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
-                case _enums_1.ReviewsSortOrder.NewFirst:
+                case _enums_1.ReviewsSortOrders.NewFirst:
                     return bdClient_1.default.query(`select * from reviews order by moment desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
-                case _enums_1.ReviewsSortOrder.RateFirst:
-                    return bdClient_1.default.query(`select * from reviews order by rate desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
-                case _enums_1.ReviewsSortOrder.LikedFirst:
+                case _enums_1.ReviewsSortOrders.LikedFirst:
                     return bdClient_1.default.query(`select * from reviews order by (select count(*) from likes where target=${itemId} and type='review') desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
-                case _enums_1.ReviewsSortOrder.UnrateFirst:
+                case _enums_1.ReviewsSortOrders.RatedFirst:
+                    return bdClient_1.default.query(`select * from reviews order by rate desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
+                case _enums_1.ReviewsSortOrders.UnratedFirst:
                     return bdClient_1.default.query(`select * from reviews order by rate limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
             }
         })();
         return response.rows.map(review => {
             return {
-                id: review.id,
-                target: review.target,
-                from: review.from,
+                id: new _primitives_1.ReviewId(review.id),
+                target: new _primitives_1.ItemId(review.target),
+                from: new _primitives_1.UserId(review.from),
                 content: review.content,
                 rate: review.rate
             };

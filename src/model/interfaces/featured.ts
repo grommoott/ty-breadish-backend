@@ -1,28 +1,31 @@
 import { ItemType } from "@enums"
+import { FeaturedId, ItemId, UserId } from "@primitives"
 
 /** Interface for BDFeatured
  * 
- * id: Id<Feature>
- * from: Id<User>
+ * id: FeaturedId 
+ * from: UserId
  * target: ItemId
+ * itemType: ItemType
  * */
 interface IBDFeatured {
-    id: number,
-    from: number,
-    target: number,
+    id: FeaturedId,
+    from: UserId,
+    target: ItemId,
     itemType: ItemType
 }
 
 /** Interface for Featured
  * 
- * id: Id<Feature>
- * from: Id<User>
+ * id: FeaturedId
+ * from: UserId
  * target: ItemId 
+ * itemType: ItemType
  * */
 interface IFeatured {
-    id: number,
-    from: number,
-    target: number,
+    id: FeaturedId,
+    from: UserId,
+    target: ItemId,
     itemType: ItemType
 }
 

@@ -1,5 +1,6 @@
 import bdClient from "@api/bdClient";
 import { IBDProduct } from "@interfaces/product";
+import { AvgRate, ItemId, Price, ProductId } from "@primitives";
 import { QueryResult } from "pg";
 
 export default async function getProducts(): Promise<Array<IBDProduct> | Error> {
@@ -8,11 +9,11 @@ export default async function getProducts(): Promise<Array<IBDProduct> | Error> 
 
         return response.rows.map(product => {
             return {
-                id: product.id,
-                itemId: product.item_id,
+                id: new ProductId(product.id),
+                itemId: new ItemId(product.item_id),
                 name: product.name,
-                price: product.price,
-                avgRate: product.avg_rate
+                price: new Price(product.price),
+                avgRate: new AvgRate(product.avg_rate)
             }
         })
     } catch (e) {

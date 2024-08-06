@@ -1,10 +1,11 @@
 import bdClient from "@api/bdClient"
 import { LikeType } from "@enums"
+import { Id } from "@primitives"
 import { QueryResult } from "pg"
 
-export default async function getLikesCount(parentId: number, type: LikeType): Promise<number | Error> {
+export default async function getLikesCount(parentId: Id, type: LikeType): Promise<number | Error> {
     try {
-        const response: QueryResult = await bdClient.query(`select count(*) from likes where target=${parentId} and type='${LikeType}'`)
+        const response: QueryResult = await bdClient.query(`select count(*) from likes where target=${parentId} and type='${type}'`)
 
         return response.rows[0].count
     } catch (e) {

@@ -1,16 +1,18 @@
 import bdClient from "@api/bdClient";
 import { IBDLike } from "@interfaces/like";
+import { Id, LikeId, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function getUserLiked(userId: number): Promise<Array<IBDLike> | Error> {
+export default async function getUserLiked(userId: UserId): Promise<Array<IBDLike> | Error> {
     try {
         const response: QueryResult = await bdClient.query(`select * from likes where "from"=${userId}`)
 
-        return response.rows.map(item => {
+        return response.rows.map(like => {
             return {
-                id: item.id,
-                from: item.from,
-                target: item.target,
+                id: new LikeId(like.id),
+                from: new UserId(like.from),
+                target: new Id(like.target),
+                type: like.type
             }
         })
     } catch (e) {

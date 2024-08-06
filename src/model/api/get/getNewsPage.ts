@@ -1,6 +1,7 @@
 import bdClient from "@api/bdClient";
 import config from "@api/config";
 import { IBDNew } from "@interfaces/new";
+import { MediaId, Moment, NewId } from "@primitives";
 import { QueryResult } from "pg";
 
 export default async function getNewsPage(page: number): Promise<Array<IBDNew> | Error> {
@@ -9,11 +10,11 @@ export default async function getNewsPage(page: number): Promise<Array<IBDNew> |
 
         return response.rows.map(aNew => {
             return {
-                id: aNew.id,
-                mediaId: aNew.media_id,
+                id: new NewId(aNew.id),
+                mediaId: new MediaId(aNew.media_id),
                 title: aNew.title,
                 content: aNew.content,
-                moment: aNew.moment
+                moment: new Moment(aNew.moment)
             }
         })
     } catch (e) {

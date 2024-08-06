@@ -1,26 +1,26 @@
-import { Rate } from "@enums"
+import { ItemId, Rate, ReviewId, UserId } from "@primitives"
 
 /** IBDReview's interface. IBDReview can be only under product or recipe
  *
- * id: Id<Review>
+ * id: ReviewId
  * target: ItemId
- * from: Id<User>
+ * from: UserId
  * content: string
  * rate: Rate
  */
 interface IBDReview {
-    id: number,
-    target: number,
-    from: number,
+    id: ReviewId,
+    target: ItemId,
+    from: UserId,
     content: string,
     rate: Rate
 }
 
 /** Review's interface. Review can be only under product or recipe
  *
- * id: Id<Review>
+ * id: ReviewId
  * target: ItemId
- * from: Id<User>
+ * from: UserId
  * content: string
  * rate: Rate
  */

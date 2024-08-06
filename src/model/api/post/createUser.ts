@@ -5,7 +5,7 @@ import { QueryResult } from "pg";
 export default async function createUser(username: string, passwordHash: string, email: string, id: number | null = null, moment: number | null = null): Promise<IBDUser | Error> {
     try {
         const _id: string | number = (() => {
-            if (id == null) {
+            if (id === null) {
                 return "(select count(*) from users)"
             } else {
                 return id

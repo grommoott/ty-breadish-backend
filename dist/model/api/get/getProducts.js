@@ -5,16 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getProducts;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
+const _primitives_1 = require("@primitives");
 async function getProducts() {
     try {
         const response = await bdClient_1.default.query("select * from products");
         return response.rows.map(product => {
             return {
-                id: product.id,
-                itemId: product.item_id,
+                id: new _primitives_1.ProductId(product.id),
+                itemId: new _primitives_1.ItemId(product.item_id),
                 name: product.name,
-                price: product.price,
-                avgRate: product.avg_rate
+                price: new _primitives_1.Price(product.price),
+                avgRate: new _primitives_1.AvgRate(product.avg_rate)
             };
         });
     }
