@@ -11,14 +11,6 @@ export default async function createReview(from: UserId, target: ItemId, content
             return null
         }
 
-        const _id: ReviewId | string = (() => {
-            if (id === null) {
-                return "((select id from reviews order by id limit 1) + 1)"
-            } else {
-                return id
-            }
-        })()
-
         const _moment: Moment = (() => {
             if (moment === null) {
                 return Moment.now()
@@ -27,7 +19,7 @@ export default async function createReview(from: UserId, target: ItemId, content
             }
         })()
 
-        const response: QueryResult = await bdClient.query(`insert into reviews values (${_id}, ${from}, ${target}, '${content}', '${rate}', ${moment}) returning *`)
+        const response: QueryResult = await bdClient.query(`insert into reviews values (default, ${from}, ${target}, '${content}', '${rate}', ${_moment}) returning *`)
         const review = response.rows[0]
 
         return {

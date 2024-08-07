@@ -4,7 +4,7 @@ import { IBDLike } from "@interfaces";
 import { Id, LikeId, MediaId, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createLike(from: UserId, target: MediaId, type: LikeType = LikeTypes.Media, id: number | null = null): Promise<IBDLike | Error | null> {
+export default async function createLike(from: UserId, target: MediaId, type: LikeType = LikeTypes.Media): Promise<IBDLike | Error | null> {
     try {
         const likes: QueryResult = await bdClient.query(`select * from likes where "from"=${from} and target=${target} and type='${type}'`)
 
@@ -12,15 +12,7 @@ export default async function createLike(from: UserId, target: MediaId, type: Li
             return null
         }
 
-        const _id: number | string = (() => {
-            if (id === null) {
-                return "((select id from likes order by id desc limit 1) + 1)"
-            } else {
-                return id
-            }
-        })()
-
-        const response: QueryResult = await bdClient.query(`insert into likes values (${_id}, ${from}, ${target}, '${type}') returning *`)
+        const response: QueryResult = await bdClient.query(`insert into likes values (default, ${from}, ${target}, '${type}') returning *`)
         const like = response.rows[0]
 
         return {

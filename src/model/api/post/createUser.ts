@@ -3,16 +3,8 @@ import { IBDUser } from "@interfaces";
 import { Email, Hash, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createUser(username: string, passwordHash: Hash, email: Email, id: UserId | null = null, moment: Moment | null = null): Promise<IBDUser | Error> {
+export default async function createUser(username: string, passwordHash: Hash, email: Email, moment: Moment | null = null): Promise<IBDUser | Error> {
     try {
-        const _id: string | UserId = (() => {
-            if (id === null) {
-                return "((select id from users order by id desc limit 1) + 1)"
-            } else {
-                return id
-            }
-        })()
-
         const _moment: Moment = (() => {
             if (moment == null) {
                 return new Moment(new Date().getTime())
@@ -21,7 +13,7 @@ export default async function createUser(username: string, passwordHash: Hash, e
             }
         })()
 
-        const response: QueryResult = await bdClient.query(`insert into users values (${_id}, '${username}', '${passwordHash}', '${email}', ${_moment}) returning *`)
+        const response: QueryResult = await bdClient.query(`insert into users values (default, '${username}', '${passwordHash}', '${email}', ${_moment}) returning *`)
         const user = response.rows[0]
 
         return {

@@ -1,4 +1,4 @@
-import { IReview } from "@interfaces/review"
+import { IReview } from "../review"
 import { Price, ProductId } from "@primitives"
 import { IItem } from "./item"
 

@@ -8,15 +8,14 @@ require("module-alias/register");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const _primitives_1 = require("@primitives");
-const createLike_1 = __importDefault(require("@api/post/createLike"));
-const _enums_1 = require("@enums");
+const deleteUser_1 = __importDefault(require("@api/delete/deleteUser"));
 // Basic fields declaration and initialization
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8443;
 // Middleware connection
 app.use((0, cors_1.default)());
 app.get("/", async (_, res) => {
-    res.send(await (0, createLike_1.default)(new _primitives_1.UserId(0), new _primitives_1.MediaId(0), _enums_1.LikeTypes.Media));
+    res.send(await (0, deleteUser_1.default)(new _primitives_1.UserId(1)));
 });
 // Starting server
 app.listen(port, () => {

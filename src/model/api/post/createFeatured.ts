@@ -4,7 +4,7 @@ import { IBDFeatured } from "@interfaces";
 import { FeaturedId, ItemId, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createFeatured(from: UserId, target: ItemId, itemType: ItemType, id: FeaturedId | null = null): Promise<IBDFeatured | Error | null> {
+export default async function createFeatured(from: UserId, target: ItemId, itemType: ItemType): Promise<IBDFeatured | Error | null> {
     try {
         const featureds: QueryResult = await bdClient.query(`select * from featured where "from"=${from} and target=${target}`)
 
@@ -12,15 +12,7 @@ export default async function createFeatured(from: UserId, target: ItemId, itemT
             return null
         }
 
-        const _id: string | FeaturedId = (() => {
-            if (id === null) {
-                return "((select id from featured order by id desc limit 1) + 1)"
-            } else {
-                return id
-            }
-        })()
-
-        const response: QueryResult = await bdClient.query(`insert into featured values(${_id}, ${from}, ${target}, ${itemType}) returning *`)
+        const response: QueryResult = await bdClient.query(`insert into featured values(default, ${from}, ${target}, ${itemType}) returning *`)
         const featured = response.rows[0]
 
         return {

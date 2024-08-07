@@ -27,10 +27,11 @@ async function getReviewsPage(itemId, sortOrder, page) {
         return response.rows.map(review => {
             return {
                 id: new _primitives_1.ReviewId(review.id),
-                target: new _primitives_1.ItemId(review.target),
                 from: new _primitives_1.UserId(review.from),
+                target: new _primitives_1.ItemId(review.target),
                 content: review.content,
-                rate: review.rate
+                rate: review.rate,
+                moment: new _primitives_1.Moment(review.moment)
             };
         });
     }

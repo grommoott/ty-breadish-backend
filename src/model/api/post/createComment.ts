@@ -4,18 +4,8 @@ import { IBDComment } from "@interfaces";
 import { CommentId, MediaId, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createComment(from: UserId, target: MediaId, content: string, id: CommentId | null = null, moment: Moment | null = null): Promise<IBDComment | Error> {
+export default async function createComment(from: UserId, target: MediaId, content: string, moment: Moment | null = null): Promise<IBDComment | Error> {
     try {
-        const _id: string | CommentId = (() => {
-            if (id === null) {
-                return "((select id from comments order by id desc limit 1) + 1)"
-            } else {
-                return id
-            }
-        })()
-
-        const _mediaId: string = `(${config.mediaIdCommentOffset} + ${_id})`
-
         const _moment: Moment = (() => {
             if (moment == null) {
                 return new Moment(new Date().getTime())
@@ -24,7 +14,7 @@ export default async function createComment(from: UserId, target: MediaId, conte
             }
         })()
 
-        const response: QueryResult = await bdClient.query(`insert into comments values(${_id}, ${_mediaId}, ${from}, ${target}, '${content}', ${_moment}) returning *`)
+        const response: QueryResult = await bdClient.query(`insert into comments values(default, nextval('media_id'), ${from}, ${target}, '${content}', ${_moment}) returning *`)
         const comment = response.rows[0]
 
         return {

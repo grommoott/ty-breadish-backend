@@ -9,12 +9,14 @@ const _primitives_1 = require("@primitives");
 async function getRecipes() {
     try {
         const response = await bdClient_1.default.query("select * from recipes");
-        return response.rows.map((product) => {
+        return response.rows.map((recipe) => {
             return {
-                id: new _primitives_1.RecipeId(product.id),
-                itemId: new _primitives_1.ItemId(product.item_id),
-                name: product.name,
-                avgRate: new _primitives_1.AvgRate(product.avg_rate)
+                id: new _primitives_1.RecipeId(recipe.id),
+                itemId: new _primitives_1.ItemId(recipe.item_id),
+                name: recipe.name,
+                description: recipe.description,
+                avgRate: new _primitives_1.AvgRate(recipe.avg_rate),
+                itemInfo: _primitives_1.ItemInfo.fromJSON(recipe.item_info)
             };
         });
     }

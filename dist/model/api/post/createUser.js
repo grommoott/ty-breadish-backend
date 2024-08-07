@@ -5,32 +5,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = createUser;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
-async function createUser(username, passwordHash, email, id = null, moment = null) {
+const _primitives_1 = require("@primitives");
+async function createUser(username, passwordHash, email, moment = null) {
     try {
-        const _id = (() => {
-            if (id === null) {
-                return "(select count(*) from users)";
-            }
-            else {
-                return id;
-            }
-        })();
         const _moment = (() => {
             if (moment == null) {
-                return new Date().getTime();
+                return new _primitives_1.Moment(new Date().getTime());
             }
             else {
                 return moment;
             }
         })();
-        const response = await bdClient_1.default.query(`insert into users values (${_id}, '${username}', '${passwordHash}', '${email}', ${_moment}) returning *`);
+        const response = await bdClient_1.default.query(`insert into users values (default, '${username}', '${passwordHash}', '${email}', ${_moment}) returning *`);
         const user = response.rows[0];
         return {
-            id: user.id,
+            id: new _primitives_1.UserId(user.id),
             username: user.username,
-            passwordHash: user.password_hash,
-            email: user.email,
-            moment: user.moment
+            passwordHash: new _primitives_1.Hash(user.password_hash),
+            email: new _primitives_1.Email(user.email),
+            moment: new _primitives_1.Moment(user.moment)
         };
     }
     catch (e) {

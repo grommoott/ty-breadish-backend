@@ -14,8 +14,10 @@ async function getProducts() {
                 id: new _primitives_1.ProductId(product.id),
                 itemId: new _primitives_1.ItemId(product.item_id),
                 name: product.name,
+                description: product.description,
                 price: new _primitives_1.Price(product.price),
-                avgRate: new _primitives_1.AvgRate(product.avg_rate)
+                avgRate: new _primitives_1.AvgRate(product.avg_rate),
+                itemInfo: _primitives_1.ItemInfo.fromJSON(product.item_info)
             };
         });
     }
