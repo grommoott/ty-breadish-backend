@@ -4,7 +4,11 @@ import "module-alias/register"
 import express from "express"
 import cors from "cors"
 import getUser from "@api/get/getUser"
-import { UserId } from "@primitives"
+import { MediaId, UserId } from "@primitives"
+import getNewsPagesCount from "@api/get/getNewsPagesCount"
+import getNewsPage from "@api/get/getNewsPage"
+import createLike from "@api/post/createLike"
+import { LikeTypes } from "@enums"
 
 // Basic fields declaration and initialization
 const app = express()
@@ -14,7 +18,7 @@ const port = process.env.PORT || 8443
 app.use(cors())
 
 app.get("/", async (_, res) => {
-    res.send(await getUser(new UserId(1)))
+    res.send(await createLike(new UserId(0), new MediaId(0), LikeTypes.Media))
 })
 
 // Starting server

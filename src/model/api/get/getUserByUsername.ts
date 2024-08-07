@@ -1,5 +1,5 @@
 import bdClient from "@api/bdClient"
-import { IBDUser } from "@interfaces/user"
+import { IBDUser } from "@interfaces"
 import { Email, Hash, Moment, UserId } from "@primitives"
 import { QueryResult } from "pg"
 

@@ -1,9 +1,9 @@
 import bdClient from "@api/bdClient"
-import { IBDReview } from "@interfaces/review"
+import { IBDReview } from "@interfaces"
 import { ReviewsSortOrder, ReviewsSortOrders } from "@enums"
 import config from "@api/config"
 import { QueryResult } from "pg"
-import { ItemId, ReviewId, UserId } from "@primitives"
+import { ItemId, Moment, ReviewId, UserId } from "@primitives"
 
 export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsSortOrder, page: number): Promise<Array<IBDReview> | Error> {
     try {
@@ -29,10 +29,11 @@ export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsS
         return response.rows.map(review => {
             return {
                 id: new ReviewId(review.id),
-                target: new ItemId(review.target),
                 from: new UserId(review.from),
+                target: new ItemId(review.target),
                 content: review.content,
-                rate: review.rate
+                rate: review.rate,
+                moment: new Moment(review.moment)
             }
         })
     } catch (e) {

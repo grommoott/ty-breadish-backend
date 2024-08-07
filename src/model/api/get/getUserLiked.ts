@@ -1,5 +1,5 @@
 import bdClient from "@api/bdClient";
-import { IBDLike } from "@interfaces/like";
+import { IBDLike } from "@interfaces";
 import { Id, LikeId, UserId } from "@primitives";
 import { QueryResult } from "pg";
 

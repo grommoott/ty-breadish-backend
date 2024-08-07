@@ -1,8 +1,8 @@
-import { IBDComment, IComment } from "./comment";
+import { IBDComment, IComment } from "./media/comment";
 import { IBDLike, ILike } from "./like"
-import { IBDNew, INew } from "./new";
-import { IBDProduct, IProduct } from "./product";
-import { IBDRecipe, IRecipe } from "./recipe";
+import { IBDNew, INew } from "./media/new";
+import { IBDProduct, IProduct } from "./item/product";
+import { IBDRecipe, IRecipe } from "./item/recipe";
 import { IBDReview, IReview } from "./review"
 import { IBDUser, IUser } from "./user"
 import { IBDFeatured, IFeatured } from "./featured";

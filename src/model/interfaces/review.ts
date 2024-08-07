@@ -1,35 +1,14 @@
-import { ItemId, Rate, ReviewId, UserId } from "@primitives"
+import { ItemId, Moment, Rate, ReviewId, UserId } from "@primitives"
 
-/** IBDReview's interface. IBDReview can be only under product or recipe
- *
- * id: ReviewId
- * target: ItemId
- * from: UserId
- * content: string
- * rate: Rate
- */
 interface IBDReview {
     id: ReviewId,
-    target: ItemId,
     from: UserId,
+    target: ItemId,
     content: string,
-    rate: Rate
+    rate: Rate,
+    moment: Moment
 }
 
-/** Review's interface. Review can be only under product or recipe
- *
- * id: ReviewId
- * target: ItemId
- * from: UserId
- * content: string
- * rate: Rate
- */
-interface IReview {
-    id: number,
-    target: number,
-    from: number,
-    content: string,
-    rate: Rate
-}
+interface IReview extends IBDReview { }
 
 export { IBDReview, IReview }

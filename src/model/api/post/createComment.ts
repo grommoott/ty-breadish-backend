@@ -1,23 +1,24 @@
 import bdClient from "@api/bdClient";
 import config from "@api/config";
-import { IBDComment } from "@interfaces/comment";
+import { IBDComment } from "@interfaces";
+import { CommentId, MediaId, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createComment(from: number, target: number, content: string, id: number | null = null, moment: number | null = null): Promise<IBDComment | Error> {
+export default async function createComment(from: UserId, target: MediaId, content: string, id: CommentId | null = null, moment: Moment | null = null): Promise<IBDComment | Error> {
     try {
-        const _id: string | number = (() => {
+        const _id: string | CommentId = (() => {
             if (id === null) {
-                return "(select count(*) from comments)"
+                return "((select id from comments order by id desc limit 1) + 1)"
             } else {
                 return id
             }
         })()
 
-        const _mediaId: string = `${config.mediaIdCommentOffset} + ${_id}`
+        const _mediaId: string = `(${config.mediaIdCommentOffset} + ${_id})`
 
-        const _moment: number = (() => {
+        const _moment: Moment = (() => {
             if (moment == null) {
-                return new Date().getTime()
+                return new Moment(new Date().getTime())
             } else {
                 return moment
             }
@@ -27,12 +28,12 @@ export default async function createComment(from: number, target: number, conten
         const comment = response.rows[0]
 
         return {
-            id: comment.id,
-            mediaId: comment.mediaId,
-            from: comment.from,
-            target: comment.target,
+            id: new CommentId(comment.id),
+            mediaId: new MediaId(comment.mediaId),
+            from: new UserId(comment.from),
+            target: new MediaId(comment.target),
             content: comment.content,
-            moment: comment.moment
+            moment: new Moment(comment.moment)
         }
     } catch (e) {
         const msg = "Error in createComment request: " + e

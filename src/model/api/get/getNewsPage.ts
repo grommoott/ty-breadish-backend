@@ -1,6 +1,6 @@
 import bdClient from "@api/bdClient";
 import config from "@api/config";
-import { IBDNew } from "@interfaces/new";
+import { IBDNew } from "@interfaces";
 import { MediaId, Moment, NewId } from "@primitives";
 import { QueryResult } from "pg";
 

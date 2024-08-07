@@ -1,18 +1,20 @@
 import bdClient from "@api/bdClient";
-import { IBDRecipe } from "@interfaces/recipe";
-import { AvgRate, ItemId, RecipeId } from "@primitives";
+import { IBDRecipe } from "@interfaces";
+import { AvgRate, ItemId, ItemInfo, RecipeId } from "@primitives";
 import { QueryResult } from "pg";
 
 export default async function getRecipes(): Promise<Array<IBDRecipe> | Error> {
     try {
         const response: QueryResult = await bdClient.query("select * from recipes")
 
-        return response.rows.map((product): IBDRecipe => {
+        return response.rows.map((recipe): IBDRecipe => {
             return {
-                id: new RecipeId(product.id),
-                itemId: new ItemId(product.item_id),
-                name: product.name,
-                avgRate: new AvgRate(product.avg_rate)
+                id: new RecipeId(recipe.id),
+                itemId: new ItemId(recipe.item_id),
+                name: recipe.name,
+                description: recipe.description,
+                avgRate: new AvgRate(recipe.avg_rate),
+                itemInfo: ItemInfo.fromJSON(recipe.item_info)
             }
         })
     } catch (e) {

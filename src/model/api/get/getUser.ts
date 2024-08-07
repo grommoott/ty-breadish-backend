@@ -1,6 +1,6 @@
 import { QueryResult, QueryResultRow } from "pg";
 import bdClient from "@api/bdClient";
-import { IBDUser } from "@interfaces/user";
+import { IBDUser } from "@interfaces";
 import { Email, Hash, Moment, UserId } from "@primitives";
 
 export default async function getUser(userId: UserId, check: boolean = false): Promise<IBDUser | Error | null> {

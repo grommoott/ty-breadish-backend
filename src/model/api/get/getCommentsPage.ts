@@ -1,7 +1,7 @@
 import bdClient from "@api/bdClient";
 import config from "@api/config";
 import { CommentsSortOrder, CommentsSortOrders } from "@enums";
-import { IBDComment } from "@interfaces/comment";
+import { IBDComment } from "@interfaces";
 import { CommentId, MediaId, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 

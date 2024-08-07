@@ -30,8 +30,8 @@
             "@api/*": [
                 "model/api/*"
             ],
-            "@interfaces/*": [
-                "model/interfaces/*"
+            "@interfaces": [
+                "model/interfaces"
             ],
             "@entities/*": [
                 "model/entities/*"

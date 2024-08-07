@@ -1,6 +1,6 @@
 import { QueryResult } from "pg";
 import bdClient from "@api/bdClient.js";
-import { IBDFeatured } from "@interfaces/featured";
+import { IBDFeatured } from "@interfaces";
 import { FeaturedId, ItemId, UserId } from "@primitives";
 
 export default async function getUserFeatured(userId: UserId): Promise<Array<IBDFeatured> | Error> {
