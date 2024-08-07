@@ -11,7 +11,7 @@ async function createLike(from, target, type = _enums_1.LikeTypes.Media) {
     try {
         const likes = await bdClient_1.default.query(`select * from likes where "from"=${from} and target=${target} and type='${type}'`);
         if (likes.rowCount != 0) {
-            return null;
+            return new Error(`There is already like from ${from} and with target ${target}(${type})`);
         }
         const response = await bdClient_1.default.query(`insert into likes values (default, ${from}, ${target}, '${type}') returning *`);
         const like = response.rows[0];
@@ -24,7 +24,6 @@ async function createLike(from, target, type = _enums_1.LikeTypes.Media) {
     }
     catch (e) {
         const msg = "Error in createLike request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

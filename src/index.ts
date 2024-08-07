@@ -3,8 +3,10 @@ import "module-alias/register"
 // Imports
 import express from "express"
 import cors from "cors"
-import { UserId } from "@primitives"
-import deleteUser from "@api/delete/deleteUser"
+import { CommentId, MediaId, ReviewId, UserId } from "@primitives"
+import createComment from "@api/post/createComment"
+import updateUser from "@api/put/updateUser"
+import updateReview from "@api/put/updateReview"
 
 // Basic fields declaration and initialization
 const app = express()
@@ -13,8 +15,10 @@ const port = process.env.PORT || 8443
 // Middleware connection
 app.use(cors())
 
+updateReview(new ReviewId(3), { content: "Так себе если честно(", rate: 2 })
+
 app.get("/", async (_, res) => {
-    res.send(await deleteUser(new UserId(1)))
+    res.sendStatus(200)
 })
 
 // Starting server

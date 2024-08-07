@@ -13,7 +13,6 @@ async function getCommentsPagesCount(mediaId) {
     }
     catch (e) {
         const msg = "Error in getCommentsPagesCount request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

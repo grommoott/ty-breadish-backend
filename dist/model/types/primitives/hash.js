@@ -16,6 +16,12 @@ class Hash {
     async compare(password) {
         return bcrypt_1.default.compare(password, this._hash);
     }
+    toString() {
+        return this._hash;
+    }
+    toBDView() {
+        return `'${this._hash.replaceAll("'", "''")}'`;
+    }
     constructor(value) {
         this._hash = value;
     }

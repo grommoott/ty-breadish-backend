@@ -16,13 +16,13 @@ async function getNewsPage(page) {
                 mediaId: new _primitives_1.MediaId(aNew.media_id),
                 title: aNew.title,
                 content: aNew.content,
-                moment: new _primitives_1.Moment(aNew.moment)
+                moment: new _primitives_1.Moment(aNew.moment),
+                isEdited: aNew.is_edited
             };
         });
     }
     catch (e) {
         const msg = "Error in getNewsPage request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

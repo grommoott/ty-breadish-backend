@@ -9,6 +9,12 @@ class Moment {
     static now() {
         return new Moment(new Date().getTime());
     }
+    toString() {
+        return this._moment.toString();
+    }
+    toBDView() {
+        return this._moment.toString();
+    }
     constructor(moment) {
         this._moment = moment;
     }

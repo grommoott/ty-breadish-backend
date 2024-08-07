@@ -22,7 +22,6 @@ async function getUserFeatured(userId) {
     }
     catch (e) {
         const msg = "Error in getUserFeatured request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

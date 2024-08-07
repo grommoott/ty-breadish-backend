@@ -6,6 +6,12 @@ class Email {
     get email() {
         return this._email;
     }
+    toString() {
+        return this._email;
+    }
+    toBDView() {
+        return `'${this._email.replaceAll("'", "''")}'`;
+    }
     constructor(email) {
         let isValid = true;
         const adressArr = email.split("@");

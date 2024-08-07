@@ -6,15 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getUser;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const _primitives_1 = require("@primitives");
-async function getUser(userId, check = false) {
+async function getUser(userId) {
     try {
         const response = await bdClient_1.default.query(`select * from users where id='${userId}'`);
         const user = response.rows[0];
         if (!user) {
-            if (check) {
-                return null;
-            }
-            return new Error(`User with such userId(${userId}) isn't found`, { cause: 400 });
+            return new Error(`User with such userId(${userId}) isn't found`);
         }
         return {
             id: new _primitives_1.UserId(user.id),
@@ -26,7 +23,6 @@ async function getUser(userId, check = false) {
     }
     catch (e) {
         const msg = "Error in getUser request:" + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

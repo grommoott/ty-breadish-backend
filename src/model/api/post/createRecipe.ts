@@ -4,7 +4,7 @@ import { IBDRecipe } from "@interfaces";
 import { AvgRate, ItemId, ItemInfo, RecipeId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createRecipe(name: string, description: string, itemInfo: ItemInfo): Promise<IBDRecipe | Error> {
+export default async function createRecipe(name: string, description: string, itemInfo: ItemInfo): Promise<IBDRecipe> {
     try {
         const response: QueryResult = await bdClient.query(`insert into recipes values (default, nextval('item_id'), '${name}', '${description}', -1, '${itemInfo.toJSON()}') returning *`)
         const recipe = response.rows[0]
@@ -19,7 +19,6 @@ export default async function createRecipe(name: string, description: string, it
         }
     } catch (e) {
         const msg = "Error in createRecipe request: " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

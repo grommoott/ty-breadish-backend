@@ -1,4 +1,6 @@
-class Id {
+import { IBDPrimitive } from "./bdPrimitive"
+
+class Id implements IBDPrimitive {
     private _id: number
 
     public get id(): number {
@@ -6,6 +8,10 @@ class Id {
     }
 
     public toString(): string {
+        return this._id.toString()
+    }
+
+    public toBDView(): string {
         return this._id.toString()
     }
 

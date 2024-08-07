@@ -6,11 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = createReview;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const _primitives_1 = require("@primitives");
-async function createReview(from, target, content, rate, id = null, moment = null) {
+async function createReview(from, target, content, rate, moment = null) {
     try {
         const reviews = await bdClient_1.default.query(`select * from reviews where "from"=${from} and target=${target}`);
         if (reviews.rowCount != 0) {
-            return null;
+            return new Error(`There is already review from ${from} to ${target}`);
         }
         const _moment = (() => {
             if (moment === null) {
@@ -33,7 +33,6 @@ async function createReview(from, target, content, rate, id = null, moment = nul
     }
     catch (e) {
         const msg = "Error in createReview request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

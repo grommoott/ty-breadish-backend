@@ -21,7 +21,6 @@ async function createRecipe(name, description, itemInfo) {
     }
     catch (e) {
         const msg = "Error in createRecipe request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

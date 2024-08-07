@@ -3,17 +3,13 @@ import bdClient from "@api/bdClient";
 import { IBDUser } from "@interfaces";
 import { Email, Hash, Moment, UserId } from "@primitives";
 
-export default async function getUser(userId: UserId, check: boolean = false): Promise<IBDUser | Error | null> {
+export default async function getUser(userId: UserId): Promise<IBDUser | Error> {
     try {
         const response: QueryResult = await bdClient.query(`select * from users where id='${userId}'`)
         const user: QueryResultRow = response.rows[0]
 
         if (!user) {
-            if (check) {
-                return null
-            }
-
-            return new Error(`User with such userId(${userId}) isn't found`, { cause: 400 })
+            return new Error(`User with such userId(${userId}) isn't found`)
         }
 
         return {
@@ -25,7 +21,6 @@ export default async function getUser(userId: UserId, check: boolean = false): P
         }
     } catch (e) {
         const msg = "Error in getUser request:" + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

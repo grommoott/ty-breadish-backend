@@ -12,7 +12,6 @@ async function getLikesCount(parentId, type) {
     }
     catch (e) {
         const msg = "Error in getLikesCount request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

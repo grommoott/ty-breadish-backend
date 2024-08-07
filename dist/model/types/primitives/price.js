@@ -9,6 +9,9 @@ class Price {
     toString() {
         return `${this._price.toString()} ₽`;
     }
+    toBDView() {
+        return this._price.toString();
+    }
     constructor(price) {
         this._price = price;
     }

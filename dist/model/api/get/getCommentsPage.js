@@ -27,13 +27,13 @@ async function getCommentsPage(mediaId, sortOrder, page) {
                 from: new _primitives_1.UserId(comment.from),
                 target: new _primitives_1.MediaId(comment.target),
                 content: comment.content,
-                moment: new _primitives_1.Moment(comment.moment)
+                moment: new _primitives_1.Moment(comment.moment),
+                isEdited: comment.is_edited
             };
         });
     }
     catch (e) {
         const msg = "Error in getCommentsPage request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

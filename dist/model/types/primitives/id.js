@@ -9,6 +9,9 @@ class Id {
     toString() {
         return this._id.toString();
     }
+    toBDView() {
+        return this._id.toString();
+    }
     constructor(id) {
         let isValid = true;
         isValid = isValid && Math.round(id) - id == 0;

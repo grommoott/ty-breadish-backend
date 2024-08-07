@@ -3,7 +3,7 @@ import { IBDProduct } from "@interfaces";
 import { AvgRate, ItemId, ItemInfo, Price, ProductId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createProduct(name: string, description: string, price: Price, itemInfo: ItemInfo): Promise<IBDProduct | Error> {
+export default async function createProduct(name: string, description: string, price: Price, itemInfo: ItemInfo): Promise<IBDProduct> {
     try {
         const response: QueryResult = await bdClient.query(`insert into products values (default, nextval('item_id'), '${name}', '${description}' ${price}, -1, '${itemInfo.toJSON()}') returning *`)
         const product = response.rows[0]
@@ -19,7 +19,6 @@ export default async function createProduct(name: string, description: string, p
         }
     } catch (e) {
         const msg = "Error in createProduct request: " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

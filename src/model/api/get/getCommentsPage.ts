@@ -5,7 +5,7 @@ import { IBDComment } from "@interfaces";
 import { CommentId, MediaId, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function getCommentsPage(mediaId: MediaId, sortOrder: CommentsSortOrder, page: number): Promise<Array<IBDComment> | Error> {
+export default async function getCommentsPage(mediaId: MediaId, sortOrder: CommentsSortOrder, page: number): Promise<Array<IBDComment>> {
     try {
         const response: QueryResult = await (() => {
             switch (sortOrder) {
@@ -27,12 +27,12 @@ export default async function getCommentsPage(mediaId: MediaId, sortOrder: Comme
                 from: new UserId(comment.from),
                 target: new MediaId(comment.target),
                 content: comment.content,
-                moment: new Moment(comment.moment)
+                moment: new Moment(comment.moment),
+                isEdited: comment.is_edited
             }
         })
     } catch (e) {
         const msg = "Error in getCommentsPage request: " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

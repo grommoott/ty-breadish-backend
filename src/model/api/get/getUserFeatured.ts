@@ -3,7 +3,7 @@ import bdClient from "@api/bdClient.js";
 import { IBDFeatured } from "@interfaces";
 import { FeaturedId, ItemId, UserId } from "@primitives";
 
-export default async function getUserFeatured(userId: UserId): Promise<Array<IBDFeatured> | Error> {
+export default async function getUserFeatured(userId: UserId): Promise<Array<IBDFeatured>> {
     try {
         const response: QueryResult = await bdClient.query(`select * from featured where "from"=${userId}`)
 
@@ -22,7 +22,6 @@ export default async function getUserFeatured(userId: UserId): Promise<Array<IBD
 
     } catch (e) {
         const msg = "Error in getUserFeatured request: " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

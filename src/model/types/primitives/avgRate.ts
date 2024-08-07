@@ -1,8 +1,18 @@
-class AvgRate {
+import { IBDPrimitive } from "./bdPrimitive"
+
+class AvgRate implements IBDPrimitive {
     private _avgRate: number
 
     public get avgRate(): number {
         return this._avgRate
+    }
+
+    public toString(): string {
+        return this._avgRate.toString()
+    }
+
+    public toBDView(): string {
+        return this._avgRate.toString()
     }
 
     public constructor(avgRate: number) {

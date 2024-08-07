@@ -1,5 +1,6 @@
 import { CookingMethod } from "../enums/itemInfo/cookingMethod"
 import { Ingredient } from "../enums/itemInfo/ingredient"
+import { IBDPrimitive } from "./bdPrimitive"
 
 type PFC = {
     kkal: number,
@@ -19,7 +20,7 @@ type ItemInfoJson = {
     }
 }
 
-class ItemInfo {
+class ItemInfo implements IBDPrimitive {
     public cookingMethod: CookingMethod
 
     public ingredients: Ingredient[]
@@ -47,6 +48,10 @@ class ItemInfo {
         }
 
         return JSON.stringify(itemInfo)
+    }
+
+    public toBDView(): string {
+        return `'${this.toJSON().replaceAll("'", "''")}'`
     }
 
     public constructor(cookingMethod: CookingMethod, ingredients: Ingredient[], pfc: PFC) {

@@ -10,7 +10,7 @@ async function createFeatured(from, target, itemType) {
     try {
         const featureds = await bdClient_1.default.query(`select * from featured where "from"=${from} and target=${target}`);
         if (featureds.rowCount != 0) {
-            return null;
+            return new Error(`There is already featured from ${from} and with target ${target}`);
         }
         const response = await bdClient_1.default.query(`insert into featured values(default, ${from}, ${target}, ${itemType}) returning *`);
         const featured = response.rows[0];
@@ -23,7 +23,6 @@ async function createFeatured(from, target, itemType) {
     }
     catch (e) {
         const msg = "Error in createFeatured request" + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

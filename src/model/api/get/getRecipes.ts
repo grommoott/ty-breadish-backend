@@ -3,7 +3,7 @@ import { IBDRecipe } from "@interfaces";
 import { AvgRate, ItemId, ItemInfo, RecipeId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function getRecipes(): Promise<Array<IBDRecipe> | Error> {
+export default async function getRecipes(): Promise<Array<IBDRecipe>> {
     try {
         const response: QueryResult = await bdClient.query("select * from recipes")
 
@@ -19,7 +19,6 @@ export default async function getRecipes(): Promise<Array<IBDRecipe> | Error> {
         })
     } catch (e) {
         const msg = "Error in getRecipes request: " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

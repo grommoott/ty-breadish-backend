@@ -16,20 +16,20 @@ async function createComment(from, target, content, moment = null) {
                 return moment;
             }
         })();
-        const response = await bdClient_1.default.query(`insert into comments values(default, nextval('media_id'), ${from}, ${target}, '${content}', ${_moment}) returning *`);
-        const comment = response.rows[0];
+        const response = await bdClient_1.default.query(`insert into comments values(default, nextval('media_id'), ${from}, ${target}, '${content}', ${_moment}, false) returning *`);
+        const comment = await response.rows[0];
         return {
             id: new _primitives_1.CommentId(comment.id),
-            mediaId: new _primitives_1.MediaId(comment.mediaId),
+            mediaId: new _primitives_1.MediaId(comment.media_id),
             from: new _primitives_1.UserId(comment.from),
             target: new _primitives_1.MediaId(comment.target),
             content: comment.content,
-            moment: new _primitives_1.Moment(comment.moment)
+            moment: new _primitives_1.Moment(comment.moment),
+            isEdited: comment.is_edited
         };
     }
     catch (e) {
         const msg = "Error in createComment request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

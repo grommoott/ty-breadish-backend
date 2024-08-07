@@ -3,7 +3,7 @@ import { IBDLike } from "@interfaces";
 import { Id, LikeId, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function getUserLiked(userId: UserId): Promise<Array<IBDLike> | Error> {
+export default async function getUserLiked(userId: UserId): Promise<Array<IBDLike>> {
     try {
         const response: QueryResult = await bdClient.query(`select * from likes where "from"=${userId}`)
 
@@ -17,7 +17,6 @@ export default async function getUserLiked(userId: UserId): Promise<Array<IBDLik
         })
     } catch (e) {
         const msg = "Error in getUserLiked request: " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

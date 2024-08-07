@@ -22,3 +22,4 @@ __exportStar(require("./moment"), exports);
 __exportStar(require("./price"), exports);
 __exportStar(require("./rate"), exports);
 __exportStar(require("./itemInfo"), exports);
+__exportStar(require("./bdPrimitive"), exports);

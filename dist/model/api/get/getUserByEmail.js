@@ -6,14 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getUserByEmail;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const _primitives_1 = require("@primitives");
-async function getUserByEmail(email, check = false) {
+async function getUserByEmail(email) {
     try {
         const response = await bdClient_1.default.query(`select * from users where email='${email}'`);
         const user = response.rows[0];
         if (!user) {
-            if (check) {
-                return null;
-            }
             return new Error(`User with such email(${email}) isn't found`, { cause: 400 });
         }
         return {
@@ -26,7 +23,6 @@ async function getUserByEmail(email, check = false) {
     }
     catch (e) {
         const msg = "Error in getUserByEmail request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

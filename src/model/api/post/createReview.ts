@@ -3,12 +3,12 @@ import { IBDReview } from "@interfaces";
 import { ItemId, Moment, Rate, ReviewId, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createReview(from: UserId, target: ItemId, content: string, rate: Rate, id: ReviewId | null = null, moment: Moment | null = null): Promise<IBDReview | Error | null> {
+export default async function createReview(from: UserId, target: ItemId, content: string, rate: Rate, moment: Moment | null = null): Promise<IBDReview | Error> {
     try {
         const reviews: QueryResult = await bdClient.query(`select * from reviews where "from"=${from} and target=${target}`)
 
         if (reviews.rowCount != 0) {
-            return null
+            return new Error(`There is already review from ${from} to ${target}`)
         }
 
         const _moment: Moment = (() => {
@@ -32,7 +32,6 @@ export default async function createReview(from: UserId, target: ItemId, content
         }
     } catch (e) {
         const msg = "Error in createReview request: " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

@@ -1,8 +1,18 @@
-class Email {
+import { IBDPrimitive } from "./bdPrimitive"
+
+class Email implements IBDPrimitive {
     private _email: string
 
     public get email(): string {
         return this._email
+    }
+
+    public toString(): string {
+        return this._email
+    }
+
+    public toBDView(): string {
+        return `'${this._email.replaceAll("'", "''")}'`
     }
 
     public constructor(email: string) {

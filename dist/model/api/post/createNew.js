@@ -16,19 +16,19 @@ async function createNew(title, content, moment = null) {
                 return moment;
             }
         })();
-        const request = await bdClient_1.default.query(`insert into news values (default, nextval('media_id'), '${title}', '${content}', ${_moment}) returning *`);
+        const request = await bdClient_1.default.query(`insert into news values (default, nextval('media_id'), '${title}', '${content}', ${_moment}, false) returning *`);
         const aNew = request.rows[0];
         return {
             id: new _primitives_1.NewId(aNew.id),
             mediaId: new _primitives_1.MediaId(aNew.media_id),
             title: aNew.title,
             content: aNew.content,
-            moment: new _primitives_1.Moment(aNew.moment)
+            moment: new _primitives_1.Moment(aNew.moment),
+            isEdited: aNew.is_edited
         };
     }
     catch (e) {
         const msg = "Error in createNew request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

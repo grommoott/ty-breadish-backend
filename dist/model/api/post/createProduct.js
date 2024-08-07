@@ -22,7 +22,6 @@ async function createProduct(name, description, price, itemInfo) {
     }
     catch (e) {
         const msg = "Error in createProduct request: " + e;
-        console.error(msg);
-        return new Error(msg, { cause: 500 });
+        throw new Error(msg, { cause: 500 });
     }
 }

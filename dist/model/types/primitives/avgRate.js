@@ -6,6 +6,12 @@ class AvgRate {
     get avgRate() {
         return this._avgRate;
     }
+    toString() {
+        return this._avgRate.toString();
+    }
+    toBDView() {
+        return this._avgRate.toString();
+    }
     constructor(avgRate) {
         let isValid = true;
         isValid = isValid && Math.round(avgRate) - avgRate == 0;

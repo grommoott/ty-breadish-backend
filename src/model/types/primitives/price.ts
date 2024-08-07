@@ -1,4 +1,6 @@
-class Price {
+import { IBDPrimitive } from "./bdPrimitive"
+
+class Price implements IBDPrimitive {
     private _price: number
 
     public get price(): number {
@@ -7,6 +9,10 @@ class Price {
 
     public toString(): string {
         return `${this._price.toString()} ₽`
+    }
+
+    public toBDView(): string {
+        return this._price.toString()
     }
 
     public constructor(price: number) {

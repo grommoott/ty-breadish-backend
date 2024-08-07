@@ -3,7 +3,7 @@ import { IBDProduct } from "@interfaces";
 import { AvgRate, ItemId, ItemInfo, Price, ProductId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function getProducts(): Promise<Array<IBDProduct> | Error> {
+export default async function getProducts(): Promise<Array<IBDProduct>> {
     try {
         const response: QueryResult = await bdClient.query("select * from products")
 
@@ -20,7 +20,6 @@ export default async function getProducts(): Promise<Array<IBDProduct> | Error> 
         })
     } catch (e) {
         const msg = "Error in getProducts request: " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

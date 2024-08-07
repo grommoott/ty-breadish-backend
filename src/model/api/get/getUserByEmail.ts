@@ -3,16 +3,12 @@ import { IBDUser } from "@interfaces";
 import { Email, Hash, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function getUserByEmail(email: Email, check: boolean = false): Promise<IBDUser | Error | null> {
+export default async function getUserByEmail(email: Email): Promise<IBDUser | Error> {
     try {
         const response: QueryResult = await bdClient.query(`select * from users where email='${email}'`)
         const user = response.rows[0]
 
         if (!user) {
-            if (check) {
-                return null
-            }
-
             return new Error(`User with such email(${email}) isn't found`, { cause: 400 })
         }
 
@@ -25,7 +21,6 @@ export default async function getUserByEmail(email: Email, check: boolean = fals
         }
     } catch (e) {
         const msg = "Error in getUserByEmail request: " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }

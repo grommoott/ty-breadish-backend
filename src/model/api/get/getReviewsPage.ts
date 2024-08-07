@@ -5,7 +5,7 @@ import config from "@api/config"
 import { QueryResult } from "pg"
 import { ItemId, Moment, ReviewId, UserId } from "@primitives"
 
-export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsSortOrder, page: number): Promise<Array<IBDReview> | Error> {
+export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsSortOrder, page: number): Promise<Array<IBDReview>> {
     try {
         const response: QueryResult = await (() => {
             switch (sortOrder) {
@@ -38,7 +38,6 @@ export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsS
         })
     } catch (e) {
         const msg = "Error in getReviewsPage request " + e
-        console.error(msg)
-        return new Error(msg, { cause: 500 })
+        throw new Error(msg, { cause: 500 })
     }
 }
