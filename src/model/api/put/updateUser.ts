@@ -5,6 +5,7 @@ import getUserByUsername from "@api/get/getUserByUsername";
 import { isEmpty } from "@helpers";
 import { IBDUser } from "@interfaces";
 import { Email, Hash, IBDPrimitive, UserId } from "@primitives";
+import { QueryResult } from "pg";
 
 export default async function updateUser(id: UserId, data: { username?: string, passwordHash?: Hash, email?: Email }): Promise<void | Error> {
     try {
@@ -12,31 +13,29 @@ export default async function updateUser(id: UserId, data: { username?: string, 
             return new Error("There is nothing to do")
         }
 
+        const userWithId: IBDUser | Error = await getUser(id)
+
+        if (userWithId instanceof Error) {
+            return new Error(`User with such id(${id}) isn't exists`)
+        }
+
         const username: string | undefined = data.username
-        const passwordHash: Hash | undefined = data.passwordHash
         const email: Email | undefined = data.email
 
         if (username) {
+            const userWithUsername: QueryResult = await bdClient.query(`select count(*) from users where username='${username}' and not id=${id}`)
 
-            const userWithUsername: IBDUser | Error = await getUserByUsername(username)
-
-            if (!(userWithUsername instanceof Error)) {
+            if (userWithUsername.rows[0].count == 0) {
                 return new Error(`User with such username(${username}) is already exists`)
             }
         }
 
         if (email) {
-            const userWithEmail: IBDUser | Error = await getUserByEmail(email)
+            const userWithEmail: QueryResult = await bdClient.query(`select count(*) from users where email='${email}' and not id=${id}`)
 
-            if (!(userWithEmail instanceof Error)) {
+            if (userWithEmail.rows[0].count == 0) {
                 return new Error(`User with such email(${email}) is already exists`)
             }
-        }
-
-        const userWithId: IBDUser | Error = await getUser(id)
-
-        if (userWithId instanceof Error) {
-            return new Error(`User with such id(${id}) isn't exists`)
         }
 
         const nameConverter: (name: string) => string = (name: string): string => {
@@ -63,7 +62,7 @@ export default async function updateUser(id: UserId, data: { username?: string, 
             return `${nameConverter(key)}=${valueConverter(key, val)}`
         }).join(",")
 
-        bdClient.query(`update users set ${setString} where id = ${id} `)
+        bdClient.query(`update users set ${setString} where id=${id} `)
     } catch (e) {
         throw new Error("Error in updateUser request: " + e)
     }

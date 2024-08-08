@@ -1,13 +1,18 @@
 import bdClient from "@api/bdClient";
+import { isEmpty } from "@helpers";
 import { IBDReview } from "@interfaces";
 import { Rate, ReviewId } from "@primitives";
 import { QueryResult } from "pg";
 
 export default async function updateReview(id: ReviewId, data: { content?: string, rate?: Rate }): Promise<void | Error> {
     try {
-        const reviewWithId: QueryResult = await bdClient.query(`select * from reviews where id=${id}`)
+        if (isEmpty(data)) {
+            return new Error("There is nothing to do")
+        }
 
-        if (reviewWithId.rowCount == 0) {
+        const reviewWithId: QueryResult = await bdClient.query(`select count(*) from reviews where id=${id}`)
+
+        if (reviewWithId.rows[0].count == 0) {
             return new Error(`There is no review with id ${id}`)
         }
 
