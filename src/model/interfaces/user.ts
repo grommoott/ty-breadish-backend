@@ -1,8 +1,6 @@
 import { Email, Hash, Moment, UserId } from "@primitives"
-import { IProduct } from "./item/product"
-import { IRecipe } from "./item/recipe"
 
-interface IBDUser {
+interface IUser {
     id: UserId,
     username: string,
     passwordHash: Hash,
@@ -10,10 +8,18 @@ interface IBDUser {
     moment: Moment
 }
 
-interface IUser extends IBDUser {
-    featured: Array<IProduct>,
-    featuredRecipes: Array<IRecipe>,
-    likes: Array<string>
+function queryRowToUser(row: any): IUser {
+    if (!("id" in row && "username" in row && "password_hash" in row && "email" in row && "moment" in row)) {
+        throw new Error("Invalid query row to convert into IUser")
+    }
+
+    return {
+        id: new UserId(row.id),
+        username: row.username,
+        passwordHash: new Hash(row.password_hash),
+        email: new Email(row.email),
+        moment: new Moment(row.moment)
+    }
 }
 
-export { IBDUser, IUser }
+export { IUser, queryRowToUser }

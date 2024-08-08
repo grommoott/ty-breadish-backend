@@ -3,6 +3,7 @@ import { ItemType, ItemTypes } from "./itemType";
 import { ItemsSortOrder, ItemsSortOrders } from "./itemsSortOrder";
 import { LikeType, LikeTypes } from "./likeType";
 import { ReviewsSortOrder, ReviewsSortOrders } from "./reviewsSortOrder";
+import { Role, Roles } from "./role";
 
 export {
     CommentsSortOrder, CommentsSortOrders,
@@ -10,4 +11,5 @@ export {
     ItemsSortOrder, ItemsSortOrders,
     LikeType, LikeTypes,
     ReviewsSortOrder, ReviewsSortOrders,
+    Role, Roles
 }

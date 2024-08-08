@@ -1,22 +1,13 @@
 import bdClient from "@api/bdClient";
-import config from "@api/config";
-import { IBDRecipe } from "@interfaces";
+import { IRecipe, queryRowToRecipe } from "@interfaces";
 import { AvgRate, ItemId, ItemInfo, RecipeId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createRecipe(name: string, description: string, itemInfo: ItemInfo): Promise<IBDRecipe> {
+export default async function createRecipe(name: string, description: string, itemInfo: ItemInfo): Promise<IRecipe> {
     try {
         const response: QueryResult = await bdClient.query(`insert into recipes values (default, nextval('item_id'), '${name}', '${description}', -1, '${itemInfo.toJSON()}') returning *`)
-        const recipe = response.rows[0]
 
-        return {
-            id: new RecipeId(recipe.id),
-            itemId: new ItemId(recipe.item_id),
-            name: recipe.name,
-            description: recipe.description,
-            avgRate: new AvgRate(recipe.avg_rate),
-            itemInfo: ItemInfo.fromJSON(recipe.item_info)
-        }
+        return queryRowToRecipe(response.rows[0])
     } catch (e) {
         const msg = "Error in createRecipe request: " + e
         throw new Error(msg, { cause: 500 })

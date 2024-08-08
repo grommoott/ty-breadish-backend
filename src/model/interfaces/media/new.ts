@@ -1,18 +1,31 @@
 import { MediaId, Moment, NewId } from "@primitives"
-import { IComment } from "./comment"
 import { IMedia } from "./media"
 
-interface IBDNew extends IMedia {
+interface INew extends IMedia {
     id: NewId,
     title: string,
     content: string,
 }
 
-interface INew {
-    getCommentsCount: () => Promise<number>,
-    loadNextCommentPage: () => Promise<void>,
-    loadedComments: Array<IComment>,
-    getLikesCount: () => Promise<number>,
+function isMediaIsNew(media: IMedia): media is IMedia {
+    return (media as INew)?.id instanceof NewId &&
+        typeof (media as INew)?.title === "string" &&
+        typeof (media as INew)?.content === "string"
 }
 
-export { IBDNew, INew }
+function queryRowToNew(row: any): INew {
+    if (!("id" in row && "title" in row && "content" in row && "media_id" in row && "moment" in row && "is_edited" in row)) {
+        throw new Error("Invalid query row to convert into INew")
+    }
+
+    return {
+        id: new NewId(row.id),
+        title: row.title,
+        content: row.content,
+        mediaId: new MediaId(row.media_id),
+        moment: new Moment(row.moment),
+        isEdited: row.is_edited
+    }
+}
+
+export { INew, isMediaIsNew, queryRowToNew }

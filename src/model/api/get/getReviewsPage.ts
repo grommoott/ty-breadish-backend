@@ -1,12 +1,19 @@
 import bdClient from "@api/bdClient"
-import { IBDReview } from "@interfaces"
+import { IItem, IReview, queryRowToReview } from "@interfaces"
 import { ReviewsSortOrder, ReviewsSortOrders } from "@enums"
 import config from "@api/config"
 import { QueryResult } from "pg"
 import { ItemId, Moment, ReviewId, UserId } from "@primitives"
+import getItem from "./getItem"
 
-export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsSortOrder, page: number): Promise<Array<IBDReview>> {
+export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsSortOrder, page: number): Promise<Array<IReview> | Error> {
     try {
+        const itemWithId: IItem | Error = await getItem(itemId)
+
+        if (itemWithId instanceof Error) {
+            return itemWithId
+        }
+
         const response: QueryResult = await (() => {
             switch (sortOrder) {
                 case ReviewsSortOrders.OldFirst:
@@ -26,16 +33,7 @@ export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsS
             }
         })()
 
-        return response.rows.map(review => {
-            return {
-                id: new ReviewId(review.id),
-                from: new UserId(review.from),
-                target: new ItemId(review.target),
-                content: review.content,
-                rate: review.rate,
-                moment: new Moment(review.moment)
-            }
-        })
+        return response.rows.map(queryRowToReview)
     } catch (e) {
         const msg = "Error in getReviewsPage request " + e
         throw new Error(msg, { cause: 500 })

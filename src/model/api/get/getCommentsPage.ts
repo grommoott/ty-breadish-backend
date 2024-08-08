@@ -1,12 +1,19 @@
 import bdClient from "@api/bdClient";
 import config from "@api/config";
 import { CommentsSortOrder, CommentsSortOrders } from "@enums";
-import { IBDComment } from "@interfaces";
+import { IComment, IMedia, queryRowToComment } from "@interfaces";
 import { CommentId, MediaId, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
+import getMedia from "./getMedia";
 
-export default async function getCommentsPage(mediaId: MediaId, sortOrder: CommentsSortOrder, page: number): Promise<Array<IBDComment>> {
+export default async function getCommentsPage(mediaId: MediaId, sortOrder: CommentsSortOrder, page: number): Promise<Array<IComment> | Error> {
     try {
+        const mediaWithId: IMedia | Error = await getMedia(mediaId)
+
+        if (mediaWithId instanceof Error) {
+            return mediaWithId
+        }
+
         const response: QueryResult = await (() => {
             switch (sortOrder) {
                 case CommentsSortOrders.NewFirst:
@@ -20,17 +27,7 @@ export default async function getCommentsPage(mediaId: MediaId, sortOrder: Comme
             }
         })()
 
-        return response.rows.map((comment): IBDComment => {
-            return {
-                id: new CommentId(comment.id),
-                mediaId: new MediaId(comment.media_id),
-                from: new UserId(comment.from),
-                target: new MediaId(comment.target),
-                content: comment.content,
-                moment: new Moment(comment.moment),
-                isEdited: comment.is_edited
-            }
-        })
+        return response.rows.map(queryRowToComment)
     } catch (e) {
         const msg = "Error in getCommentsPage request: " + e
         throw new Error(msg, { cause: 500 })

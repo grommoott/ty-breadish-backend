@@ -3,9 +3,7 @@ import "module-alias/register"
 // Imports
 import express from "express"
 import cors from "cors"
-import { CommentId, MediaId, ReviewId, UserId } from "@primitives"
-import createComment from "@api/post/createComment"
-import updateUser from "@api/put/updateUser"
+import { ReviewId } from "@primitives"
 import updateReview from "@api/put/updateReview"
 
 // Basic fields declaration and initialization

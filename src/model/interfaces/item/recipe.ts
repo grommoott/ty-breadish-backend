@@ -1,14 +1,32 @@
-import { RecipeId } from "@primitives"
+import { AvgRate, ItemId, ItemInfo, RecipeId } from "@primitives"
 import { IItem } from "./item"
 
-interface IBDRecipe extends IItem {
+interface IRecipe extends IItem {
     id: RecipeId,
 }
 
-interface IRecipe extends IBDRecipe {
-    getReviewsCount: () => Promise<number>,
-    loadNextReviewPage: () => Promise<void>,
-    loadedReviews: Array<IRecipe>
+function isItemIsRecipe(item: IItem): item is IRecipe {
+    return (item as IRecipe)?.id instanceof RecipeId
 }
 
-export { IBDRecipe, IRecipe }
+function queryRowToRecipe(row: any): IRecipe {
+    if (!("id" in row &&
+        "item_id" in row &&
+        "name" in row &&
+        "description" in row &&
+        "avg_rate" in row &&
+        "item_info" in row)) {
+        throw new Error("Invalid query row to convert into IRecipe")
+    }
+
+    return {
+        id: new RecipeId(row.id),
+        itemId: new ItemId(row.item_id),
+        name: row.name,
+        description: row.description,
+        avgRate: new AvgRate(row.avg_rate),
+        itemInfo: ItemInfo.fromJSON(row.item_info)
+    }
+}
+
+export { IRecipe, isItemIsRecipe, queryRowToRecipe }

@@ -1,7 +1,9 @@
 import bdClient from "@api/bdClient";
 import getUser from "@api/get/getUser";
+import getUserByEmail from "@api/get/getUserByEmail";
+import getUserByUsername from "@api/get/getUserByUsername";
 import { isEmpty } from "@helpers";
-import { IBDUser } from "@interfaces";
+import { IUser } from "@interfaces";
 import { Email, Hash, IBDPrimitive, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
@@ -11,7 +13,7 @@ export default async function updateUser(id: UserId, data: { username?: string, 
             return new Error("There is nothing to do")
         }
 
-        const userWithId: IBDUser | Error = await getUser(id)
+        const userWithId: IUser | Error = await getUser(id)
 
         if (userWithId instanceof Error) {
             return new Error(`User with such id(${id}) isn't exists`)
@@ -21,17 +23,17 @@ export default async function updateUser(id: UserId, data: { username?: string, 
         const email: Email | undefined = data.email
 
         if (username) {
-            const userWithUsername: QueryResult = await bdClient.query(`select count(*) from users where username='${username}' and not id=${id}`)
+            const userWithUsername: IUser | Error = await getUserByUsername(username)
 
-            if (userWithUsername.rows[0].count == 0) {
+            if (!(userWithUsername instanceof Error) && userWithUsername.id.id != id.id) {
                 return new Error(`User with such username(${username}) is already exists`)
             }
         }
 
         if (email) {
-            const userWithEmail: QueryResult = await bdClient.query(`select count(*) from users where email='${email}' and not id=${id}`)
+            const userWithEmail: IUser | Error = await getUserByEmail(email)
 
-            if (userWithEmail.rows[0].count == 0) {
+            if (!(userWithEmail instanceof Error) && userWithEmail.id.id != id.id) {
                 return new Error(`User with such email(${email}) is already exists`)
             }
         }

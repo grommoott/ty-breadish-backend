@@ -2,10 +2,10 @@ import bdClient from "@api/bdClient";
 import { Id } from "@primitives";
 import { QueryResult } from "pg";
 
-export default function createDeleteRequest<T extends Id>(entityName: string, requestName: string): (id: T) => Promise<boolean> {
+export default function createDeleteRequest<T extends Id>(tableName: string, requestName: string): (id: T) => Promise<boolean> {
     return async function(id: T) {
         try {
-            const response: QueryResult = await bdClient.query(`delete from ${entityName} where id=${id}`)
+            const response: QueryResult = await bdClient.query(`delete from ${tableName} where id=${id}`)
 
             return response.rowCount == 1
         } catch (e) {
