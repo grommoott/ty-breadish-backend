@@ -1,7 +1,5 @@
 import bdClient from "@api/bdClient";
 import getUser from "@api/get/getUser";
-import getUserByEmail from "@api/get/getUserByEmail";
-import getUserByUsername from "@api/get/getUserByUsername";
 import { isEmpty } from "@helpers";
 import { IBDUser } from "@interfaces";
 import { Email, Hash, IBDPrimitive, UserId } from "@primitives";

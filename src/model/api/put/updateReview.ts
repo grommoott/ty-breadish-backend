@@ -1,6 +1,5 @@
 import bdClient from "@api/bdClient";
 import { isEmpty } from "@helpers";
-import { IBDReview } from "@interfaces";
 import { Rate, ReviewId } from "@primitives";
 import { QueryResult } from "pg";
 
