@@ -3,3 +3,5 @@ import createSimpleGetRequest from "./helpers";
 import { INew, queryRowToNew } from "@interfaces";
 
 const getNew = createSimpleGetRequest<NewId, INew>("news", "New", queryRowToNew)
+
+export default getNew

@@ -2,10 +2,9 @@ import bdClient from "@api/bdClient";
 import getUser from "@api/get/getUser";
 import getUserByEmail from "@api/get/getUserByEmail";
 import getUserByUsername from "@api/get/getUserByUsername";
-import { isEmpty } from "@helpers";
+import isEmpty from "helpers/isEmpty";
 import { IUser } from "@interfaces";
 import { Email, Hash, IBDPrimitive, UserId } from "@primitives";
-import { QueryResult } from "pg";
 
 export default async function updateUser(id: UserId, data: { username?: string, passwordHash?: Hash, email?: Email }): Promise<void | Error> {
     try {

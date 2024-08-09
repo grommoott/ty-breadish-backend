@@ -1,9 +1,9 @@
 import bdClient from "@api/bdClient";
-import { isEmpty } from "@helpers";
+import isEmpty from "helpers/isEmpty";
 import { NewId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function updateNew(id: NewId, data: { content?: string, title?: string }): Promise<void | Error> {
+export default async function updateNew(id: NewId, data: { title?: string, content?: string }): Promise<void | Error> {
     try {
         if (isEmpty(data)) {
             return new Error("There is nothing to do")

@@ -1,5 +1,7 @@
+import deleteReview from "@api/delete/deleteReview"
 import getReview from "@api/get/getReview"
 import getReviewsPage from "@api/get/getReviewsPage"
+import createReview from "@api/post/createReview"
 import updateReview from "@api/put/updateReview"
 import { ReviewsSortOrder } from "@enums"
 import { IReview } from "@interfaces"
@@ -43,6 +45,10 @@ class Review {
         return await updateReview(this._review.id, data)
     }
 
+    public async delete(): Promise<boolean | Error> {
+        return await deleteReview(this._review.id)
+    }
+
     // Static constructors
 
     public static async getReviewsPage(itemId: ItemId, sortOrder: ReviewsSortOrder, page: number): Promise<Array<Review> | Error> {
@@ -57,6 +63,16 @@ class Review {
 
     public static async fromId(id: ReviewId): Promise<Review | Error> {
         const review: IReview | Error = await getReview(id)
+
+        if (review instanceof Error) {
+            return review
+        }
+
+        return new Review(review)
+    }
+
+    public static async create(from: UserId, target: ItemId, content: string, rate: Rate): Promise<Review | Error> {
+        const review: IReview | Error = await createReview(from, target, content, rate)
 
         if (review instanceof Error) {
             return review

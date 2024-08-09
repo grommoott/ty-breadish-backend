@@ -7,7 +7,7 @@ interface INew extends IMedia {
     content: string,
 }
 
-function isMediaIsNew(media: IMedia): media is IMedia {
+function isMediaIsNew(media: IMedia): media is INew {
     return (media as INew)?.id instanceof NewId &&
         typeof (media as INew)?.title === "string" &&
         typeof (media as INew)?.content === "string"

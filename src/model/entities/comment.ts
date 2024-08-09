@@ -8,6 +8,7 @@ import { isJSDocCommentContainingNode } from "typescript";
 import getComment from "@api/get/getComment";
 import createComment from "@api/post/createComment";
 import getMedia from "@api/get/getMedia";
+import deleteComment from "@api/delete/deleteComment";
 
 class Comment extends Media {
 
@@ -42,6 +43,10 @@ class Comment extends Media {
         return await updateComment(this._id, data)
     }
 
+    public async delete(): Promise<boolean | Error> {
+        return await deleteComment(this._id)
+    }
+
     // Static constructors
 
     public static async fromId(id: CommentId): Promise<Comment | Error> {
@@ -62,10 +67,10 @@ class Comment extends Media {
         }
 
         if (isMediaIsNew(media)) {
-            return new Error(`Media with this id(${id}) actually is new, but not comment`)
+            return new Error(`Media with this id(${id}) actually is a new, but not a comment`)
         }
 
-        return media
+        return new Comment(media as IComment)
     }
 
     public static async getCommentsPage(mediaId: MediaId, sortOrder: CommentsSortOrder, page: number): Promise<Array<Comment> | Error> {

@@ -10,6 +10,8 @@ import { Comment } from "./comment";
 import getUser from "@api/get/getUser";
 import createComment from "@api/post/createComment";
 import { Review } from "./review";
+import deleteUser from "@api/delete/deleteUser";
+import createReview from "@api/post/createReview";
 
 class User {
 
@@ -83,21 +85,31 @@ class User {
     }
 
     public async createComment(target: MediaId, content: string): Promise<Comment | Error> {
-        const comment: IComment | Error = await createComment(this._user.id, target, content)
+        const comment: Comment | Error = await Comment.create(this._user.id, target, content)
 
         if (comment instanceof Error) {
             return comment
         }
 
-        return Comment.create(this._user.id, target, content)
+        return comment
     }
 
     public async createReview(target: ItemId, content: string, rate: Rate): Promise<Review | Error> {
-        return new Error("Эта функция пока что не разрабатвывалась!")
+        const review: Review | Error = await Review.create(this._user.id, target, content, rate)
+
+        if (review instanceof Error) {
+            return review
+        }
+
+        return review
     }
 
     public async edit(data: { username?: string, passwordHash?: Hash, email?: Email }): Promise<void | Error> {
         return await updateUser(this._user.id, data)
+    }
+
+    public async delete(): Promise<boolean | Error> {
+        return await deleteUser(this._user.id)
     }
 
     // Static constructors
