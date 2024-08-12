@@ -1,5 +1,7 @@
 import bdClient from "@api/bdClient";
-import isEmpty from "helpers/isEmpty";
+import getNew from "@api/get/getNew";
+import { isEmpty } from "@helpers";
+import { INew } from "@interfaces";
 import { NewId } from "@primitives";
 import { QueryResult } from "pg";
 
@@ -9,10 +11,10 @@ export default async function updateNew(id: NewId, data: { title?: string, conte
             return new Error("There is nothing to do")
         }
 
-        const newWithId: QueryResult = await bdClient.query(`select count(*) from news where id=${id}`)
+        const newWithId: INew | Error = await getNew(id)
 
-        if (newWithId.rows[0].count == 0) {
-            return new Error(`New with id ${id} isn't exists`)
+        if (newWithId instanceof Error) {
+            return newWithId
         }
 
         const valueConverter: (key: string, value: string) => string = (_: string, value: string): string => {

@@ -1,5 +1,7 @@
 import bdClient from "@api/bdClient";
-import isEmpty from "helpers/isEmpty";
+import getComment from "@api/get/getComment";
+import { isEmpty } from "@helpers";
+import { IComment } from "@interfaces";
 import { CommentId } from "@primitives";
 import { QueryResult } from "pg";
 
@@ -9,10 +11,10 @@ export default async function updateComment(id: CommentId, data: { content?: str
             return new Error("There is nothing to do")
         }
 
-        const commentWithId: QueryResult = await bdClient.query(`select count(*) from comments where id=${id}`)
+        const commentWithId: IComment | Error = await getComment(id)
 
-        if (commentWithId.rows[0].count == 0) {
-            return new Error(`There is no comment with id ${id}`)
+        if (commentWithId instanceof Error) {
+            return commentWithId
         }
 
         const valueConverter: (key: string, value: any) => string = (_: string, value: any): string => {

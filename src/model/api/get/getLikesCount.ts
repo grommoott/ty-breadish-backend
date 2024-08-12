@@ -1,25 +1,13 @@
 import bdClient from "@api/bdClient"
-import { LikeType, LikeTypes } from "@enums"
-import { Id, ItemId, MediaId, ReviewId } from "@primitives"
+import { LikeType } from "@enums"
+import { Id } from "@primitives"
 import { QueryResult } from "pg"
-import getItem from "./getItem"
-import getMedia from "./getMedia"
-import getReview from "./getReview"
+import { IItem, IMedia, IReview } from "@interfaces"
+import getLikeParent from "./getLikeParent"
 
 export default async function getLikesCount(parentId: Id, type: LikeType): Promise<number | Error> {
     try {
-        let likeParent
-
-        switch (type) {
-            case LikeTypes.Item:
-                likeParent = await getItem(new ItemId(parentId.id))
-
-            case LikeTypes.Media:
-                likeParent = await getMedia(new MediaId(parentId.id))
-
-            case LikeTypes.Review:
-                likeParent = await getReview(new ReviewId(parentId.id))
-        }
+        const likeParent: IItem | IMedia | IReview | Error = await getLikeParent(parentId, type)
 
         if (likeParent instanceof Error) {
             return likeParent

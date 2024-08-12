@@ -1,5 +1,7 @@
 import bdClient from "@api/bdClient";
-import isEmpty from "helpers/isEmpty";
+import getRecipe from "@api/get/getRecipe";
+import { isEmpty } from "@helpers";
+import { IRecipe } from "@interfaces";
 import { ItemInfo, RecipeId } from "@primitives";
 import { QueryResult } from "pg";
 
@@ -9,10 +11,10 @@ export default async function updateRecipe(id: RecipeId, data: { name: string, d
             return new Error("There is nothing to do")
         }
 
-        const recipeWithId: QueryResult = await bdClient.query(`select count(*) from recipes where id=${id}`)
+        const recipeWithId: IRecipe | Error = await getRecipe(id)
 
-        if (recipeWithId.rows[0].count == 0) {
-            return new Error(`Recipe with id ${id} isn't exists`)
+        if (recipeWithId instanceof Error) {
+            return recipeWithId
         }
 
         const nameConverter: (name: string) => string = (name: string): string => {

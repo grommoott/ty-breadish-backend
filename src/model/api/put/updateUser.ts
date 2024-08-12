@@ -2,7 +2,7 @@ import bdClient from "@api/bdClient";
 import getUser from "@api/get/getUser";
 import getUserByEmail from "@api/get/getUserByEmail";
 import getUserByUsername from "@api/get/getUserByUsername";
-import isEmpty from "helpers/isEmpty";
+import { isEmpty } from "@helpers";
 import { IUser } from "@interfaces";
 import { Email, Hash, IBDPrimitive, UserId } from "@primitives";
 
@@ -15,7 +15,7 @@ export default async function updateUser(id: UserId, data: { username?: string, 
         const userWithId: IUser | Error = await getUser(id)
 
         if (userWithId instanceof Error) {
-            return new Error(`User with such id(${id}) isn't exists`)
+            return userWithId
         }
 
         const username: string | undefined = data.username
@@ -63,6 +63,6 @@ export default async function updateUser(id: UserId, data: { username?: string, 
 
         bdClient.query(`update users set ${setString} where id=${id} `)
     } catch (e) {
-        throw new Error("Error in updateUser request: " + e)
+        throw new Error("Error in updateUser request: " + e, { cause: 500 })
     }
 }

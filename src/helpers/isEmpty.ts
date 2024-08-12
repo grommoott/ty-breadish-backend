@@ -1,4 +1,4 @@
-export default function isEmpty(obj: object): boolean {
+function isEmpty(obj: object): boolean {
     let fields = 0
 
     for (const _ in obj) {
@@ -7,3 +7,5 @@ export default function isEmpty(obj: object): boolean {
 
     return fields == 0
 }
+
+export { isEmpty }

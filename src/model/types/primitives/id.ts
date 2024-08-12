@@ -69,6 +69,10 @@ class ItemId extends Id {
     private _: ItemId | null = null
 }
 
+class OrderId extends Id {
+    private _: ItemId | null = null
+}
+
 export {
     Id,
     CommentId,
@@ -80,5 +84,6 @@ export {
     ReviewId,
     UserId,
     MediaId,
-    ItemId
+    ItemId,
+    OrderId
 }

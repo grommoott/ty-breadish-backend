@@ -6,6 +6,7 @@ import { MediaId, Moment, NewId } from "@primitives"
 import { Media } from "./media"
 import updateNew from "@api/put/updateNew"
 import deleteNew from "@api/delete/deleteNew"
+import createNew from "@api/post/createNew"
 
 class New extends Media {
 
@@ -73,6 +74,16 @@ class New extends Media {
         }
 
         return new New(media as INew)
+    }
+
+    public static async create(title: string, content: string): Promise<New | Error> {
+        const aNew: INew | Error = await createNew(title, content)
+
+        if (aNew instanceof Error) {
+            return aNew
+        }
+
+        return new New(aNew)
     }
 
     private constructor({ id, title, content, mediaId, moment, isEdited }: INew) {

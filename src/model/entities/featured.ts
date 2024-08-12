@@ -1,5 +1,7 @@
 import deleteFeatured from "@api/delete/deleteFeatured"
 import getFeatured from "@api/get/getFeatured"
+import getUserFeatured from "@api/get/getUserFeatured"
+import createFeatured from "@api/post/createFeatured"
 import { ItemType } from "@enums"
 import { IFeatured } from "@interfaces"
 import { FeaturedId, ItemId, UserId } from "@primitives"
@@ -38,6 +40,26 @@ class Featured {
 
     public static async fromId(id: FeaturedId): Promise<Featured | Error> {
         const featured: IFeatured | Error = await getFeatured(id)
+
+        if (featured instanceof Error) {
+            return featured
+        }
+
+        return new Featured(featured)
+    }
+
+    public static async fromUser(id: UserId): Promise<Array<Featured> | Error> {
+        const featured: Array<IFeatured> | Error = await getUserFeatured(id)
+
+        if (featured instanceof Error) {
+            return featured
+        }
+
+        return featured.map(featured => new Featured(featured))
+    }
+
+    public static async create(from: UserId, target: ItemId, itemType: ItemType): Promise<Featured | Error> {
+        const featured: IFeatured | Error = await createFeatured(from, target, itemType)
 
         if (featured instanceof Error) {
             return featured

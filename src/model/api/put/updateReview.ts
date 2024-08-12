@@ -1,5 +1,7 @@
 import bdClient from "@api/bdClient";
-import isEmpty from "helpers/isEmpty";
+import getReview from "@api/get/getReview";
+import { isEmpty } from "@helpers";
+import { IReview } from "@interfaces";
 import { Rate, ReviewId } from "@primitives";
 import { QueryResult } from "pg";
 
@@ -9,10 +11,10 @@ export default async function updateReview(id: ReviewId, data: { content?: strin
             return new Error("There is nothing to do")
         }
 
-        const reviewWithId: QueryResult = await bdClient.query(`select count(*) from reviews where id=${id}`)
+        const reviewsWithId: IReview | Error = await getReview(id)
 
-        if (reviewWithId.rows[0].count == 0) {
-            return new Error(`There is no review with id ${id}`)
+        if (reviewsWithId instanceof Error) {
+            return reviewsWithId
         }
 
         const valueConverter: (key: string, value: any) => string = (key: string, value: any): string => {

@@ -1,5 +1,7 @@
 import deleteLike from "@api/delete/deleteLike"
 import getLike from "@api/get/getLike"
+import getUserLiked from "@api/get/getUserLiked"
+import createLike from "@api/post/createLike"
 import { LikeType } from "@enums"
 import { ILike } from "@interfaces"
 import { Id, LikeId, UserId } from "@primitives"
@@ -38,6 +40,26 @@ class Like {
 
     public static async fromId(id: LikeId): Promise<Like | Error> {
         const like: ILike | Error = await getLike(id)
+
+        if (like instanceof Error) {
+            return like
+        }
+
+        return new Like(like)
+    }
+
+    public static async fromUser(id: UserId): Promise<Array<Like> | Error> {
+        const likes: Array<ILike> | Error = await getUserLiked(id)
+
+        if (likes instanceof Error) {
+            return likes
+        }
+
+        return likes.map(like => new Like(like))
+    }
+
+    public static async create(from: UserId, target: Id, type: LikeType): Promise<Like | Error> {
+        const like: ILike | Error = await createLike(from, target, type)
 
         if (like instanceof Error) {
             return like

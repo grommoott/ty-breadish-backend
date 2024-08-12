@@ -1,7 +1,5 @@
 import { IMedia, isMediaIsNew } from "@interfaces";
 import { MediaId, Moment } from "@primitives";
-import { CommentsSortOrder } from "@enums";
-import { Comment } from "./comment";
 import getMedia from "@api/get/getMedia";
 
 class Media {

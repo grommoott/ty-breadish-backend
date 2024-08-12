@@ -6,6 +6,7 @@ import deleteProduct from "@api/delete/deleteProduct";
 import getProducts from "@api/get/getProducts";
 import getProduct from "@api/get/getProduct";
 import getItem from "@api/get/getItem";
+import createProduct from "@api/post/createProduct";
 
 class Product extends Item {
 
@@ -64,6 +65,16 @@ class Product extends Item {
         const products: Array<IProduct> = await getProducts()
 
         return products.map(product => new Product(product))
+    }
+
+    public static async create(price: Price, name: string, description: string, itemInfo: ItemInfo): Promise<Product | Error> {
+        const product: IProduct | Error = await createProduct(name, description, price, itemInfo)
+
+        if (product instanceof Error) {
+            return product
+        }
+
+        return new Product(product)
     }
 
     private constructor({ id, price, itemId, name, description, avgRate, itemInfo }: IProduct) {

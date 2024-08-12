@@ -1,5 +1,7 @@
 import bdClient from "@api/bdClient";
-import isEmpty from "helpers/isEmpty";
+import getProduct from "@api/get/getProduct";
+import { isEmpty } from "@helpers";
+import { IProduct } from "@interfaces";
 import { ItemInfo, Price, ProductId } from "@primitives";
 import { QueryResult } from "pg";
 
@@ -9,10 +11,10 @@ export default async function updateProduct(id: ProductId, data: { price?: Price
             return new Error("There is nothing to do")
         }
 
-        const productWithId: QueryResult = await bdClient.query(`select count(*) from products where id=${id}`)
+        const productWithId: IProduct | Error = await getProduct(id)
 
-        if (productWithId.rows[0].count == 0) {
-            return new Error(`Product with id ${id} isn't exists`)
+        if (productWithId instanceof Error) {
+            return productWithId
         }
 
         const nameConverter: (name: string) => string = (name: string): string => {
