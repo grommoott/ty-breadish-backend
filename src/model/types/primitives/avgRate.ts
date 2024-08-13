@@ -15,6 +15,10 @@ class AvgRate implements IBDPrimitive {
         return this._avgRate.toString()
     }
 
+    public serialize(): string {
+        return this._avgRate.toString()
+    }
+
     public constructor(avgRate: number) {
         let isValid: boolean = true
 

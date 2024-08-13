@@ -24,6 +24,10 @@ class Hash implements IBDPrimitive {
         return `'${this._hash.replaceAll("'", "''")}'`
     }
 
+    public serialize(): string {
+        return this._hash
+    }
+
     public constructor(value: string) {
         this._hash = value
     }

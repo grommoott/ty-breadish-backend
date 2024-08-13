@@ -1,8 +1,9 @@
 import getItem from "@api/get/getItem"
 import { IItem } from "@interfaces"
 import { AvgRate, ItemId, ItemInfo } from "@primitives"
+import { Entity } from "./entity"
 
-class Item {
+class Item extends Entity {
 
     // Private fields
 
@@ -42,7 +43,19 @@ class Item {
         return new Item(item)
     }
 
+    public serialize(): string {
+        return JSON.stringify({
+            itemId: this._item.itemId.id,
+            name: this._item.name,
+            description: this._item.description,
+            avgRate: this._item.avgRate.avgRate,
+            itemInfo: this._item.itemInfo
+        })
+    }
+
     protected constructor({ itemId, name, description, avgRate, itemInfo }: IItem) {
+        super()
+
         this._item = { itemId, name, description, avgRate, itemInfo }
     }
 }

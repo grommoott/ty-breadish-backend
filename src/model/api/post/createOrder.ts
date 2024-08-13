@@ -43,7 +43,7 @@ export default async function createOrder(from: UserId, orderType: OrderType, or
 
         const paymentId = "payment_id" // get it from yookassa
 
-        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${paymentId}', ${moment}, '${orderType}', '${JSON.stringify(orderInfo)}') returning *`)
+        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${paymentId}', ${moment}, '${orderType}', '${JSON.stringify(orderInfo)}', -1) returning *`)
         const order = responseOrders.rows[0]
 
         const responseProducts: QueryResult = await bdClient.query(`insert into order_products_ids values ${products.map(productId => `(default, ${order.id}, ${productId})`).join(", ")} returning *`)

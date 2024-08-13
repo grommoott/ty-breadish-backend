@@ -5,11 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getReviewsPage;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
+const _interfaces_1 = require("@interfaces");
 const _enums_1 = require("@enums");
 const config_1 = __importDefault(require("@api/config"));
-const _primitives_1 = require("@primitives");
+const getItem_1 = __importDefault(require("./getItem"));
 async function getReviewsPage(itemId, sortOrder, page) {
     try {
+        const itemWithId = await (0, getItem_1.default)(itemId);
+        if (itemWithId instanceof Error) {
+            return itemWithId;
+        }
         const response = await (() => {
             switch (sortOrder) {
                 case _enums_1.ReviewsSortOrders.OldFirst:
@@ -24,16 +29,7 @@ async function getReviewsPage(itemId, sortOrder, page) {
                     return bdClient_1.default.query(`select * from reviews order by rate limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
             }
         })();
-        return response.rows.map(review => {
-            return {
-                id: new _primitives_1.ReviewId(review.id),
-                from: new _primitives_1.UserId(review.from),
-                target: new _primitives_1.ItemId(review.target),
-                content: review.content,
-                rate: review.rate,
-                moment: new _primitives_1.Moment(review.moment)
-            };
-        });
+        return response.rows.map(_interfaces_1.queryRowToReview);
     }
     catch (e) {
         const msg = "Error in getReviewsPage request " + e;

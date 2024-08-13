@@ -5,8 +5,9 @@ import createLike from "@api/post/createLike"
 import { LikeType } from "@enums"
 import { ILike } from "@interfaces"
 import { Id, LikeId, UserId } from "@primitives"
+import { Entity } from "./entity"
 
-class Like {
+class Like extends Entity {
 
     // Private fields
 
@@ -68,7 +69,18 @@ class Like {
         return new Like(like)
     }
 
+    public serialize(): string {
+        return JSON.stringify({
+            id: this._like.id.id,
+            from: this._like.from.id,
+            target: this._like.target.id,
+            type: this._like.type
+        })
+    }
+
     private constructor({ id, from, target, type }: ILike) {
+        super()
+
         this._like = { id, from, target, type }
     }
 }

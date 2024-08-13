@@ -5,18 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getUserLiked;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
-const _primitives_1 = require("@primitives");
+const _interfaces_1 = require("@interfaces");
+const getUser_1 = __importDefault(require("./getUser"));
 async function getUserLiked(userId) {
     try {
+        const userWithId = await (0, getUser_1.default)(userId);
+        if (userWithId instanceof Error) {
+            return userWithId;
+        }
         const response = await bdClient_1.default.query(`select * from likes where "from"=${userId}`);
-        return response.rows.map(like => {
-            return {
-                id: new _primitives_1.LikeId(like.id),
-                from: new _primitives_1.UserId(like.from),
-                target: new _primitives_1.Id(like.target),
-                type: like.type
-            };
-        });
+        return response.rows.map(_interfaces_1.queryRowToLike);
     }
     catch (e) {
         const msg = "Error in getUserLiked request: " + e;

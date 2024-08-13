@@ -1,5 +1,6 @@
 interface IBDPrimitive {
-    toBDView: () => string
+    toBDView: () => string,
+    serialize: () => string
 }
 
 export { IBDPrimitive }

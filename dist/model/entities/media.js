@@ -1,26 +1,42 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-class Media {
-    _mediaId;
+exports.Media = void 0;
+const getMedia_1 = __importDefault(require("@api/get/getMedia"));
+const entity_1 = require("./entity");
+class Media extends entity_1.Entity {
+    // Private fields
+    _media;
+    // Getters
     get mediaId() {
-        return this._mediaId;
+        return this._media.mediaId;
     }
-    async getCommentsCount() {
-        return new Promise((resolve, _) => resolve(0));
+    get moment() {
+        return this._media.moment;
     }
-    _pagesLoaded = 0;
-    async loadNextCommentPage() {
-        return new Promise((resolve, _) => resolve());
+    get isEdited() {
+        return this._media.isEdited;
     }
-    _loadedComments = new Array();
-    get loadedComments() {
-        return this._loadedComments.map((a) => a);
+    // Static constructors
+    static async fromMediaId(id) {
+        const media = await (0, getMedia_1.default)(id);
+        if (media instanceof Error) {
+            return media;
+        }
+        return new Media(media);
     }
-    async getLikesCount() {
-        return new Promise((resolve, _) => resolve(0));
+    serialize() {
+        return JSON.stringify({
+            mediaId: this._media.mediaId.id,
+            moment: this._media.moment.moment,
+            idEdited: this._media.isEdited
+        });
     }
-    constructor(mediaId) {
-        this._mediaId = mediaId;
+    constructor({ mediaId, moment, isEdited }) {
+        super();
+        this._media = { mediaId, moment, isEdited };
     }
 }
-exports.default = Media;
+exports.Media = Media;

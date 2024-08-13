@@ -14,24 +14,23 @@ async function updateUser(id, data) {
         if ((0, _helpers_1.isEmpty)(data)) {
             return new Error("There is nothing to do");
         }
+        const userWithId = await (0, getUser_1.default)(id);
+        if (userWithId instanceof Error) {
+            return userWithId;
+        }
         const username = data.username;
-        const passwordHash = data.passwordHash;
         const email = data.email;
         if (username) {
             const userWithUsername = await (0, getUserByUsername_1.default)(username);
-            if (!(userWithUsername instanceof Error)) {
+            if (!(userWithUsername instanceof Error) && userWithUsername.id.id != id.id) {
                 return new Error(`User with such username(${username}) is already exists`);
             }
         }
         if (email) {
             const userWithEmail = await (0, getUserByEmail_1.default)(email);
-            if (!(userWithEmail instanceof Error)) {
+            if (!(userWithEmail instanceof Error) && userWithEmail.id.id != id.id) {
                 return new Error(`User with such email(${email}) is already exists`);
             }
-        }
-        const userWithId = await (0, getUser_1.default)(id);
-        if (userWithId instanceof Error) {
-            return new Error(`User with such id(${id}) isn't exists`);
         }
         const nameConverter = (name) => {
             switch (name) {
@@ -52,9 +51,9 @@ async function updateUser(id, data) {
         const setString = Object.entries(data).map(([key, val]) => {
             return `${nameConverter(key)}=${valueConverter(key, val)}`;
         }).join(",");
-        bdClient_1.default.query(`update users set ${setString} where id = ${id} `);
+        bdClient_1.default.query(`update users set ${setString} where id=${id} `);
     }
     catch (e) {
-        throw new Error("Error in updateUser request: " + e);
+        throw new Error("Error in updateUser request: " + e, { cause: 500 });
     }
 }

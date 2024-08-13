@@ -5,11 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = updateReview;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
+const getReview_1 = __importDefault(require("@api/get/getReview"));
+const _helpers_1 = require("@helpers");
 async function updateReview(id, data) {
     try {
-        const reviewWithId = await bdClient_1.default.query(`select * from reviews where id=${id}`);
-        if (reviewWithId.rowCount == 0) {
-            return new Error(`There is no review with id ${id}`);
+        if ((0, _helpers_1.isEmpty)(data)) {
+            return new Error("There is nothing to do");
+        }
+        const reviewsWithId = await (0, getReview_1.default)(id);
+        if (reviewsWithId instanceof Error) {
+            return reviewsWithId;
         }
         const valueConverter = (key, value) => {
             return `'${value}'`;

@@ -12,6 +12,9 @@ class Price {
     toBDView() {
         return this._price.toString();
     }
+    serialize() {
+        return this._price.toString();
+    }
     constructor(price) {
         this._price = price;
     }

@@ -54,6 +54,10 @@ class ItemInfo implements IBDPrimitive {
         return `'${this.toJSON().replaceAll("'", "''")}'`
     }
 
+    public serialize(): string {
+        return JSON.stringify(this)
+    }
+
     public constructor(cookingMethod: CookingMethod, ingredients: Ingredient[], pfc: PFC) {
         this.cookingMethod = cookingMethod
         this.ingredients = ingredients

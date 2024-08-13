@@ -6,8 +6,9 @@ import updateReview from "@api/put/updateReview"
 import { ReviewsSortOrder } from "@enums"
 import { IReview } from "@interfaces"
 import { ItemId, Moment, Rate, ReviewId, UserId } from "@primitives"
+import { Entity } from "./entity"
 
-class Review {
+class Review extends Entity {
 
     // Private fields
 
@@ -81,7 +82,20 @@ class Review {
         return new Review(review)
     }
 
+    public serialize(): string {
+        return JSON.stringify({
+            id: this._review.id.id,
+            from: this._review.from.id,
+            target: this._review.target.id,
+            content: this._review.content,
+            moment: this._review.moment.moment,
+            rate: this._review.rate
+        })
+    }
+
     private constructor({ id, from, target, content, moment, rate }: IReview) {
+        super()
+
         this._review = { id, from, target, content, moment, rate }
     }
 }

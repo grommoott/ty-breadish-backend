@@ -5,20 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getUserFeatured;
 const bdClient_js_1 = __importDefault(require("@api/bdClient.js"));
-const _primitives_1 = require("@primitives");
+const _interfaces_1 = require("@interfaces");
+const getUser_1 = __importDefault(require("./getUser"));
 async function getUserFeatured(userId) {
     try {
-        const response = await bdClient_js_1.default.query(`select * from featured where "from"=${userId}`);
-        const result = new Array();
-        for (let featured of response.rows) {
-            result.push({
-                id: new _primitives_1.FeaturedId(featured.id),
-                from: new _primitives_1.UserId(featured.from),
-                target: new _primitives_1.ItemId(featured.target),
-                itemType: featured.item_type
-            });
+        const userWithId = await (0, getUser_1.default)(userId);
+        if (userWithId instanceof Error) {
+            return userWithId;
         }
-        return result;
+        const response = await bdClient_js_1.default.query(`select * from featured where "from"=${userId}`);
+        return response.rows.map(_interfaces_1.queryRowToFeatured);
     }
     catch (e) {
         const msg = "Error in getUserFeatured request: " + e;

@@ -72,6 +72,17 @@ class Recipe extends Item {
         return new Recipe(recipe)
     }
 
+    public serialize(): string {
+        return JSON.stringify({
+            id: this.id.id,
+            itemId: this.itemId.id,
+            name: this.name,
+            description: this.description,
+            avgRate: this.avgRate.avgRate,
+            itemInfo: this.itemInfo
+        })
+    }
+
     private constructor({ id, itemId, name, description, avgRate, itemInfo }: IRecipe) {
         super({ itemId, name, description, avgRate, itemInfo })
 

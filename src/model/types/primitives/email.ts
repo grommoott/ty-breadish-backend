@@ -15,6 +15,10 @@ class Email implements IBDPrimitive {
         return `'${this._email.replaceAll("'", "''")}'`
     }
 
+    public serialize(): string {
+        return this._email
+    }
+
     public constructor(email: string) {
         let isValid: boolean = true
         const adressArr: Array<string> = email.split("@")

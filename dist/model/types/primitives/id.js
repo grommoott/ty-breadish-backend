@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ItemId = exports.MediaId = exports.UserId = exports.ReviewId = exports.RecipeId = exports.ProductId = exports.NewId = exports.LikeId = exports.FeaturedId = exports.CommentId = exports.Id = void 0;
+exports.SessionId = exports.OrderId = exports.ItemId = exports.MediaId = exports.UserId = exports.ReviewId = exports.RecipeId = exports.ProductId = exports.NewId = exports.LikeId = exports.FeaturedId = exports.CommentId = exports.Id = void 0;
 class Id {
     _id;
     get id() {
@@ -10,6 +10,9 @@ class Id {
         return this._id.toString();
     }
     toBDView() {
+        return this._id.toString();
+    }
+    serialize() {
         return this._id.toString();
     }
     constructor(id) {
@@ -63,3 +66,11 @@ class ItemId extends Id {
     _ = null;
 }
 exports.ItemId = ItemId;
+class OrderId extends Id {
+    _ = null;
+}
+exports.OrderId = OrderId;
+class SessionId extends Id {
+    _ = null;
+}
+exports.SessionId = SessionId;

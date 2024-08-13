@@ -6,8 +6,9 @@ import { OrderType, OrderTypes } from "@enums"
 import { IOrder } from "@interfaces"
 import { Moment, OrderId, ProductId, UserId } from "@primitives"
 import { CourierOrderInfo, OrderInfo, PickUpOrderInfo } from "model/types/primitives/orderInfo"
+import { Entity } from "./entity"
 
-class Order {
+class Order extends Entity {
 
     // Private fields
 
@@ -75,8 +76,23 @@ class Order {
         return new Order(order)
     }
 
-    protected constructor({ id, from, paymentId, moment, orderType, orderInfo, productIds }: IOrder) {
-        this._order = { id, from, paymentId, moment, orderType, orderInfo, productIds }
+    public serialize(): string {
+        return JSON.stringify({
+            id: this._order.id.id,
+            from: this._order.from.id,
+            paymentId: this._order.paymentId,
+            moment: this._order.moment.moment,
+            orderType: this._order.orderType,
+            orderInfo: this._order.orderInfo,
+            productIds: this._order.productIds.map(productId => productId.id),
+            readyMoment: this._order.readyMoment.moment
+        })
+    }
+
+    protected constructor({ id, from, paymentId, moment, orderType, orderInfo, productIds, readyMoment }: IOrder) {
+        super()
+
+        this._order = { id, from, paymentId, moment, orderType, orderInfo, productIds, readyMoment }
     }
 }
 

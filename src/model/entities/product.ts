@@ -77,6 +77,18 @@ class Product extends Item {
         return new Product(product)
     }
 
+    public serialize(): string {
+        return JSON.stringify({
+            id: this.id.id,
+            price: this.price.price,
+            itemId: this.itemId.id,
+            name: this.name,
+            description: this.description,
+            avgRate: this.avgRate.avgRate,
+            itemInfo: this.itemInfo
+        })
+    }
+
     private constructor({ id, price, itemId, name, description, avgRate, itemInfo }: IProduct) {
         super({ itemId, name, description, avgRate, itemInfo })
 

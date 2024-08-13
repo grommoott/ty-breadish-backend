@@ -3,10 +3,9 @@ import getOrder from "@api/get/getOrder";
 import { OrderType, OrderTypes } from "@enums";
 import { isEmpty } from "@helpers";
 import { IOrder } from "@interfaces";
-import { OrderId } from "@primitives";
-import { isOrderInfoIsCourierOrderInfo, isOrderInfoIsPickUpOrderInfo, OrderInfo } from "model/types/primitives/orderInfo";
+import { IBDPrimitive, isOrderInfoIsCourierOrderInfo, isOrderInfoIsPickUpOrderInfo, Moment, OrderId, OrderInfo } from "@primitives";
 
-export default async function updateOrder(id: OrderId, data: { orderType?: OrderType, orderInfo?: OrderInfo }): Promise<void | Error> {
+export default async function updateOrder(id: OrderId, data: { orderType?: OrderType, orderInfo?: OrderInfo, readyMoment?: Moment }): Promise<void | Error> {
     try {
         if (isEmpty(data)) {
             return new Error("There is nothing to do")
@@ -48,6 +47,9 @@ export default async function updateOrder(id: OrderId, data: { orderType?: Order
                 case "orderInfo":
                     return "order_info"
 
+                case "readyMoment":
+                    return "ready_moment"
+
                 default:
                     return name
             }
@@ -57,6 +59,9 @@ export default async function updateOrder(id: OrderId, data: { orderType?: Order
             switch (key) {
                 case "orderInfo":
                     return `'${JSON.stringify(value)}'`
+
+                case "readyMoment":
+                    return `${(value as IBDPrimitive).toBDView()}`
 
                 default:
                     return `'${value}'`

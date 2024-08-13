@@ -26,6 +26,9 @@ class ItemInfo {
     toBDView() {
         return `'${this.toJSON().replaceAll("'", "''")}'`;
     }
+    serialize() {
+        return JSON.stringify(this);
+    }
     constructor(cookingMethod, ingredients, pfc) {
         this.cookingMethod = cookingMethod;
         this.ingredients = ingredients;

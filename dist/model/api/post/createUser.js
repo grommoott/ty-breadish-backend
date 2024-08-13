@@ -7,6 +7,7 @@ exports.default = createUser;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getUserByEmail_1 = __importDefault(require("@api/get/getUserByEmail"));
 const getUserByUsername_1 = __importDefault(require("@api/get/getUserByUsername"));
+const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
 async function createUser(username, passwordHash, email, moment = null) {
     try {
@@ -27,14 +28,7 @@ async function createUser(username, passwordHash, email, moment = null) {
             }
         })();
         const response = await bdClient_1.default.query(`insert into users values (default, '${username}', '${passwordHash}', '${email}', ${_moment}) returning *`);
-        const user = response.rows[0];
-        return {
-            id: new _primitives_1.UserId(user.id),
-            username: user.username,
-            passwordHash: new _primitives_1.Hash(user.password_hash),
-            email: new _primitives_1.Email(user.email),
-            moment: new _primitives_1.Moment(user.moment)
-        };
+        return (0, _interfaces_1.queryRowToUser)(response.rows[0]);
     }
     catch (e) {
         const msg = "Error in createUser request" + e;

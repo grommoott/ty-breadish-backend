@@ -22,6 +22,9 @@ class Hash {
     toBDView() {
         return `'${this._hash.replaceAll("'", "''")}'`;
     }
+    serialize() {
+        return this._hash;
+    }
     constructor(value) {
         this._hash = value;
     }

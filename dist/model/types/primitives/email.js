@@ -12,6 +12,9 @@ class Email {
     toBDView() {
         return `'${this._email.replaceAll("'", "''")}'`;
     }
+    serialize() {
+        return this._email;
+    }
     constructor(email) {
         let isValid = true;
         const adressArr = email.split("@");

@@ -15,6 +15,10 @@ class Price implements IBDPrimitive {
         return this._price.toString()
     }
 
+    public serialize(): string {
+        return this._price.toString()
+    }
+
     public constructor(price: number) {
         this._price = price
     }

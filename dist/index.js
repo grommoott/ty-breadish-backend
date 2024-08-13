@@ -8,13 +8,15 @@ require("module-alias/register");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const _primitives_1 = require("@primitives");
-const updateReview_1 = __importDefault(require("@api/put/updateReview"));
+const jwt_1 = __importDefault(require("@helpers/jwt"));
 // Basic fields declaration and initialization
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8443;
 // Middleware connection
 app.use((0, cors_1.default)());
-(0, updateReview_1.default)(new _primitives_1.ReviewId(3), { content: "Так себе если честно(", rate: 2 });
+app.use((req, res, next) => {
+});
+console.log(jwt_1.default.createAccessToken(new _primitives_1.UserId(0)));
 app.get("/", async (_, res) => {
     res.sendStatus(200);
 });

@@ -15,6 +15,9 @@ class Moment {
     toBDView() {
         return this._moment.toString();
     }
+    serialize() {
+        return this._moment.toString();
+    }
     constructor(moment) {
         this._moment = moment;
     }

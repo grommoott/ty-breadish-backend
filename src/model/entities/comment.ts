@@ -93,6 +93,18 @@ class Comment extends Media {
         return new Comment(comment)
     }
 
+    public override serialize(): string {
+        return JSON.stringify({
+            id: this._id.id,
+            from: this._from.id,
+            target: this._target.id,
+            content: this._content,
+            mediaId: this.mediaId.id,
+            moment: this.moment.moment,
+            isEdited: this.isEdited
+        })
+    }
+
     private constructor({ id, from, target, content, mediaId, moment, isEdited }: IComment) {
         super({ mediaId, moment, isEdited })
 

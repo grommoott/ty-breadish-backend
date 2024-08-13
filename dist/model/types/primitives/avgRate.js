@@ -12,6 +12,9 @@ class AvgRate {
     toBDView() {
         return this._avgRate.toString();
     }
+    serialize() {
+        return this._avgRate.toString();
+    }
     constructor(avgRate) {
         let isValid = true;
         isValid = isValid && Math.round(avgRate) - avgRate == 0;

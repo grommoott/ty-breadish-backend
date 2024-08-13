@@ -1,8 +1,9 @@
 import { IMedia, isMediaIsNew } from "@interfaces";
 import { MediaId, Moment } from "@primitives";
 import getMedia from "@api/get/getMedia";
+import { Entity } from "./entity";
 
-class Media {
+class Media extends Entity {
 
     // Private fields
 
@@ -34,7 +35,17 @@ class Media {
         return new Media(media)
     }
 
+    public serialize(): string {
+        return JSON.stringify({
+            mediaId: this._media.mediaId.id,
+            moment: this._media.moment.moment,
+            idEdited: this._media.isEdited
+        })
+    }
+
     protected constructor({ mediaId, moment, isEdited }: IMedia) {
+        super()
+
         this._media = { mediaId, moment, isEdited }
     }
 }

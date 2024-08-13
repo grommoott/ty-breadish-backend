@@ -9,7 +9,8 @@ interface IOrder {
     moment: Moment,
     orderType: OrderType,
     orderInfo: OrderInfo,
-    productIds: Array<ProductId>
+    productIds: Array<ProductId>,
+    readyMoment: Moment
 }
 
 function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
@@ -21,7 +22,8 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
         "order_type" in orderRow &&
         "order_info" in orderRow &&
         "address" in orderRow.orderInfo &&
-        "state" in orderRow.orderInfo
+        "state" in orderRow.orderInfo &&
+        "ready_moment" in orderRow
     )) {
         throw new Error("Invalid order row to convert into Order")
     }
@@ -64,7 +66,8 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
         moment: new Moment(orderRow.moment),
         orderType,
         orderInfo,
-        productIds: productsRows.map(row => new ProductId(row.product))
+        productIds: productsRows.map(row => new ProductId(row.product)),
+        readyMoment: new Moment(orderRow.ready_moment)
     }
 }
 

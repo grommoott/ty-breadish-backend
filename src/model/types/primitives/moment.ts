@@ -19,6 +19,10 @@ class Moment implements IBDPrimitive {
         return this._moment.toString()
     }
 
+    public serialize(): string {
+        return this._moment.toString()
+    }
+
     public constructor(moment: number) {
         this._moment = moment
     }

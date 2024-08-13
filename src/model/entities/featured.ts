@@ -5,8 +5,9 @@ import createFeatured from "@api/post/createFeatured"
 import { ItemType } from "@enums"
 import { IFeatured } from "@interfaces"
 import { FeaturedId, ItemId, UserId } from "@primitives"
+import { Entity } from "./entity"
 
-class Featured {
+class Featured extends Entity {
 
     // Private fields
 
@@ -68,7 +69,18 @@ class Featured {
         return new Featured(featured)
     }
 
+    public serialize(): string {
+        return JSON.stringify({
+            id: this._featured.id.id,
+            from: this._featured.from.id,
+            target: this._featured.target.id,
+            itemType: this._featured.itemType
+        })
+    }
+
     private constructor({ id, from, target, itemType }: IFeatured) {
+        super()
+
         this._featured = { id, from, target, itemType }
     }
 }

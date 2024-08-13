@@ -15,6 +15,10 @@ class Id implements IBDPrimitive {
         return this._id.toString()
     }
 
+    public serialize(): string {
+        return this._id.toString()
+    }
+
     public constructor(id: number) {
         let isValid = true
 
@@ -70,7 +74,11 @@ class ItemId extends Id {
 }
 
 class OrderId extends Id {
-    private _: ItemId | null = null
+    private _: OrderId | null = null
+}
+
+class SessionId extends Id {
+    private _: SessionId | null = null
 }
 
 export {
@@ -85,5 +93,6 @@ export {
     UserId,
     MediaId,
     ItemId,
-    OrderId
+    OrderId,
+    SessionId
 }

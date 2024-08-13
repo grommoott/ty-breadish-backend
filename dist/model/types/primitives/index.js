@@ -23,3 +23,4 @@ __exportStar(require("./price"), exports);
 __exportStar(require("./rate"), exports);
 __exportStar(require("./itemInfo"), exports);
 __exportStar(require("./bdPrimitive"), exports);
+__exportStar(require("./orderInfo"), exports);

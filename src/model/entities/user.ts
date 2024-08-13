@@ -1,24 +1,21 @@
 import getUserByUsername from "@api/get/getUserByUsername";
-import getUserFeatured from "@api/get/getUserFeatured";
-import getUserLiked from "@api/get/getUserLiked";
 import getUserRole from "@api/get/getUserRole";
 import updateUser from "@api/put/updateUser";
 import { ItemType, LikeType, OrderType, Role } from "@enums";
-import { IComment, IFeatured, ILike, IUser } from "@interfaces";
+import { IFeatured, ILike, IUser } from "@interfaces";
 import { Email, Hash, Id, ItemId, MediaId, Moment, ProductId, Rate, UserId } from "@primitives";
 import { Comment } from "./comment";
 import getUser from "@api/get/getUser";
-import createComment from "@api/post/createComment";
 import { Review } from "./review";
 import deleteUser from "@api/delete/deleteUser";
-import createReview from "@api/post/createReview";
 import createUser from "@api/post/createUser";
 import { Like } from "./like";
 import { Featured } from "./featured";
 import { OrderInfo } from "model/types/primitives/orderInfo";
 import { Order } from "./order";
+import { Entity } from "./entity";
 
-class User {
+class User extends Entity {
 
     // Private field
 
@@ -185,7 +182,19 @@ class User {
         return new User(user)
     }
 
+    public serialize(): string {
+        return JSON.stringify({
+            id: this._user.id.id,
+            username: this._user.username,
+            passwordHash: this._user.passwordHash.hash,
+            email: this._user.email.email,
+            moment: this._user.moment.moment
+        })
+    }
+
     private constructor({ id, username, passwordHash, email, moment }: IUser) {
+        super()
+
         this._user = { id, username, passwordHash, email, moment }
     }
 }
