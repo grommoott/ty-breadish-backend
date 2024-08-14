@@ -1,15 +1,16 @@
 import bdClient from "@api/bdClient";
 import getSessionByUserDevice from "@api/get/getSessionByUserDevice";
+import { pgFormat } from "@helpers";
 import { ISession, queryRowToSession } from "@interfaces";
 import { Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createSession(userId: UserId, refreshTokenId: string, deviceId: string, moment: Moment | null = null): Promise<ISession | Error> {
+export default async function createSession(userId: UserId, deviceId: string, moment: Moment | null = null): Promise<ISession | Error> {
     try {
         const sessionWithUserDevice: ISession | Error = await getSessionByUserDevice(userId, deviceId)
 
-        if (sessionWithUserDevice instanceof Error) {
-            return sessionWithUserDevice
+        if (!(sessionWithUserDevice instanceof Error)) {
+            return new Error(`There is already session with userId ${userId} and deviceId ${deviceId}`)
         }
 
         const _moment: Moment = (() => {
@@ -20,7 +21,7 @@ export default async function createSession(userId: UserId, refreshTokenId: stri
             }
         })()
 
-        const response: QueryResult = await bdClient.query(`insert into sessions values (default, ${userId}, '${refreshTokenId}', '${deviceId}', ${_moment}) returning * `)
+        const response: QueryResult = await bdClient.query(`insert into sessions values (default, ${userId}, NULL, '${pgFormat(deviceId)}', ${_moment}) returning *`)
 
         return queryRowToSession(response.rows[0])
     } catch (e) {

@@ -19,7 +19,11 @@ class Id implements IBDPrimitive {
         return this._id.toString()
     }
 
-    public constructor(id: number) {
+    public constructor(id: number | string) {
+        if (typeof id === "string") {
+            id = parseInt(id)
+        }
+
         let isValid = true
 
         isValid = isValid && Math.round(id) - id == 0

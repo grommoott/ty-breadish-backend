@@ -1,6 +1,7 @@
 import bdClient from "@api/bdClient";
 import getItem from "@api/get/getItem";
 import getUser from "@api/get/getUser";
+import { pgFormat } from "@helpers";
 import { IItem, IReview, IUser, queryRowToReview } from "@interfaces";
 import { ItemId, Moment, Rate, ReviewId, UserId } from "@primitives";
 import { QueryResult } from "pg";
@@ -33,7 +34,7 @@ export default async function createReview(from: UserId, target: ItemId, content
             }
         })()
 
-        const response: QueryResult = await bdClient.query(`insert into reviews values (default, ${from}, ${target}, '${content}', '${rate}', ${_moment}) returning *`)
+        const response: QueryResult = await bdClient.query(`insert into reviews values (default, ${from}, ${target}, '${pgFormat(content)}', '${pgFormat(rate)}', ${_moment}) returning *`)
 
         return queryRowToReview(response.rows[0])
     } catch (e) {

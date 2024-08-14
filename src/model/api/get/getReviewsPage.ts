@@ -1,10 +1,11 @@
 import bdClient from "@api/bdClient"
 import { IItem, IReview, queryRowToReview } from "@interfaces"
-import { ReviewsSortOrder, ReviewsSortOrders } from "@enums"
+import { LikeTypes, ReviewsSortOrder, ReviewsSortOrders } from "@enums"
 import config from "@api/config"
 import { QueryResult } from "pg"
 import { ItemId, Moment, ReviewId, UserId } from "@primitives"
 import getItem from "./getItem"
+import { pgFormat } from "@helpers"
 
 export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsSortOrder, page: number): Promise<Array<IReview> | Error> {
     try {
@@ -23,7 +24,7 @@ export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsS
                     return bdClient.query(`select * from reviews order by moment desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
 
                 case ReviewsSortOrders.LikedFirst:
-                    return bdClient.query(`select * from reviews order by (select count(*) from likes where target=${itemId} and type='review') desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
+                    return bdClient.query(`select * from reviews order by (select count(*) from likes where target=${itemId} and type='${pgFormat(LikeTypes.Review)}') desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
 
                 case ReviewsSortOrders.RatedFirst:
                     return bdClient.query(`select * from reviews order by rate desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)

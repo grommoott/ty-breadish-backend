@@ -11,8 +11,8 @@ const _primitives_1 = require("@primitives");
 async function createSession(userId, refreshTokenId, deviceId, moment = null) {
     try {
         const sessionWithUserDevice = await (0, getSessionByUserDevice_1.default)(userId, deviceId);
-        if (sessionWithUserDevice instanceof Error) {
-            return sessionWithUserDevice;
+        if (!(sessionWithUserDevice instanceof Error)) {
+            return new Error(`There is already session with userId ${userId} and deviceId ${deviceId}`);
         }
         const _moment = (() => {
             if (moment === null) {

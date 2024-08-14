@@ -1,6 +1,7 @@
 import bdClient from "@api/bdClient";
 import getUserByEmail from "@api/get/getUserByEmail";
 import getUserByUsername from "@api/get/getUserByUsername";
+import { pgFormat } from "@helpers";
 import { IUser, queryRowToUser } from "@interfaces";
 import { Email, Hash, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
@@ -27,7 +28,7 @@ export default async function createUser(username: string, passwordHash: Hash, e
             }
         })()
 
-        const response: QueryResult = await bdClient.query(`insert into users values (default, '${username}', '${passwordHash}', '${email}', ${_moment}) returning *`)
+        const response: QueryResult = await bdClient.query(`insert into users values (default, '${pgFormat(username)}', '${pgFormat(passwordHash)}', '${pgFormat(email)}', ${_moment}) returning *`)
 
         return queryRowToUser(response.rows[0])
     } catch (e) {

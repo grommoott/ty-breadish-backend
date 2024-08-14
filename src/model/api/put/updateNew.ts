@@ -1,6 +1,6 @@
 import bdClient from "@api/bdClient";
 import getNew from "@api/get/getNew";
-import { isEmpty } from "@helpers";
+import { isEmpty, pgFormat } from "@helpers";
 import { INew } from "@interfaces";
 import { NewId } from "@primitives";
 import { QueryResult } from "pg";
@@ -18,7 +18,7 @@ export default async function updateNew(id: NewId, data: { title?: string, conte
         }
 
         const valueConverter: (key: string, value: string) => string = (_: string, value: string): string => {
-            return `'${value}'`
+            return `'${pgFormat(value)}'`
         }
 
         const setString = Object.entries(data).map(([key, val]) => {

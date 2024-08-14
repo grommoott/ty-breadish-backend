@@ -23,7 +23,11 @@ class Moment implements IBDPrimitive {
         return this._moment.toString()
     }
 
-    public constructor(moment: number) {
+    public constructor(moment: number | string) {
+        if (typeof moment === "string") {
+            moment = parseInt(moment)
+        }
+
         this._moment = moment
     }
 }

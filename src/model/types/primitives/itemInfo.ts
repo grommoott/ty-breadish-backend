@@ -1,3 +1,4 @@
+import { pgFormat } from "@helpers"
 import { CookingMethod } from "../enums/itemInfo/cookingMethod"
 import { Ingredient } from "../enums/itemInfo/ingredient"
 import { IBDPrimitive } from "./bdPrimitive"
@@ -51,7 +52,7 @@ class ItemInfo implements IBDPrimitive {
     }
 
     public toBDView(): string {
-        return `'${this.toJSON().replaceAll("'", "''")}'`
+        return `'${pgFormat(this.toJSON())}'`
     }
 
     public serialize(): string {

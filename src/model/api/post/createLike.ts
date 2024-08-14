@@ -2,6 +2,7 @@ import bdClient from "@api/bdClient";
 import getLikeParent from "@api/get/getLikeParent";
 import getUser from "@api/get/getUser";
 import { LikeType, LikeTypes } from "@enums";
+import { pgFormat } from "@helpers";
 import { IItem, ILike, IMedia, IReview, IUser, queryRowToLike } from "@interfaces";
 import { Id, UserId } from "@primitives";
 import { QueryResult } from "pg";
@@ -20,13 +21,13 @@ export default async function createLike(from: UserId, target: Id, type: LikeTyp
             return likeParent
         }
 
-        const likes: QueryResult = await bdClient.query(`select * from likes where "from"=${from} and target=${target} and type='${type}'`)
+        const likes: QueryResult = await bdClient.query(`select * from likes where "from"=${from} and target=${target} and type='${pgFormat(type)}'`)
 
         if (likes.rowCount != 0) {
             return new Error(`There is already like from ${from} and with target ${target}(${type})`)
         }
 
-        const response: QueryResult = await bdClient.query(`insert into likes values (default, ${from}, ${target}, '${type}') returning *`)
+        const response: QueryResult = await bdClient.query(`insert into likes values (default, ${from}, ${target}, '${pgFormat(type)}') returning *`)
 
         return queryRowToLike(response.rows[0])
     } catch (e) {

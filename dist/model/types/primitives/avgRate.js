@@ -16,6 +16,9 @@ class AvgRate {
         return this._avgRate.toString();
     }
     constructor(avgRate) {
+        if (typeof avgRate === "string") {
+            avgRate = parseFloat(avgRate);
+        }
         let isValid = true;
         isValid = isValid && Math.round(avgRate) - avgRate == 0;
         isValid = isValid && (avgRate >= 1 && avgRate <= 5 || avgRate == -1);

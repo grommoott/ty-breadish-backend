@@ -1,3 +1,4 @@
+import { pgFormat } from "@helpers"
 import { IBDPrimitive } from "./bdPrimitive"
 
 class Email implements IBDPrimitive {
@@ -12,7 +13,7 @@ class Email implements IBDPrimitive {
     }
 
     public toBDView(): string {
-        return `'${this._email.replaceAll("'", "''")}'`
+        return `'${pgFormat(this._email)}'`
     }
 
     public serialize(): string {
@@ -22,14 +23,14 @@ class Email implements IBDPrimitive {
     public constructor(email: string) {
         let isValid: boolean = true
         const adressArr: Array<string> = email.split("@")
-        const urlArr: Array<string> = adressArr[1].split(".")
+        const urlArr: Array<string> = adressArr[1]?.split(".")
 
-        isValid = isValid && adressArr.length == 2
-        isValid = isValid && adressArr[0].length > 0
-        isValid = isValid && adressArr[1].length > 0
-        isValid = isValid && urlArr.length == 2
+        isValid = isValid && adressArr?.length == 2
+        isValid = isValid && adressArr[0]?.length > 0
+        isValid = isValid && adressArr[1]?.length > 0
+        isValid = isValid && urlArr?.length == 2
 
-        urlArr.map((str) => {
+        urlArr?.map((str) => {
             isValid = isValid && str.length > 0
         })
 

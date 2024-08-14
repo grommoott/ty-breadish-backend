@@ -4,6 +4,7 @@ import { Id } from "@primitives"
 import { QueryResult } from "pg"
 import { IItem, IMedia, IReview } from "@interfaces"
 import getLikeParent from "./getLikeParent"
+import { pgFormat } from "@helpers"
 
 export default async function getLikesCount(parentId: Id, type: LikeType): Promise<number | Error> {
     try {
@@ -13,7 +14,7 @@ export default async function getLikesCount(parentId: Id, type: LikeType): Promi
             return likeParent
         }
 
-        const response: QueryResult = await bdClient.query(`select count(*) from likes where target=${parentId} and type='${type}'`)
+        const response: QueryResult = await bdClient.query(`select count(*) from likes where target=${parentId} and type='${pgFormat(type)}'`)
 
         return response.rows[0].count
     } catch (e) {

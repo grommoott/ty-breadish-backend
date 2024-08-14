@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt"
 import { IBDPrimitive } from "./bdPrimitive"
+import { pgFormat } from "@helpers"
 
 class Hash implements IBDPrimitive {
     private _hash: string
@@ -21,7 +22,7 @@ class Hash implements IBDPrimitive {
     }
 
     public toBDView(): string {
-        return `'${this._hash.replaceAll("'", "''")}'`
+        return `'${pgFormat(this._hash)}'`
     }
 
     public serialize(): string {

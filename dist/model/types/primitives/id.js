@@ -16,6 +16,9 @@ class Id {
         return this._id.toString();
     }
     constructor(id) {
+        if (typeof id === "string") {
+            id = parseInt(id);
+        }
         let isValid = true;
         isValid = isValid && Math.round(id) - id == 0;
         isValid = isValid && id >= 0;

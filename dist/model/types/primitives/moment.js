@@ -19,6 +19,9 @@ class Moment {
         return this._moment.toString();
     }
     constructor(moment) {
+        if (typeof moment === "string") {
+            moment = parseInt(moment);
+        }
         this._moment = moment;
     }
 }

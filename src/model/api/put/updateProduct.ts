@@ -1,6 +1,6 @@
 import bdClient from "@api/bdClient";
 import getProduct from "@api/get/getProduct";
-import { isEmpty } from "@helpers";
+import { isEmpty, pgFormat } from "@helpers";
 import { IProduct } from "@interfaces";
 import { ItemInfo, Price, ProductId } from "@primitives";
 import { QueryResult } from "pg";
@@ -36,7 +36,7 @@ export default async function updateProduct(id: ProductId, data: { price?: Price
                     return (value as Price).toBDView()
 
                 default:
-                    return `'${value}'`
+                    return `'${pgFormat(value)}'`
             }
         }
 

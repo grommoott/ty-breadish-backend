@@ -1,38 +1,37 @@
 import { Moment, UserId } from "@primitives"
-import jwt from "jsonwebtoken"
-import { Session } from "@entities"
+import jwt, { JwtPayload } from "jsonwebtoken"
+import { Session, User } from "@entities"
 import { v4 as uuid } from "uuid"
+import { weekSeconds } from "./timeConstants"
 
 type AccessToken = {
-    sub: UserId,
-    iat: Moment, // Unix Timestamp of token creation
-    exp: Moment, // Unix Timestamp of token invalidation
+    sub: number,
+    iat: number, // Unix Timestamp of token creation
+    exp: number, // Unix Timestamp of token invalidation
 }
 
 type RefreshToken = {
-    sub: UserId,
-    iat: Moment,
-    exp: Moment,
+    sub: number,
+    iat: number,
+    exp: number,
     jti: string, // Token id
     dvi: string, // Device id
 }
 
-const week = 7 * 24 * 3600
-
 class Jwt {
     private _secret: string
 
-    public createAccessToken(userId: UserId, lifetime: number = 1800): string {
+    public createAccessToken(user: User, lifetime: number = 1800): string {
         const date = Math.floor(new Date().getTime() / 1000)
 
         return jwt.sign({
-            sub: userId.id,
+            sub: user.id.id,
             iat: date,
             exp: date + lifetime
         }, this._secret)
     }
 
-    public async createRefreshTokenFromSession(session: Session, lifetime: number = 2 * week): Promise<string | Error> {
+    public async createRefreshTokenFromSession(session: Session, lifetime: number = 2 * weekSeconds): Promise<string | Error> {
         const date = Math.floor(new Date().getTime() / 1000)
         const refreshTokenId = uuid()
 
@@ -47,23 +46,72 @@ class Jwt {
         }, this._secret)
     }
 
-    public async createRefreshToken(userId: UserId, deviceId: string, lifetime: number = 2 * week): Promise<string | Error> {
-        const session: Session | Error = await Session.fromUserDevice(userId, deviceId)
+    public async createRefreshToken(user: User, deviceId: string, lifetime: number = 2 * weekSeconds): Promise<string | Error> {
+        const session: Session | Error = await Session.fromUserDevice(user, deviceId)
 
         if (session instanceof Error) {
             return session
         }
 
-        return this.createRefreshTokenFromSession(session)
+        return this.createRefreshTokenFromSession(session, lifetime)
     }
 
-    public async createSession(userId: UserId): Promise<Session | Error> {
-        const refreshTokenId = uuid()
-        const deviceId = uuid()
+    public getAccessTokenPayload(token: string): AccessToken | Error {
+        try {
+            const payload: JwtPayload = (jwt.verify(token, this._secret) as JwtPayload)
 
-        const session: Session | Error = await Session.create(userId, refreshTokenId, deviceId)
+            const sub: number = (() => {
+                switch (typeof payload.sub) {
+                    case "number":
+                        return payload.sub
 
-        return session
+                    case "string":
+                        return parseInt(payload.sub)
+
+                    default:
+                        throw new Error("Invalid sub")
+                }
+            })()
+
+            return {
+                sub: sub,
+                iat: payload.iat || (() => { throw new Error("Invalid iat") })(),
+                exp: payload.exp || (() => { throw new Error("Invalid exp") })(),
+            }
+        } catch (e) {
+            const msg = "Failed to get payload: " + e
+            return new Error(msg)
+        }
+    }
+
+    public getRefreshTokenPayload(token: string): RefreshToken | Error {
+        try {
+            const payload: JwtPayload = (jwt.verify(token, this._secret) as JwtPayload)
+
+            const sub: number = (() => {
+                switch (typeof payload.sub) {
+                    case "number":
+                        return payload.sub
+
+                    case "string":
+                        return parseInt(payload.sub)
+
+                    default:
+                        throw new Error("Invalid sub")
+                }
+            })()
+
+            return {
+                sub: sub,
+                iat: payload.iat || (() => { throw new Error("Invalid iat") })(),
+                exp: payload.exp || (() => { throw new Error("Invalid exp") })(),
+                jti: payload.jti || (() => { throw new Error("Invalid jti") })(),
+                dvi: payload.dvi || (() => { throw new Error("Invalid dvi") })()
+            }
+        } catch (e) {
+            const msg = "Failed to get payload: " + e
+            return new Error(msg)
+        }
     }
 
     public constructor() {
@@ -72,3 +120,4 @@ class Jwt {
 }
 
 export default new Jwt()
+export { AccessToken, RefreshToken }

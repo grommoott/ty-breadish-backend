@@ -3,10 +3,9 @@ import "module-alias/register"
 // Imports
 import express from "express"
 import cors from "cors"
-import { ReviewId, UserId } from "@primitives"
-import updateReview from "@api/put/updateReview"
-import jwt from "@helpers/jwt"
-import { isEmpty } from "@helpers"
+import { apiRouter } from "@routes"
+import { errorHandler } from "@middlewares"
+import cookieParser from "cookie-parser"
 
 // Basic fields declaration and initialization
 const app = express()
@@ -14,16 +13,12 @@ const port = process.env.PORT || 8443
 
 // Middleware connection
 app.use(cors())
+app.use(express.json())
+app.use(cookieParser())
 
-app.use((req, res, next) => {
+app.use("/api", apiRouter)
 
-})
-
-console.log(jwt.createAccessToken(new UserId(0)))
-
-app.get("/", async (_, res) => {
-    res.sendStatus(200)
-})
+app.use(errorHandler)
 
 // Starting server
 app.listen(port, () => {

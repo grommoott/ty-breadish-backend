@@ -16,6 +16,9 @@ class Price {
         return this._price.toString();
     }
     constructor(price) {
+        if (typeof price === "string") {
+            price = parseFloat(price);
+        }
         this._price = price;
     }
 }

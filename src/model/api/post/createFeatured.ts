@@ -2,6 +2,7 @@ import bdClient from "@api/bdClient";
 import getItem from "@api/get/getItem";
 import getUser from "@api/get/getUser";
 import { ItemType } from "@enums";
+import { pgFormat } from "@helpers";
 import { IFeatured, IItem, IUser, queryRowToFeatured } from "@interfaces";
 import { FeaturedId, ItemId, UserId } from "@primitives";
 import { QueryResult } from "pg";
@@ -26,7 +27,7 @@ export default async function createFeatured(from: UserId, target: ItemId, itemT
             return new Error(`There is already featured from ${from} and with target ${target}`)
         }
 
-        const response: QueryResult = await bdClient.query(`insert into featured values(default, ${from}, ${target}, ${itemType}) returning *`)
+        const response: QueryResult = await bdClient.query(`insert into featured values(default, ${from}, ${target}, '${pgFormat(itemType)}') returning *`)
 
         return queryRowToFeatured(response.rows[0])
     } catch (e) {

@@ -2,7 +2,7 @@ import bdClient from "@api/bdClient";
 import getUser from "@api/get/getUser";
 import getUserByEmail from "@api/get/getUserByEmail";
 import getUserByUsername from "@api/get/getUserByUsername";
-import { isEmpty } from "@helpers";
+import { isEmpty, pgFormat } from "@helpers";
 import { IUser } from "@interfaces";
 import { Email, Hash, IBDPrimitive, UserId } from "@primitives";
 
@@ -50,7 +50,7 @@ export default async function updateUser(id: UserId, data: { username?: string, 
         const valueConverter: (key: string, value: any) => string = (key: string, value: any): string => {
             switch (key) {
                 case "username":
-                    return `'${value}'`
+                    return `'${pgFormat(value)}'`
 
                 default:
                     return (value as IBDPrimitive).toBDView()

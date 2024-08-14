@@ -133,13 +133,13 @@ class User extends entity_1.Entity {
         return new User(user);
     }
     serialize() {
-        return JSON.stringify({
+        const result = JSON.stringify({
             id: this._user.id.id,
             username: this._user.username,
-            passwordHash: this._user.passwordHash.hash,
             email: this._user.email.email,
             moment: this._user.moment.moment
         });
+        return result;
     }
     constructor({ id, username, passwordHash, email, moment }) {
         super();

@@ -1,11 +1,12 @@
 import bdClient from "@api/bdClient"
+import { pgFormat } from "@helpers"
 import { IUser, queryRowToUser } from "@interfaces"
 import { Email, Hash, Moment, UserId } from "@primitives"
 import { QueryResult } from "pg"
 
 export default async function getUserByUsername(username: string): Promise<IUser | Error> {
     try {
-        const response: QueryResult = await bdClient.query(`select * from users where username='${username}'`)
+        const response: QueryResult = await bdClient.query(`select * from users where username='${pgFormat(username)}'`)
         const user = response.rows[0]
 
         if (!user) {

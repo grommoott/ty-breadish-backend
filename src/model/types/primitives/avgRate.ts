@@ -19,7 +19,11 @@ class AvgRate implements IBDPrimitive {
         return this._avgRate.toString()
     }
 
-    public constructor(avgRate: number) {
+    public constructor(avgRate: number | string) {
+        if (typeof avgRate === "string") {
+            avgRate = parseFloat(avgRate)
+        }
+
         let isValid: boolean = true
 
         isValid = isValid && Math.round(avgRate) - avgRate == 0

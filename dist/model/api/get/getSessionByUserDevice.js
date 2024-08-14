@@ -8,7 +8,7 @@ const bdClient_1 = __importDefault(require("@api/bdClient"));
 const _interfaces_1 = require("@interfaces");
 async function getSessionByUserDevice(userId, deviceId) {
     try {
-        const response = await bdClient_1.default.query(`select * from sessions where user_id=${userId} and deviceId='${deviceId}'`);
+        const response = await bdClient_1.default.query(`select * from sessions where user_id=${userId} and device_id='${deviceId}'`);
         if (response.rowCount == 0) {
             return new Error(`Session with such userId(${userId}) and deviceId(${deviceId}) isn't found`);
         }

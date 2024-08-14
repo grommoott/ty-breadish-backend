@@ -1,8 +1,8 @@
 import bdClient from "@api/bdClient";
 import { getSession } from "@api/get/getSession";
-import { isEmpty } from "@helpers";
+import { isEmpty, pgFormat } from "@helpers";
 import { ISession } from "@interfaces";
-import { Moment, SessionId } from "@primitives";
+import { IBDPrimitive, Moment, SessionId } from "@primitives";
 
 export default async function updateSession(id: SessionId, data: { refreshTokenId?: string, moment?: Moment }): Promise<void | Error> {
     try {
@@ -29,13 +29,13 @@ export default async function updateSession(id: SessionId, data: { refreshTokenI
         const valueConverter: (key: string, val: any) => string = (key: string, val: any): string => {
             switch (key) {
                 case "refreshTokenId":
-                    return `'${val}'`
+                    return `'${pgFormat(val)}'`
 
                 case "moment":
-                    return `${val}`
+                    return (val as IBDPrimitive).toBDView()
 
                 default:
-                    return `${val}`
+                    return `${pgFormat(val)}`
             }
         }
 

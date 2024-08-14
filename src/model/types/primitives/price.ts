@@ -20,6 +20,10 @@ class Price implements IBDPrimitive {
     }
 
     public constructor(price: number) {
+        if (typeof price === "string") {
+            price = parseFloat(price)
+        }
+
         this._price = price
     }
 }

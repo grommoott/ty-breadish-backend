@@ -5,6 +5,8 @@ import createSession from "@api/post/createSession"
 import updateSession from "@api/put/updateSession"
 import { ISession } from "@interfaces"
 import { Moment, SessionId, UserId } from "@primitives"
+import { User } from "./user"
+import { v4 as uuid } from "uuid"
 
 class Session {
 
@@ -56,8 +58,8 @@ class Session {
         return new Session(session)
     }
 
-    public static async fromUserDevice(userId: UserId, deviceId: string) {
-        const session: ISession | Error = await getSessionByUserDevice(userId, deviceId)
+    public static async fromUserDevice(user: User, deviceId: string) {
+        const session: ISession | Error = await getSessionByUserDevice(user.id, deviceId)
 
         if (session instanceof Error) {
             return session
@@ -66,8 +68,16 @@ class Session {
         return new Session(session)
     }
 
-    public static async create(userId: UserId, refreshTokenId: string, deviceId: string): Promise<Session | Error> {
-        const session: ISession | Error = await createSession(userId, refreshTokenId, deviceId)
+    public static async create(user: User, deviceId?: string): Promise<Session | Error> {
+        const _deviceId: string = (() => {
+            if (deviceId) {
+                return deviceId
+            } else {
+                return uuid()
+            }
+        })()
+
+        const session: ISession | Error = await createSession(user.id, _deviceId)
 
         if (session instanceof Error) {
             return session

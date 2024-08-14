@@ -1,5 +1,20 @@
-import { NextFunction, Request, Response } from "express";
+import jwt, { AccessToken } from "@helpers/jwt";
+import { Middleware } from "./middleware";
 
-function checkAuthorized(req: Request, res: Response, next: NextFunction) {
+const checkAuthorized: Middleware = (req, _, next) => {
+    if (!req.cookies.AccessToken) {
+        next(new Error("Unauthorized", { cause: 401 }))
+        return
+    }
 
+    const accessTokenPayload: AccessToken | Error = jwt.getAccessTokenPayload(req.cookies.AccessToken)
+
+    if (accessTokenPayload instanceof Error) {
+        next(accessTokenPayload)
+        return
+    }
+
+    next()
 }
+
+export { checkAuthorized }

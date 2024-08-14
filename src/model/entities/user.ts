@@ -183,13 +183,14 @@ class User extends Entity {
     }
 
     public serialize(): string {
-        return JSON.stringify({
+        const result = JSON.stringify({
             id: this._user.id.id,
             username: this._user.username,
-            passwordHash: this._user.passwordHash.hash,
             email: this._user.email.email,
             moment: this._user.moment.moment
         })
+
+        return result
     }
 
     private constructor({ id, username, passwordHash, email, moment }: IUser) {

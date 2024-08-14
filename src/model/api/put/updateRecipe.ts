@@ -1,6 +1,6 @@
 import bdClient from "@api/bdClient";
 import getRecipe from "@api/get/getRecipe";
-import { isEmpty } from "@helpers";
+import { isEmpty, pgFormat } from "@helpers";
 import { IRecipe } from "@interfaces";
 import { ItemInfo, RecipeId } from "@primitives";
 import { QueryResult } from "pg";
@@ -33,7 +33,7 @@ export default async function updateRecipe(id: RecipeId, data: { name: string, d
                     return (value as ItemInfo).toBDView()
 
                 default:
-                    return `'${value}'`
+                    return `'${pgFormat(value)}'`
             }
         }
 

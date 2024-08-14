@@ -1,7 +1,7 @@
 import bdClient from "@api/bdClient";
 import getOrder from "@api/get/getOrder";
 import { OrderType, OrderTypes } from "@enums";
-import { isEmpty } from "@helpers";
+import { isEmpty, pgFormat } from "@helpers";
 import { IOrder } from "@interfaces";
 import { IBDPrimitive, isOrderInfoIsCourierOrderInfo, isOrderInfoIsPickUpOrderInfo, Moment, OrderId, OrderInfo } from "@primitives";
 
@@ -58,13 +58,13 @@ export default async function updateOrder(id: OrderId, data: { orderType?: Order
         const valueConverter: (key: string, value: any) => string = (key: string, value: any): string => {
             switch (key) {
                 case "orderInfo":
-                    return `'${JSON.stringify(value)}'`
+                    return `'${pgFormat(JSON.stringify(value))}'`
 
                 case "readyMoment":
-                    return `${(value as IBDPrimitive).toBDView()}`
+                    return (value as IBDPrimitive).toBDView()
 
                 default:
-                    return `'${value}'`
+                    return `'${pgFormat(value)}'`
             }
         }
 

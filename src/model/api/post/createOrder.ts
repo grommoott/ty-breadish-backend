@@ -2,6 +2,7 @@ import bdClient from "@api/bdClient";
 import getProduct from "@api/get/getProduct";
 import getUser from "@api/get/getUser";
 import { OrderType } from "@enums";
+import { pgFormat } from "@helpers";
 import { IOrder, IProduct, IUser, queryRowsToOrder } from "@interfaces";
 import { Moment, ProductId, UserId } from "@primitives";
 import { OrderInfo } from "model/types/primitives/orderInfo";
@@ -43,7 +44,7 @@ export default async function createOrder(from: UserId, orderType: OrderType, or
 
         const paymentId = "payment_id" // get it from yookassa
 
-        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${paymentId}', ${moment}, '${orderType}', '${JSON.stringify(orderInfo)}', -1) returning *`)
+        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${pgFormat(paymentId)}', ${moment}, '${pgFormat(orderType)}', '${pgFormat(JSON.stringify(orderInfo))}', -1) returning *`)
         const order = responseOrders.rows[0]
 
         const responseProducts: QueryResult = await bdClient.query(`insert into order_products_ids values ${products.map(productId => `(default, ${order.id}, ${productId})`).join(", ")} returning *`)
