@@ -1,5 +1,5 @@
 abstract class Entity {
-    public abstract serialize(): string
+    public abstract toNormalView(): object
 }
 
 export { Entity }

@@ -43,7 +43,7 @@ async function updateUser(id, data) {
         const valueConverter = (key, value) => {
             switch (key) {
                 case "username":
-                    return `'${value}'`;
+                    return `'${(0, _helpers_1.pgFormat)(value)}'`;
                 default:
                     return value.toBDView();
             }
@@ -51,7 +51,7 @@ async function updateUser(id, data) {
         const setString = Object.entries(data).map(([key, val]) => {
             return `${nameConverter(key)}=${valueConverter(key, val)}`;
         }).join(",");
-        bdClient_1.default.query(`update users set ${setString} where id=${id} `);
+        await bdClient_1.default.query(`update users set ${setString} where id=${id} `);
     }
     catch (e) {
         throw new Error("Error in updateUser request: " + e, { cause: 500 });

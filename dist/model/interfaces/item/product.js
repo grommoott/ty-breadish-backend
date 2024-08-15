@@ -24,6 +24,6 @@ function queryRowToProduct(row) {
         name: row.name,
         description: row.description,
         avgRate: new _primitives_1.AvgRate(row.avg_rate),
-        itemInfo: _primitives_1.ItemInfo.fromJSON(row.item_info)
+        itemInfo: _primitives_1.ItemInfo.fromObject(row.item_info)
     };
 }

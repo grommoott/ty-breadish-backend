@@ -53,11 +53,11 @@ async function updateOrder(id, data) {
         const valueConverter = (key, value) => {
             switch (key) {
                 case "orderInfo":
-                    return `'${JSON.stringify(value)}'`;
+                    return `'${(0, _helpers_1.pgFormat)(JSON.stringify(value))}'`;
                 case "readyMoment":
-                    return `${value.toBDView()}`;
+                    return value.toBDView();
                 default:
-                    return `'${value}'`;
+                    return `'${(0, _helpers_1.pgFormat)(value)}'`;
             }
         };
         const setString = Object.entries(data).map(([key, val]) => {

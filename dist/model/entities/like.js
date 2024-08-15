@@ -51,13 +51,13 @@ class Like extends entity_1.Entity {
         }
         return new Like(like);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             id: this._like.id.id,
             from: this._like.from.id,
             target: this._like.target.id,
             type: this._like.type
-        });
+        };
     }
     constructor({ id, from, target, type }) {
         super();

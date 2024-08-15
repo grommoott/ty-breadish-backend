@@ -86,15 +86,15 @@ class New extends Media {
         return new New(aNew)
     }
 
-    public override serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             id: this.id.id,
             title: this.title,
             content: this.content,
             mediaId: this.mediaId.id,
             moment: this.moment.moment,
             isEdited: this.isEdited
-        })
+        }
     }
 
     private constructor({ id, title, content, mediaId, moment, isEdited }: INew) {

@@ -35,12 +35,12 @@ class Media extends Entity {
         return new Media(media)
     }
 
-    public serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             mediaId: this._media.mediaId.id,
             moment: this._media.moment.moment,
             idEdited: this._media.isEdited
-        })
+        }
     }
 
     protected constructor({ mediaId, moment, isEdited }: IMedia) {

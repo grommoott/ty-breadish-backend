@@ -82,15 +82,15 @@ class Review extends Entity {
         return new Review(review)
     }
 
-    public serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             id: this._review.id.id,
             from: this._review.from.id,
             target: this._review.target.id,
             content: this._review.content,
             moment: this._review.moment.moment,
             rate: this._review.rate
-        })
+        }
     }
 
     private constructor({ id, from, target, content, moment, rate }: IReview) {

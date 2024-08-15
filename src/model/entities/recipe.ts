@@ -14,6 +14,8 @@ class Recipe extends Item {
 
     private _id: RecipeId
 
+    private static _recipes: Array<Recipe> | undefined
+
     // Getters
 
     public get id(): RecipeId {
@@ -57,9 +59,13 @@ class Recipe extends Item {
     }
 
     public static async getRecipes(): Promise<Array<Recipe>> {
-        const recipes: Array<IRecipe> = await getRecipes()
+        if (!this._recipes) {
+            const recipes: Array<IRecipe> = await getRecipes()
 
-        return recipes.map(recipe => new Recipe(recipe))
+            this._recipes = recipes.map(recipe => new Recipe(recipe))
+        }
+
+        return this._recipes
     }
 
     public static async create(name: string, description: string, itemInfo: ItemInfo): Promise<Recipe | Error> {
@@ -72,15 +78,15 @@ class Recipe extends Item {
         return new Recipe(recipe)
     }
 
-    public serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             id: this.id.id,
             itemId: this.itemId.id,
             name: this.name,
             description: this.description,
             avgRate: this.avgRate.avgRate,
             itemInfo: this.itemInfo
-        })
+        }
     }
 
     private constructor({ id, itemId, name, description, avgRate, itemInfo }: IRecipe) {

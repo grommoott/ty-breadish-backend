@@ -66,15 +66,15 @@ class New extends media_1.Media {
         }
         return new New(aNew);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             id: this.id.id,
             title: this.title,
             content: this.content,
             mediaId: this.mediaId.id,
             moment: this.moment.moment,
             isEdited: this.isEdited
-        });
+        };
     }
     constructor({ id, title, content, mediaId, moment, isEdited }) {
         super({ mediaId, moment, isEdited });

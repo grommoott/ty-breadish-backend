@@ -6,7 +6,7 @@ import { IComment, IMedia, IUser, queryRowToComment } from "@interfaces";
 import { CommentId, MediaId, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createComment(from: UserId, target: MediaId, content: string, moment: Moment | null = null): Promise<IComment | Error> {
+export default async function createComment(from: UserId, target: MediaId, content: string, moment?: Moment): Promise<IComment | Error> {
     try {
         const userWithId: IUser | Error = await getUser(from)
 
@@ -21,7 +21,7 @@ export default async function createComment(from: UserId, target: MediaId, conte
         }
 
         const _moment: Moment = (() => {
-            if (moment == null) {
+            if (!moment) {
                 return new Moment(new Date().getTime())
             } else {
                 return moment

@@ -69,13 +69,13 @@ class Featured extends Entity {
         return new Featured(featured)
     }
 
-    public serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             id: this._featured.id.id,
             from: this._featured.from.id,
             target: this._featured.target.id,
             itemType: this._featured.itemType
-        })
+        }
     }
 
     private constructor({ id, from, target, itemType }: IFeatured) {

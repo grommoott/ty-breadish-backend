@@ -145,7 +145,7 @@ class User extends Entity {
             return new Error(`User with such username(${username}) isn't exists`)
         }
 
-        if (await user.passwordHash.compare(password)) {
+        if (!(await user.passwordHash.compare(password))) {
             return new Error(`Invalid password`)
         }
 
@@ -182,15 +182,13 @@ class User extends Entity {
         return new User(user)
     }
 
-    public serialize(): string {
-        const result = JSON.stringify({
+    public override toNormalView(): object {
+        return {
             id: this._user.id.id,
             username: this._user.username,
             email: this._user.email.email,
             moment: this._user.moment.moment
-        })
-
-        return result
+        }
     }
 
     private constructor({ id, username, passwordHash, email, moment }: IUser) {

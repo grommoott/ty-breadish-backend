@@ -5,10 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getSessionByUserDevice;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
+const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 async function getSessionByUserDevice(userId, deviceId) {
     try {
-        const response = await bdClient_1.default.query(`select * from sessions where user_id=${userId} and device_id='${deviceId}'`);
+        const response = await bdClient_1.default.query(`select * from sessions where user_id=${userId} and device_id='${(0, _helpers_1.pgFormat)(deviceId)}'`);
         if (response.rowCount == 0) {
             return new Error(`Session with such userId(${userId}) and deviceId(${deviceId}) isn't found`);
         }

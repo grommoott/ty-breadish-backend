@@ -16,6 +16,7 @@ class Product extends item_1.Item {
     // Private fields
     _id;
     _price;
+    static _products;
     // Getters
     get id() {
         return this._id;
@@ -49,8 +50,11 @@ class Product extends item_1.Item {
         return new Product(item);
     }
     static async getProducts() {
-        const products = await (0, getProducts_1.default)();
-        return products.map(product => new Product(product));
+        if (!this._products) {
+            const products = await (0, getProducts_1.default)();
+            this._products = products.map(product => new Product(product));
+        }
+        return this._products;
     }
     static async create(price, name, description, itemInfo) {
         const product = await (0, createProduct_1.default)(name, description, price, itemInfo);
@@ -59,8 +63,8 @@ class Product extends item_1.Item {
         }
         return new Product(product);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             id: this.id.id,
             price: this.price.price,
             itemId: this.itemId.id,
@@ -68,7 +72,7 @@ class Product extends item_1.Item {
             description: this.description,
             avgRate: this.avgRate.avgRate,
             itemInfo: this.itemInfo
-        });
+        };
     }
     constructor({ id, price, itemId, name, description, avgRate, itemInfo }) {
         super({ itemId, name, description, avgRate, itemInfo });

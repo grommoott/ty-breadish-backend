@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemInfo = void 0;
+const _helpers_1 = require("@helpers");
 class ItemInfo {
     cookingMethod;
     ingredients;
@@ -9,6 +10,9 @@ class ItemInfo {
         const itemInfo = JSON.parse(json);
         const pfc = { ...itemInfo.pfc };
         return new ItemInfo(itemInfo.cooking_method, itemInfo.ingredients, pfc);
+    }
+    static fromObject(obj) {
+        return new ItemInfo(obj.cooking_method, obj.ingredients, obj.pfc);
     }
     toJSON() {
         const itemInfo = {
@@ -24,7 +28,7 @@ class ItemInfo {
         return JSON.stringify(itemInfo);
     }
     toBDView() {
-        return `'${this.toJSON().replaceAll("'", "''")}'`;
+        return `'${(0, _helpers_1.pgFormat)(this.toJSON())}'`;
     }
     serialize() {
         return JSON.stringify(this);

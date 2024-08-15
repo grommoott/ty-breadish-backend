@@ -1,6 +1,5 @@
 import bdClient from "@api/bdClient";
 import { IProduct, queryRowToProduct } from "@interfaces";
-import { AvgRate, ItemId, ItemInfo, Price, ProductId } from "@primitives";
 import { QueryResult } from "pg";
 
 export default async function getProducts(): Promise<Array<IProduct>> {

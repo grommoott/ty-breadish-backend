@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = createSession;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getSessionByUserDevice_1 = __importDefault(require("@api/get/getSessionByUserDevice"));
+const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
-async function createSession(userId, refreshTokenId, deviceId, moment = null) {
+async function createSession(userId, deviceId, moment = null) {
     try {
         const sessionWithUserDevice = await (0, getSessionByUserDevice_1.default)(userId, deviceId);
         if (!(sessionWithUserDevice instanceof Error)) {
@@ -22,7 +23,7 @@ async function createSession(userId, refreshTokenId, deviceId, moment = null) {
                 return moment;
             }
         })();
-        const response = await bdClient_1.default.query(`insert into sessions values (default, ${userId}, '${refreshTokenId}', '${deviceId}', ${_moment}) returning * `);
+        const response = await bdClient_1.default.query(`insert into sessions values (default, ${userId}, NULL, '${(0, _helpers_1.pgFormat)(deviceId)}', ${_moment}) returning *`);
         return (0, _interfaces_1.queryRowToSession)(response.rows[0]);
     }
     catch (e) {

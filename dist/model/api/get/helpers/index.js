@@ -8,7 +8,7 @@ const bdClient_1 = __importDefault(require("@api/bdClient"));
 function createSimpleGetRequest(tableName, entityName, parseQueryRow) {
     return async function (id) {
         try {
-            const response = await bdClient_1.default.query(`select * from ${tableName} where id=${id}`);
+            const response = await bdClient_1.default.query(`select * from ${tableName} where id=${id.toBDView()}`);
             if (response.rowCount == 0) {
                 return new Error(`${entityName} with such id(${id}) isn't exists`);
             }

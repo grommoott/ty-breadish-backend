@@ -3,7 +3,6 @@ import getComment from "@api/get/getComment";
 import { isEmpty, pgFormat } from "@helpers";
 import { IComment } from "@interfaces";
 import { CommentId } from "@primitives";
-import { QueryResult } from "pg";
 
 export default async function updateComment(id: CommentId, data: { content?: string }): Promise<void | Error> {
     try {
@@ -25,7 +24,7 @@ export default async function updateComment(id: CommentId, data: { content?: str
             return `${key}=${valueConverter(key, val)}`
         }).join(", ")
 
-        bdClient.query(`update comments set ${setString} where id=${id}`)
+        await bdClient.query(`update comments set ${setString} where id=${id}`)
     } catch (e) {
         const msg = "Error in updateComment request: " + e
         throw new Error(msg, { cause: 500 })

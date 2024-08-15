@@ -9,6 +9,7 @@ const _interfaces_1 = require("@interfaces");
 const _enums_1 = require("@enums");
 const config_1 = __importDefault(require("@api/config"));
 const getItem_1 = __importDefault(require("./getItem"));
+const _helpers_1 = require("@helpers");
 async function getReviewsPage(itemId, sortOrder, page) {
     try {
         const itemWithId = await (0, getItem_1.default)(itemId);
@@ -22,7 +23,7 @@ async function getReviewsPage(itemId, sortOrder, page) {
                 case _enums_1.ReviewsSortOrders.NewFirst:
                     return bdClient_1.default.query(`select * from reviews order by moment desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
                 case _enums_1.ReviewsSortOrders.LikedFirst:
-                    return bdClient_1.default.query(`select * from reviews order by (select count(*) from likes where target=${itemId} and type='review') desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
+                    return bdClient_1.default.query(`select * from reviews order by (select count(*) from likes where target=${itemId} and type='${(0, _helpers_1.pgFormat)(_enums_1.LikeTypes.Review)}') desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
                 case _enums_1.ReviewsSortOrders.RatedFirst:
                     return bdClient_1.default.query(`select * from reviews order by rate desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
                 case _enums_1.ReviewsSortOrders.UnratedFirst:

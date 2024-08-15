@@ -10,12 +10,17 @@ const uuid_1 = require("uuid");
 const timeConstants_1 = require("./timeConstants");
 class Jwt {
     _secret;
-    createAccessToken(user, lifetime = 1800) {
+    async createAccessToken(user, lifetime = 1800) {
         const date = Math.floor(new Date().getTime() / 1000);
+        const role = await user.getRole();
+        if (role instanceof Error) {
+            return role;
+        }
         return jsonwebtoken_1.default.sign({
             sub: user.id.id,
             iat: date,
-            exp: date + lifetime
+            exp: date + lifetime,
+            role: role
         }, this._secret);
     }
     async createRefreshTokenFromSession(session, lifetime = 2 * timeConstants_1.weekSeconds) {
@@ -31,17 +36,19 @@ class Jwt {
         }, this._secret);
     }
     async createRefreshToken(user, deviceId, lifetime = 2 * timeConstants_1.weekSeconds) {
-        const session = await _entities_1.Session.fromUserDevice(user.id, deviceId);
+        const session = await _entities_1.Session.fromUserDevice(user, deviceId);
         if (session instanceof Error) {
             return session;
         }
         return this.createRefreshTokenFromSession(session, lifetime);
     }
-    async createSession(user, deviceId) {
-        const refreshTokenId = (0, uuid_1.v4)();
-        const _deviceId = deviceId || (0, uuid_1.v4)();
-        const session = await _entities_1.Session.create(user.id, refreshTokenId, _deviceId);
-        return session;
+    createRegisterToken(username, password, email) {
+        const payload = {
+            username,
+            password,
+            email: email.email
+        };
+        return jsonwebtoken_1.default.sign(payload, this._secret);
     }
     getAccessTokenPayload(token) {
         try {
@@ -60,6 +67,7 @@ class Jwt {
                 sub: sub,
                 iat: payload.iat || (() => { throw new Error("Invalid iat"); })(),
                 exp: payload.exp || (() => { throw new Error("Invalid exp"); })(),
+                role: payload.role || (() => { throw new Error("Invalid role"); })
             };
         }
         catch (e) {
@@ -86,6 +94,20 @@ class Jwt {
                 exp: payload.exp || (() => { throw new Error("Invalid exp"); })(),
                 jti: payload.jti || (() => { throw new Error("Invalid jti"); })(),
                 dvi: payload.dvi || (() => { throw new Error("Invalid dvi"); })()
+            };
+        }
+        catch (e) {
+            const msg = "Failed to get payload: " + e;
+            return new Error(msg);
+        }
+    }
+    getRegisterTokenPayload(token) {
+        try {
+            const payload = jsonwebtoken_1.default.verify(token, this._secret);
+            return {
+                username: payload.username || (() => { throw new Error("Invalid username"); })(),
+                password: payload.password || (() => { throw new Error("Invalid password"); })(),
+                email: payload.email || (() => { throw new Error("Invlid email"); })()
             };
         }
         catch (e) {

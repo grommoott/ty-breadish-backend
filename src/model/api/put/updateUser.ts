@@ -61,7 +61,7 @@ export default async function updateUser(id: UserId, data: { username?: string, 
             return `${nameConverter(key)}=${valueConverter(key, val)}`
         }).join(",")
 
-        bdClient.query(`update users set ${setString} where id=${id} `)
+        await bdClient.query(`update users set ${setString} where id=${id} `)
     } catch (e) {
         throw new Error("Error in updateUser request: " + e, { cause: 500 })
     }

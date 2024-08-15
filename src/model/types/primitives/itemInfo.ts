@@ -36,6 +36,10 @@ class ItemInfo implements IBDPrimitive {
         return new ItemInfo(itemInfo.cooking_method, itemInfo.ingredients, pfc)
     }
 
+    public static fromObject(obj: ItemInfoJson): ItemInfo {
+        return new ItemInfo(obj.cooking_method, obj.ingredients, obj.pfc)
+    }
+
     public toJSON(): string {
         const itemInfo: ItemInfoJson = {
             cooking_method: this.cookingMethod,

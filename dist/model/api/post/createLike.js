@@ -8,6 +8,7 @@ const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getLikeParent_1 = __importDefault(require("@api/get/getLikeParent"));
 const getUser_1 = __importDefault(require("@api/get/getUser"));
 const _enums_1 = require("@enums");
+const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 async function createLike(from, target, type = _enums_1.LikeTypes.Media) {
     try {
@@ -19,11 +20,11 @@ async function createLike(from, target, type = _enums_1.LikeTypes.Media) {
         if (likeParent instanceof Error) {
             return likeParent;
         }
-        const likes = await bdClient_1.default.query(`select * from likes where "from"=${from} and target=${target} and type='${type}'`);
+        const likes = await bdClient_1.default.query(`select * from likes where "from"=${from} and target=${target} and type='${(0, _helpers_1.pgFormat)(type)}'`);
         if (likes.rowCount != 0) {
             return new Error(`There is already like from ${from} and with target ${target}(${type})`);
         }
-        const response = await bdClient_1.default.query(`insert into likes values (default, ${from}, ${target}, '${type}') returning *`);
+        const response = await bdClient_1.default.query(`insert into likes values (default, ${from}, ${target}, '${(0, _helpers_1.pgFormat)(type)}') returning *`);
         return (0, _interfaces_1.queryRowToLike)(response.rows[0]);
     }
     catch (e) {

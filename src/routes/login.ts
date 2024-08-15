@@ -38,13 +38,20 @@ class Login {
                 return
             }
 
-            const accessToken: string = jwt.createAccessToken(user)
+            const accessToken: string | Error = await jwt.createAccessToken(user)
+
+            if (accessToken instanceof Error) {
+                next(accessToken)
+                return
+            }
 
             res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: true, maxAge: 2 * month })
             res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: true, maxAge: 20 * minute })
             res.cookie("DeviceId", session.deviceId)
 
-            res.send(user.serialize())
+            res.send(user.toNormalView())
+
+            next()
         })]
 }
 

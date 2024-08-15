@@ -27,12 +27,12 @@ class Media extends entity_1.Entity {
         }
         return new Media(media);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             mediaId: this._media.mediaId.id,
             moment: this._media.moment.moment,
             idEdited: this._media.isEdited
-        });
+        };
     }
     constructor({ mediaId, moment, isEdited }) {
         super();

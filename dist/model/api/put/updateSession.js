@@ -27,11 +27,11 @@ async function updateSession(id, data) {
         const valueConverter = (key, val) => {
             switch (key) {
                 case "refreshTokenId":
-                    return `'${val}'`;
+                    return `'${(0, _helpers_1.pgFormat)(val)}'`;
                 case "moment":
-                    return `${val}`;
+                    return val.toBDView();
                 default:
-                    return `${val}`;
+                    return `${(0, _helpers_1.pgFormat)(val)}`;
             }
         };
         const setString = Object.entries(data).map(([key, val]) => {

@@ -6,7 +6,7 @@ import { IUser, queryRowToUser } from "@interfaces";
 import { Email, Hash, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createUser(username: string, passwordHash: Hash, email: Email, moment: Moment | null = null): Promise<IUser | Error> {
+export default async function createUser(username: string, passwordHash: Hash, email: Email, moment?: Moment): Promise<IUser | Error> {
     try {
         const usersWithUsername: IUser | Error = await getUserByUsername(username)
 
@@ -21,7 +21,7 @@ export default async function createUser(username: string, passwordHash: Hash, e
         }
 
         const _moment: Moment = (() => {
-            if (moment == null) {
+            if (!moment) {
                 return new Moment(new Date().getTime())
             } else {
                 return moment

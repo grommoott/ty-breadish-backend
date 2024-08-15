@@ -93,8 +93,8 @@ class Comment extends Media {
         return new Comment(comment)
     }
 
-    public override serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             id: this._id.id,
             from: this._from.id,
             target: this._target.id,
@@ -102,7 +102,7 @@ class Comment extends Media {
             mediaId: this.mediaId.id,
             moment: this.moment.moment,
             isEdited: this.isEdited
-        })
+        }
     }
 
     private constructor({ id, from, target, content, mediaId, moment, isEdited }: IComment) {

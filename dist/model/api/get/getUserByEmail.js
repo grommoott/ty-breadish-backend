@@ -5,10 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = getUserByEmail;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
+const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 async function getUserByEmail(email) {
     try {
-        const response = await bdClient_1.default.query(`select * from users where email='${email}'`);
+        const response = await bdClient_1.default.query(`select * from users where email='${(0, _helpers_1.pgFormat)(email)}'`);
         const user = response.rows[0];
         if (!user) {
             return new Error(`User with such email(${email}) isn't found`, { cause: 400 });

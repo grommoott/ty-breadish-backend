@@ -6,7 +6,7 @@ import { IItem, IReview, IUser, queryRowToReview } from "@interfaces";
 import { ItemId, Moment, Rate, ReviewId, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createReview(from: UserId, target: ItemId, content: string, rate: Rate, moment: Moment | null = null): Promise<IReview | Error> {
+export default async function createReview(from: UserId, target: ItemId, content: string, rate: Rate, moment?: Moment): Promise<IReview | Error> {
     try {
         const userWithId: IUser | Error = await getUser(from)
 
@@ -27,7 +27,7 @@ export default async function createReview(from: UserId, target: ItemId, content
         }
 
         const _moment: Moment = (() => {
-            if (moment === null) {
+            if (!moment) {
                 return Moment.now()
             } else {
                 return moment

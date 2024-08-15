@@ -9,6 +9,7 @@ const getSession_1 = require("@api/get/getSession");
 const getSessionByUserDevice_1 = __importDefault(require("@api/get/getSessionByUserDevice"));
 const createSession_1 = __importDefault(require("@api/post/createSession"));
 const updateSession_1 = __importDefault(require("@api/put/updateSession"));
+const uuid_1 = require("uuid");
 class Session {
     // Private fields
     _session;
@@ -43,15 +44,23 @@ class Session {
         }
         return new Session(session);
     }
-    static async fromUserDevice(userId, deviceId) {
-        const session = await (0, getSessionByUserDevice_1.default)(userId, deviceId);
+    static async fromUserDevice(user, deviceId) {
+        const session = await (0, getSessionByUserDevice_1.default)(user.id, deviceId);
         if (session instanceof Error) {
             return session;
         }
         return new Session(session);
     }
-    static async create(userId, refreshTokenId, deviceId) {
-        const session = await (0, createSession_1.default)(userId, refreshTokenId, deviceId);
+    static async create(user, deviceId) {
+        const _deviceId = (() => {
+            if (deviceId) {
+                return deviceId;
+            }
+            else {
+                return (0, uuid_1.v4)();
+            }
+        })();
+        const session = await (0, createSession_1.default)(user.id, _deviceId);
         if (session instanceof Error) {
             return session;
         }

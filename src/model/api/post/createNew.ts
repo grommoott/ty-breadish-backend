@@ -4,10 +4,10 @@ import { INew, queryRowToNew } from "@interfaces";
 import { MediaId, Moment, NewId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createNew(title: string, content: string, moment: Moment | null = null): Promise<INew> {
+export default async function createNew(title: string, content: string, moment?: Moment): Promise<INew> {
     try {
         const _moment: Moment = (() => {
-            if (moment === null) {
+            if (!moment) {
                 return Moment.now()
             } else {
                 return moment

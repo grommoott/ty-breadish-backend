@@ -7,6 +7,7 @@ exports.default = createUser;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getUserByEmail_1 = __importDefault(require("@api/get/getUserByEmail"));
 const getUserByUsername_1 = __importDefault(require("@api/get/getUserByUsername"));
+const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
 async function createUser(username, passwordHash, email, moment = null) {
@@ -27,7 +28,7 @@ async function createUser(username, passwordHash, email, moment = null) {
                 return moment;
             }
         })();
-        const response = await bdClient_1.default.query(`insert into users values (default, '${username}', '${passwordHash}', '${email}', ${_moment}) returning *`);
+        const response = await bdClient_1.default.query(`insert into users values (default, '${(0, _helpers_1.pgFormat)(username)}', '${(0, _helpers_1.pgFormat)(passwordHash)}', '${(0, _helpers_1.pgFormat)(email)}', ${_moment}) returning *`);
         return (0, _interfaces_1.queryRowToUser)(response.rows[0]);
     }
     catch (e) {

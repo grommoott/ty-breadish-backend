@@ -27,3 +27,4 @@ __exportStar(require("./recipe"), exports);
 __exportStar(require("./review"), exports);
 __exportStar(require("./user"), exports);
 __exportStar(require("./session"), exports);
+__exportStar(require("./verificationCode"), exports);

@@ -7,6 +7,7 @@ exports.default = createOrder;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getProduct_1 = __importDefault(require("@api/get/getProduct"));
 const getUser_1 = __importDefault(require("@api/get/getUser"));
+const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
 async function createOrder(from, orderType, orderInfo, products, _moment = null) {
@@ -36,7 +37,7 @@ async function createOrder(from, orderType, orderInfo, products, _moment = null)
             }
         }
         const paymentId = "payment_id"; // get it from yookassa
-        const responseOrders = await bdClient_1.default.query(`insert into orders values (default, ${from}, '${paymentId}', ${moment}, '${orderType}', '${JSON.stringify(orderInfo)}', -1) returning *`);
+        const responseOrders = await bdClient_1.default.query(`insert into orders values (default, ${from}, '${(0, _helpers_1.pgFormat)(paymentId)}', ${moment}, '${(0, _helpers_1.pgFormat)(orderType)}', '${(0, _helpers_1.pgFormat)(JSON.stringify(orderInfo))}', -1) returning *`);
         const order = responseOrders.rows[0];
         const responseProducts = await bdClient_1.default.query(`insert into order_products_ids values ${products.map(productId => `(default, ${order.id}, ${productId})`).join(", ")} returning *`);
         return (0, _interfaces_1.queryRowsToOrder)(responseOrders.rows[0], responseProducts.rows);

@@ -15,6 +15,8 @@ class Product extends Item {
     private _id: ProductId
     private _price: Price
 
+    private static _products: Array<Product> | undefined
+
     // Getters
 
     public get id(): ProductId {
@@ -62,9 +64,13 @@ class Product extends Item {
     }
 
     public static async getProducts(): Promise<Array<Product>> {
-        const products: Array<IProduct> = await getProducts()
+        if (!this._products) {
+            const products: Array<IProduct> = await getProducts()
 
-        return products.map(product => new Product(product))
+            this._products = products.map(product => new Product(product))
+        }
+
+        return this._products
     }
 
     public static async create(price: Price, name: string, description: string, itemInfo: ItemInfo): Promise<Product | Error> {
@@ -77,8 +83,8 @@ class Product extends Item {
         return new Product(product)
     }
 
-    public serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             id: this.id.id,
             price: this.price.price,
             itemId: this.itemId.id,
@@ -86,7 +92,7 @@ class Product extends Item {
             description: this.description,
             avgRate: this.avgRate.avgRate,
             itemInfo: this.itemInfo
-        })
+        }
     }
 
     private constructor({ id, price, itemId, name, description, avgRate, itemInfo }: IProduct) {

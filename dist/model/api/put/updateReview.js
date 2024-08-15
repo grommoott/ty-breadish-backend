@@ -17,12 +17,12 @@ async function updateReview(id, data) {
             return reviewsWithId;
         }
         const valueConverter = (key, value) => {
-            return `'${value}'`;
+            return `'${(0, _helpers_1.pgFormat)(value)}'`;
         };
         const setString = Object.entries(data).map(([key, val]) => {
             return `${key}=${valueConverter(key, val)}`;
         }).join(", ");
-        bdClient_1.default.query(`update reviews set ${setString} where id=${id}`);
+        await bdClient_1.default.query(`update reviews set ${setString} where id=${id}`);
     }
     catch (e) {
         const msg = "Error in updateReview request: " + e;

@@ -7,6 +7,7 @@ exports.default = createComment;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getMedia_1 = __importDefault(require("@api/get/getMedia"));
 const getUser_1 = __importDefault(require("@api/get/getUser"));
+const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
 async function createComment(from, target, content, moment = null) {
@@ -27,7 +28,7 @@ async function createComment(from, target, content, moment = null) {
                 return moment;
             }
         })();
-        const response = await bdClient_1.default.query(`insert into comments values(default, nextval('media_id'), ${from}, ${target}, '${content}', ${_moment}, false) returning *`);
+        const response = await bdClient_1.default.query(`insert into comments values(default, nextval('media_id'), ${from}, ${target}, '${(0, _helpers_1.pgFormat)(content)}', ${_moment}, false) returning *`);
         return (0, _interfaces_1.queryRowToComment)(response.rows[0]);
     }
     catch (e) {

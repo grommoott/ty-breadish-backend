@@ -7,6 +7,7 @@ exports.default = createFeatured;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getItem_1 = __importDefault(require("@api/get/getItem"));
 const getUser_1 = __importDefault(require("@api/get/getUser"));
+const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 async function createFeatured(from, target, itemType) {
     try {
@@ -22,7 +23,7 @@ async function createFeatured(from, target, itemType) {
         if (featureds.rowCount != 0) {
             return new Error(`There is already featured from ${from} and with target ${target}`);
         }
-        const response = await bdClient_1.default.query(`insert into featured values(default, ${from}, ${target}, ${itemType}) returning *`);
+        const response = await bdClient_1.default.query(`insert into featured values(default, ${from}, ${target}, '${(0, _helpers_1.pgFormat)(itemType)}') returning *`);
         return (0, _interfaces_1.queryRowToFeatured)(response.rows[0]);
     }
     catch (e) {

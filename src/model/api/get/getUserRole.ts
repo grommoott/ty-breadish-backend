@@ -1,7 +1,7 @@
 import { UserId } from "@primitives";
 import getUser from "./getUser";
 import { IUser } from "@interfaces";
-import { Role } from "@enums";
+import { Role, Roles } from "@enums";
 import { QueryResult } from "pg";
 import bdClient from "@api/bdClient";
 
@@ -13,7 +13,11 @@ export default async function getUserRole(id: UserId): Promise<Role | Error> {
             return userWithId
         }
 
-        const response: QueryResult = await bdClient.query(`select * from roles where user=${id}`)
+        const response: QueryResult = await bdClient.query(`select * from roles where "user"=${id}`)
+
+        if (response.rowCount === 0) {
+            return Roles.User
+        }
 
         return response.rows[0].role
     } catch (e) {

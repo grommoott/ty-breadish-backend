@@ -43,14 +43,14 @@ class Item extends Entity {
         return new Item(item)
     }
 
-    public serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             itemId: this._item.itemId.id,
             name: this._item.name,
             description: this._item.description,
             avgRate: this._item.avgRate.avgRate,
             itemInfo: this._item.itemInfo
-        })
+        }
     }
 
     protected constructor({ itemId, name, description, avgRate, itemInfo }: IItem) {

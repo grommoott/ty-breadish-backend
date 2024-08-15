@@ -70,8 +70,8 @@ class Comment extends media_1.Media {
         }
         return new Comment(comment);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             id: this._id.id,
             from: this._from.id,
             target: this._target.id,
@@ -79,7 +79,7 @@ class Comment extends media_1.Media {
             mediaId: this.mediaId.id,
             moment: this.moment.moment,
             isEdited: this.isEdited
-        });
+        };
     }
     constructor({ id, from, target, content, mediaId, moment, isEdited }) {
         super({ mediaId, moment, isEdited });

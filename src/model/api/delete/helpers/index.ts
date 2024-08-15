@@ -7,7 +7,7 @@ export default function createDeleteRequest<T extends Id>(tableName: string, req
         try {
             const response: QueryResult = await bdClient.query(`delete from ${tableName} where id=${id}`)
 
-            return response.rowCount == 1
+            return response.rowCount != 0
         } catch (e) {
             const msg = `Error in ${requestName} request: ` + e
             throw new Error(msg, { cause: 500 })

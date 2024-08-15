@@ -69,13 +69,13 @@ class Like extends Entity {
         return new Like(like)
     }
 
-    public serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             id: this._like.id.id,
             from: this._like.from.id,
             target: this._like.target.id,
             type: this._like.type
-        })
+        }
     }
 
     private constructor({ id, from, target, type }: ILike) {

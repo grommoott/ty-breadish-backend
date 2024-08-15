@@ -61,15 +61,15 @@ class Review extends entity_1.Entity {
         }
         return new Review(review);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             id: this._review.id.id,
             from: this._review.from.id,
             target: this._review.target.id,
             content: this._review.content,
             moment: this._review.moment.moment,
             rate: this._review.rate
-        });
+        };
     }
     constructor({ id, from, target, content, moment, rate }) {
         super();

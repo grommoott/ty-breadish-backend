@@ -14,7 +14,7 @@ class Hash implements IBDPrimitive {
     }
 
     public async compare(password: string): Promise<boolean> {
-        return bcrypt.compare(password, this._hash)
+        return await bcrypt.compare(password, this._hash)
     }
 
     public toString(): string {

@@ -33,14 +33,14 @@ class Item extends entity_1.Entity {
         }
         return new Item(item);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             itemId: this._item.itemId.id,
             name: this._item.name,
             description: this._item.description,
             avgRate: this._item.avgRate.avgRate,
             itemInfo: this._item.itemInfo
-        });
+        };
     }
     constructor({ itemId, name, description, avgRate, itemInfo }) {
         super();

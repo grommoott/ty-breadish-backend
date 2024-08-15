@@ -7,6 +7,7 @@ exports.default = createReview;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getItem_1 = __importDefault(require("@api/get/getItem"));
 const getUser_1 = __importDefault(require("@api/get/getUser"));
+const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
 async function createReview(from, target, content, rate, moment = null) {
@@ -31,7 +32,7 @@ async function createReview(from, target, content, rate, moment = null) {
                 return moment;
             }
         })();
-        const response = await bdClient_1.default.query(`insert into reviews values (default, ${from}, ${target}, '${content}', '${rate}', ${_moment}) returning *`);
+        const response = await bdClient_1.default.query(`insert into reviews values (default, ${from}, ${target}, '${(0, _helpers_1.pgFormat)(content)}', '${(0, _helpers_1.pgFormat)(rate)}', ${_moment}) returning *`);
         return (0, _interfaces_1.queryRowToReview)(response.rows[0]);
     }
     catch (e) {

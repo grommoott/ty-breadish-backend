@@ -9,7 +9,7 @@ function createDeleteRequest(tableName, requestName) {
     return async function (id) {
         try {
             const response = await bdClient_1.default.query(`delete from ${tableName} where id=${id}`);
-            return response.rowCount == 1;
+            return response.rowCount != 0;
         }
         catch (e) {
             const msg = `Error in ${requestName} request: ` + e;

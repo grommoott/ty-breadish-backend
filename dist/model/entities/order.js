@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Order = void 0;
-const deleteOrder_1 = require("@api/delete/deleteOrder");
+const deleteOrder_1 = __importDefault(require("@api/delete/deleteOrder"));
 const getOrder_1 = __importDefault(require("@api/get/getOrder"));
 const createOrder_1 = __importDefault(require("@api/post/createOrder"));
 const updateOrder_1 = __importDefault(require("@api/put/updateOrder"));
@@ -39,7 +39,7 @@ class Order extends entity_1.Entity {
         return await (0, updateOrder_1.default)(this._order.id, data);
     }
     async delete() {
-        return await (0, deleteOrder_1.deleteOrder)(this._order.id);
+        return await (0, deleteOrder_1.default)(this._order.id);
     }
     // Static constructors
     static async fromId(id) {
@@ -56,8 +56,8 @@ class Order extends entity_1.Entity {
         }
         return new Order(order);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             id: this._order.id.id,
             from: this._order.from.id,
             paymentId: this._order.paymentId,
@@ -66,7 +66,7 @@ class Order extends entity_1.Entity {
             orderInfo: this._order.orderInfo,
             productIds: this._order.productIds.map(productId => productId.id),
             readyMoment: this._order.readyMoment.moment
-        });
+        };
     }
     constructor({ id, from, paymentId, moment, orderType, orderInfo, productIds, readyMoment }) {
         super();

@@ -15,6 +15,7 @@ const getItem_1 = __importDefault(require("@api/get/getItem"));
 class Recipe extends item_1.Item {
     // Private fields
     _id;
+    static _recipes;
     // Getters
     get id() {
         return this._id;
@@ -45,8 +46,11 @@ class Recipe extends item_1.Item {
         return new Recipe(item);
     }
     static async getRecipes() {
-        const recipes = await (0, getRecipes_1.default)();
-        return recipes.map(recipe => new Recipe(recipe));
+        if (!this._recipes) {
+            const recipes = await (0, getRecipes_1.default)();
+            this._recipes = recipes.map(recipe => new Recipe(recipe));
+        }
+        return this._recipes;
     }
     static async create(name, description, itemInfo) {
         const recipe = await (0, createRecipe_1.default)(name, description, itemInfo);
@@ -55,15 +59,15 @@ class Recipe extends item_1.Item {
         }
         return new Recipe(recipe);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             id: this.id.id,
             itemId: this.itemId.id,
             name: this.name,
             description: this.description,
             avgRate: this.avgRate.avgRate,
             itemInfo: this.itemInfo
-        });
+        };
     }
     constructor({ id, itemId, name, description, avgRate, itemInfo }) {
         super({ itemId, name, description, avgRate, itemInfo });

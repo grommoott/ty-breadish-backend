@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Email = void 0;
+const _helpers_1 = require("@helpers");
 class Email {
     _email;
     get email() {
@@ -10,7 +11,7 @@ class Email {
         return this._email;
     }
     toBDView() {
-        return `'${this._email.replaceAll("'", "''")}'`;
+        return `'${(0, _helpers_1.pgFormat)(this._email)}'`;
     }
     serialize() {
         return this._email;

@@ -8,7 +8,7 @@ import { Moment, ProductId, UserId } from "@primitives";
 import { OrderInfo } from "model/types/primitives/orderInfo";
 import { QueryResult } from "pg";
 
-export default async function createOrder(from: UserId, orderType: OrderType, orderInfo: OrderInfo, products: Array<ProductId>, _moment: Moment | null = null): Promise<IOrder | Error> {
+export default async function createOrder(from: UserId, orderType: OrderType, orderInfo: OrderInfo, products: Array<ProductId>, moment: Moment): Promise<IOrder | Error> {
     try {
         const userWithId: IUser | Error = await getUser(from)
 
@@ -16,11 +16,11 @@ export default async function createOrder(from: UserId, orderType: OrderType, or
             return userWithId
         }
 
-        const moment: Moment = (() => {
-            if (_moment === null) {
+        const _moment: Moment = (() => {
+            if (moment === null) {
                 return Moment.now()
             } else {
-                return _moment
+                return moment
             }
         })()
 
@@ -44,7 +44,7 @@ export default async function createOrder(from: UserId, orderType: OrderType, or
 
         const paymentId = "payment_id" // get it from yookassa
 
-        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${pgFormat(paymentId)}', ${moment}, '${pgFormat(orderType)}', '${pgFormat(JSON.stringify(orderInfo))}', -1) returning *`)
+        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${pgFormat(paymentId)}', ${_moment}, '${pgFormat(orderType)}', '${pgFormat(JSON.stringify(orderInfo))}', -1) returning *`)
         const order = responseOrders.rows[0]
 
         const responseProducts: QueryResult = await bdClient.query(`insert into order_products_ids values ${products.map(productId => `(default, ${order.id}, ${productId})`).join(", ")} returning *`)

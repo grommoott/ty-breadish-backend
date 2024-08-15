@@ -44,7 +44,7 @@ export default async function updateProduct(id: ProductId, data: { price?: Price
             return `${nameConverter(key)}=${valueConverter(key, val)}`
         })
 
-        bdClient.query(`update products set ${setString} where id=${id}`)
+        await bdClient.query(`update products set ${setString} where id=${id}`)
     } catch (e) {
         const msg = "Error in updateProduct request: " + e
         throw new Error(msg, { cause: 500 })

@@ -1,4 +1,4 @@
-import { deleteOrder } from "@api/delete/deleteOrder"
+import deleteOrder from "@api/delete/deleteOrder"
 import getOrder from "@api/get/getOrder"
 import createOrder from "@api/post/createOrder"
 import updateOrder from "@api/put/updateOrder"
@@ -76,8 +76,8 @@ class Order extends Entity {
         return new Order(order)
     }
 
-    public serialize(): string {
-        return JSON.stringify({
+    public override toNormalView(): object {
+        return {
             id: this._order.id.id,
             from: this._order.from.id,
             paymentId: this._order.paymentId,
@@ -86,7 +86,7 @@ class Order extends Entity {
             orderInfo: this._order.orderInfo,
             productIds: this._order.productIds.map(productId => productId.id),
             readyMoment: this._order.readyMoment.moment
-        })
+        }
     }
 
     protected constructor({ id, from, paymentId, moment, orderType, orderInfo, productIds, readyMoment }: IOrder) {

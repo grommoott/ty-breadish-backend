@@ -51,13 +51,13 @@ class Featured extends entity_1.Entity {
         }
         return new Featured(featured);
     }
-    serialize() {
-        return JSON.stringify({
+    toNormalView() {
+        return {
             id: this._featured.id.id,
             from: this._featured.from.id,
             target: this._featured.target.id,
             itemType: this._featured.itemType
-        });
+        };
     }
     constructor({ id, from, target, itemType }) {
         super();

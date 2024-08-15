@@ -20,3 +20,4 @@ __exportStar(require("./checkBodyParams"), exports);
 __exportStar(require("./middleware"), exports);
 __exportStar(require("./contentJson"), exports);
 __exportStar(require("./errorHandler"), exports);
+__exportStar(require("./checkAdmin"), exports);

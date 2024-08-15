@@ -5,7 +5,7 @@ import { ISession, queryRowToSession } from "@interfaces";
 import { Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createSession(userId: UserId, deviceId: string, moment: Moment | null = null): Promise<ISession | Error> {
+export default async function createSession(userId: UserId, deviceId: string, moment?: Moment): Promise<ISession | Error> {
     try {
         const sessionWithUserDevice: ISession | Error = await getSessionByUserDevice(userId, deviceId)
 
@@ -14,7 +14,7 @@ export default async function createSession(userId: UserId, deviceId: string, mo
         }
 
         const _moment: Moment = (() => {
-            if (moment === null) {
+            if (!moment) {
                 return Moment.now()
             } else {
                 return moment
