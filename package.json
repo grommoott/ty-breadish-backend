@@ -10,6 +10,7 @@
     "dev": "tsc && node dist/index.js"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
@@ -20,6 +21,7 @@
     "@types/nodemailer": "^6.4.15",
     "@types/pg": "^8.11.6",
     "@types/uuid": "^10.0.0",
+    "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

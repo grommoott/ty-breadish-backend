@@ -30,6 +30,32 @@ class Users {
         })
     ]
 
+    public getEmailAvailable: Array<Middleware> = [
+        checkParams(["email"]),
+        contentJson,
+        asyncErrorCatcher(async (req, res, next) => {
+            const email: Email = new Email(req.params.email)
+
+            const user: User | Error = await User.fromEmail(email)
+
+            if (user instanceof Error) {
+                if (user.message.startsWith("User with such email")) {
+                    res.send(false)
+
+                    next()
+                    return
+                }
+
+                next(user)
+                return
+            }
+
+            res.send(true)
+
+            next()
+        })
+    ]
+
     public delete: Array<Middleware> = [
         checkAuthorized,
         checkParams(["verificationCode", "password"]),

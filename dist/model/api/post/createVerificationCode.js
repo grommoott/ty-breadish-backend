@@ -9,7 +9,7 @@ const getVerificationCode_1 = __importDefault(require("@api/get/getVerificationC
 const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
-async function createVerificationCode(username, code, moment) {
+async function createVerificationCode(email, code, moment) {
     try {
         const _moment = (() => {
             if (moment) {
@@ -19,11 +19,11 @@ async function createVerificationCode(username, code, moment) {
                 return _primitives_1.Moment.now();
             }
         })();
-        const verificationCode = await (0, getVerificationCode_1.default)(username);
+        const verificationCode = await (0, getVerificationCode_1.default)(email);
         if (!(verificationCode instanceof Error)) {
-            return new Error(`There is already verification code for user ${username}`);
+            return new Error(`There is already verification code for email ${email}`);
         }
-        const response = await bdClient_1.default.query(`insert into verification_codes values ('${(0, _helpers_1.pgFormat)(username)}', ${code}, ${_moment}) returning *`);
+        const response = await bdClient_1.default.query(`insert into verification_codes values (default, '${(0, _helpers_1.pgFormat)(email)}', ${code}, ${_moment}) returning *`);
         return (0, _interfaces_1.queryRowToVerificationCode)(response.rows[0]);
     }
     catch (e) {

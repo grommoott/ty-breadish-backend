@@ -7,11 +7,11 @@ exports.default = getVerificationCode;
 const _interfaces_1 = require("@interfaces");
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const _helpers_1 = require("@helpers");
-async function getVerificationCode(username) {
+async function getVerificationCode(email) {
     try {
-        const response = await bdClient_1.default.query(`select * from verification_codes where "username"='${(0, _helpers_1.pgFormat)(username)}'`);
+        const response = await bdClient_1.default.query(`select * from verification_codes where email='${(0, _helpers_1.pgFormat)(email)}'`);
         if (response.rowCount == 0) {
-            return new Error(`There is no verification code for user ${username}`);
+            return new Error(`There is no verification code for user ${email}`);
         }
         return (0, _interfaces_1.queryRowToVerificationCode)(response.rows[0]);
     }

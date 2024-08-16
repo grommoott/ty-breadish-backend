@@ -16,12 +16,14 @@ const like_1 = require("./like");
 const featured_1 = require("./featured");
 const order_1 = require("./order");
 const entity_1 = require("./entity");
+const getUserByEmail_1 = __importDefault(require("@api/get/getUserByEmail"));
 class User extends entity_1.Entity {
     // Private field
     _user;
     _role;
     _liked;
     _featured;
+    _orders;
     // Getters
     get id() {
         return this._user.id;
@@ -66,6 +68,19 @@ class User extends entity_1.Entity {
         }
         return this._featured;
     }
+    async getOrders() {
+        if (!this._orders) {
+            const orders = await order_1.Order.fromUser(this._user.id);
+            if (orders instanceof Error) {
+                return orders;
+            }
+            this._orders = orders;
+        }
+        return this._orders;
+    }
+    async isPasswordIsValid(password) {
+        return await this._user.passwordHash.compare(password);
+    }
     async createComment(target, content) {
         const comment = await comment_1.Comment.create(this._user.id, target, content);
         return comment;
@@ -101,18 +116,15 @@ class User extends entity_1.Entity {
         return await (0, deleteUser_1.default)(this._user.id);
     }
     // Static constructors
-    static async fromAuth(username, password) {
+    static async fromUsername(username) {
         const user = await (0, getUserByUsername_1.default)(username);
         if (user instanceof Error) {
-            return new Error(`User with such username(${username}) isn't exists`);
-        }
-        if (!(await user.passwordHash.compare(password))) {
-            return new Error(`Invalid password`);
+            return user;
         }
         return new User(user);
     }
-    static async fromUsername(username) {
-        const user = await (0, getUserByUsername_1.default)(username);
+    static async fromEmail(email) {
+        const user = await (0, getUserByEmail_1.default)(email);
         if (user instanceof Error) {
             return user;
         }

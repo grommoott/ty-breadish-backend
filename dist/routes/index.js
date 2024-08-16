@@ -15,6 +15,10 @@ const news_1 = __importDefault(require("./news"));
 const likes_1 = __importDefault(require("./likes"));
 const featured_1 = __importDefault(require("./featured"));
 const reviews_1 = __importDefault(require("./reviews"));
+const orders_1 = __importDefault(require("./orders"));
+const verificationCode_1 = __importDefault(require("./verificationCode"));
+const users_1 = __importDefault(require("./users"));
+const yookassaWebhook_1 = __importDefault(require("./yookassaWebhook"));
 const apiRouter = express_1.default.Router();
 exports.apiRouter = apiRouter;
 // Authorization & Authentication
@@ -22,6 +26,7 @@ apiRouter.post("/register", register_1.default.post);
 apiRouter.post("/register/token", register_1.default.postToken);
 apiRouter.post("/login", login_1.default.post);
 apiRouter.get("/accessToken", accessToken_1.default.get);
+apiRouter.post("/verificationCode/create", verificationCode_1.default.postCreate);
 // Items
 apiRouter.get("/products/id/:id", products_1.default.get);
 apiRouter.get("/products/list", products_1.default.getList);
@@ -56,3 +61,11 @@ apiRouter.get("/news/images/id/:id", news_1.default.getImages);
 apiRouter.get("/likes", likes_1.default.get);
 apiRouter.post("/likes/create", likes_1.default.postCreate);
 apiRouter.delete("/likes/id/:id", likes_1.default.delete);
+// Order
+apiRouter.get("/orders", orders_1.default.get);
+apiRouter.post("/yookassaWebhook", yookassaWebhook_1.default.post);
+// User
+apiRouter.get("/users/usernameAvailable/:username", users_1.default.getUsernameAvailable);
+apiRouter.get("/users/emailAvailable/:email", users_1.default.getEmailAvailable);
+apiRouter.delete("/users/verificationCode/:verificationCode/password/:password", users_1.default.delete);
+apiRouter.put("/users", users_1.default.put);

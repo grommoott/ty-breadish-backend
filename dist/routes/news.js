@@ -74,7 +74,7 @@ class News {
     ];
     put = [
         _middlewares_1.checkAdmin,
-        (0, _middlewares_1.checkBodyParams)(["id", "title", "content"]),
+        (0, _middlewares_1.checkBodyParams)(["id"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const id = new _primitives_1.NewId(req.body.id);
             const title = req.body.title;

@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = deleteVerificationCode;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const _helpers_1 = require("@helpers");
-async function deleteVerificationCode(username) {
+async function deleteVerificationCode(email) {
     try {
-        const response = await bdClient_1.default.query(`delete from verification_codes where username='${(0, _helpers_1.pgFormat)(username)}'`);
+        const response = await bdClient_1.default.query(`delete from verification_codes where email='${(0, _helpers_1.pgFormat)(email)}'`);
         return response.rowCount != 0;
     }
     catch (e) {

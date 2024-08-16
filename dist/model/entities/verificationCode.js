@@ -15,8 +15,8 @@ class VerificationCode {
     _verificationCode;
     static _maxAge = timeConstants_1.hour;
     // Getters
-    get username() {
-        return this._verificationCode.username;
+    get email() {
+        return this._verificationCode.email;
     }
     get code() {
         return this._verificationCode.code;
@@ -29,29 +29,39 @@ class VerificationCode {
     }
     // Methods
     async edit(data) {
-        return await (0, updateVerificationCode_1.default)(this._verificationCode.username, data);
+        return await (0, updateVerificationCode_1.default)(this._verificationCode.email, data);
     }
     async delete() {
-        return await (0, deleteVerificationCode_1.default)(this._verificationCode.username);
+        return await (0, deleteVerificationCode_1.default)(this._verificationCode.email);
+    }
+    async compare(code) {
+        const result = code === this.code;
+        if (result) {
+            const del = await (0, deleteVerificationCode_1.default)(this.email);
+            if (del instanceof Error) {
+                return del;
+            }
+        }
+        return result;
     }
     // Static constructors
-    static async fromUsername(username) {
-        const verificationCode = await (0, getVerificationCode_1.default)(username);
+    static async fromEmail(email) {
+        const verificationCode = await (0, getVerificationCode_1.default)(email);
         if (verificationCode instanceof Error) {
             return verificationCode;
         }
         return new VerificationCode(verificationCode);
     }
-    static async create(username) {
+    static async create(email) {
         const code = 100000 + Math.floor(900000 * Math.random());
-        const verificationCode = await (0, createVerificationCode_1.default)(username, code);
+        const verificationCode = await (0, createVerificationCode_1.default)(email, code);
         if (verificationCode instanceof Error) {
             return verificationCode;
         }
         return new VerificationCode(verificationCode);
     }
-    constructor({ username, code, moment }) {
-        this._verificationCode = { username, code, moment };
+    constructor({ email, code, moment }) {
+        this._verificationCode = { email, code, moment };
     }
 }
 exports.VerificationCode = VerificationCode;

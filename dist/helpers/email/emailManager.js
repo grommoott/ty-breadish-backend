@@ -18,7 +18,7 @@ class EmailManager {
         });
     }
     constructor() {
-        this._mailPassword = "mV2z5Tb11DzpSBik4AXd"; // process.env.MAIL_PASSWORD
+        this._mailPassword = process.env.MAIL_PASSWORD || "mV2z5Tb11DzpSBik4AXd";
         this._smtp = nodemailer_1.default.createTransport({
             host: "smtp.mail.ru",
             port: 465,

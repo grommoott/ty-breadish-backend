@@ -14,9 +14,13 @@ class Login {
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const username = req.body.username;
             const password = req.body.password;
-            const user = await _entities_1.User.fromAuth(username, password);
+            const user = await _entities_1.User.fromUsername(username);
             if (user instanceof Error) {
                 next(user);
+                return;
+            }
+            if (!user.isPasswordIsValid(password)) {
+                next(new Error("Invalid password"));
                 return;
             }
             const deviceId = req.cookies?.DeviceId;

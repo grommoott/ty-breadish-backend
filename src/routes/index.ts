@@ -11,6 +11,8 @@ import featured from "./featured"
 import reviews from "./reviews"
 import orders from "./orders"
 import verificaitonCode from "./verificationCode"
+import users from "./users"
+import yookassaWebhook from "./yookassaWebhook"
 
 const apiRouter: Router = express.Router()
 
@@ -71,5 +73,14 @@ apiRouter.delete("/likes/id/:id", likes.delete)
 // Order
 
 apiRouter.get("/orders", orders.get)
+
+apiRouter.post("/yookassaWebhook", yookassaWebhook.post)
+
+// User
+
+apiRouter.get("/users/usernameAvailable/:username", users.getUsernameAvailable)
+apiRouter.get("/users/emailAvailable/:email", users.getEmailAvailable)
+apiRouter.delete("/users/verificationCode/:verificationCode/password/:password", users.delete)
+apiRouter.put("/users", users.put)
 
 export { apiRouter }

@@ -116,7 +116,7 @@ class Jwt {
         }
     }
     constructor() {
-        this._secret = "test"; //process.env.PRIVATE_KEY as string
+        this._secret = process.env.PRIVATE_KEY || "test";
     }
 }
 exports.default = new Jwt();

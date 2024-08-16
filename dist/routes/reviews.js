@@ -79,7 +79,7 @@ class Reviews {
     ];
     put = [
         _middlewares_1.checkAuthorized,
-        (0, _middlewares_1.checkBodyParams)(["id", "content", "rate"]),
+        (0, _middlewares_1.checkBodyParams)(["id"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const from = new _primitives_1.UserId(req.body.accessTokenPayload.sub);
             const id = new _primitives_1.ReviewId(req.body.id);

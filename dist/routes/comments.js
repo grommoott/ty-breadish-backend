@@ -75,7 +75,7 @@ class Comments {
     ];
     put = [
         _middlewares_1.checkAuthorized,
-        (0, _middlewares_1.checkBodyParams)(["id", "content"]),
+        (0, _middlewares_1.checkBodyParams)(["id"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const id = new _primitives_1.CommentId(req.body.id);
             const content = req.body.content;

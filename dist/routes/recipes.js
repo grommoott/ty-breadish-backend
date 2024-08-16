@@ -67,7 +67,7 @@ class Recipes {
     ];
     put = [
         _middlewares_1.checkAdmin,
-        (0, _middlewares_1.checkBodyParams)(["id", "name", "description", "itemInfo"]),
+        (0, _middlewares_1.checkBodyParams)(["id"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const id = new _primitives_1.RecipeId(req.body.id);
             const name = req.body.name;

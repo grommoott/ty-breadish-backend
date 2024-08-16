@@ -50,7 +50,7 @@ class Products {
     ];
     put = [
         _middlewares_1.checkAdmin,
-        (0, _middlewares_1.checkBodyParams)(["id", "price", "name", "description", "itemInfo"]),
+        (0, _middlewares_1.checkBodyParams)(["id"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const id = new _primitives_1.ProductId(req.body.id);
             const price = new _primitives_1.Price(req.body.price);

@@ -24,23 +24,27 @@ class Register {
                 return;
             }
             const token = jwt_1.default.createRegisterToken(username, password, email);
-            let verificationCode = await _entities_1.VerificationCode.create(username);
+            let verificationCode = await _entities_1.VerificationCode.create(email);
             if (verificationCode instanceof Error) {
-                if (!verificationCode.message.startsWith("There is already verification code for user ")) {
+                if (!verificationCode.message.startsWith("There is already verification code for email ")) {
                     next(verificationCode);
                     return;
                 }
-                verificationCode = await _entities_1.VerificationCode.fromUsername(username);
+                verificationCode = await _entities_1.VerificationCode.fromEmail(email);
                 if (verificationCode instanceof Error) {
                     next(verificationCode);
                     return;
                 }
                 if (verificationCode.isFresh) {
-                    next("Another user already trying to register an account with such username, sorry you're late :(");
+                    next("Another user already trying to register an account with this email, sorry you're late :(");
                     return;
                 }
-                await verificationCode.delete();
-                verificationCode = await _entities_1.VerificationCode.create(username);
+                const del = await verificationCode.delete();
+                if (del instanceof Error) {
+                    next(del);
+                    return;
+                }
+                verificationCode = await _entities_1.VerificationCode.create(email);
                 if (verificationCode instanceof Error) {
                     next(verificationCode);
                     return;
@@ -61,12 +65,17 @@ class Register {
                 next(payload);
                 return;
             }
-            const verificationCode = await _entities_1.VerificationCode.fromUsername(payload.username);
+            const verificationCode = await _entities_1.VerificationCode.fromEmail(new _primitives_1.Email(payload.email));
             if (verificationCode instanceof Error) {
                 next(verificationCode);
                 return;
             }
-            if (verificationCode.code !== code) {
+            const isValid = await verificationCode.compare(code);
+            if (isValid instanceof Error) {
+                next(isValid);
+                return;
+            }
+            if (!isValid) {
                 next(new Error("Invalid verification code"));
                 return;
             }
