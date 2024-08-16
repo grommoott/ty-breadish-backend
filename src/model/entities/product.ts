@@ -29,12 +29,23 @@ class Product extends Item {
 
     // Methods
 
-    public async edit(data: { price: Price, name: string, description: string, itemInfo: ItemInfo }): Promise<void | Error> {
+    public async edit(data: { price?: Price, name?: string, description?: string, itemInfo?: ItemInfo }): Promise<void | Error> {
         return await updateProduct(this._id, data)
     }
 
     public async delete(): Promise<boolean | Error> {
         return await deleteProduct(this._id)
+    }
+
+    public toListView(): object {
+        return {
+            id: this.id.id,
+            price: this.price.price,
+            itemId: this.itemId.id,
+            name: this.name,
+            avgRate: this.avgRate.avgRate,
+            itemInfo: this.itemInfo.toNormalView()
+        }
     }
 
     // Static constructors
@@ -91,7 +102,7 @@ class Product extends Item {
             name: this.name,
             description: this.description,
             avgRate: this.avgRate.avgRate,
-            itemInfo: this.itemInfo
+            itemInfo: this.itemInfo.toNormalView()
         }
     }
 

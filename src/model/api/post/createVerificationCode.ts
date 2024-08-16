@@ -4,10 +4,10 @@ import getUserByUsername from "@api/get/getUserByUsername";
 import getVerificationCode from "@api/get/getVerificationCode";
 import { pgFormat } from "@helpers";
 import { IUser, IVerificationCode, queryRowToVerificationCode } from "@interfaces";
-import { Moment, UserId } from "@primitives";
+import { Email, Moment, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
-export default async function createVerificationCode(username: string, code: number, moment?: Moment) {
+export default async function createVerificationCode(email: Email, code: number, moment?: Moment) {
     try {
         const _moment: Moment = (() => {
             if (moment) {
@@ -17,13 +17,13 @@ export default async function createVerificationCode(username: string, code: num
             }
         })()
 
-        const verificationCode: IVerificationCode | Error = await getVerificationCode(username)
+        const verificationCode: IVerificationCode | Error = await getVerificationCode(email)
 
         if (!(verificationCode instanceof Error)) {
-            return new Error(`There is already verification code for user ${username}`)
+            return new Error(`There is already verification code for email ${email}`)
         }
 
-        const response: QueryResult = await bdClient.query(`insert into verification_codes values ('${pgFormat(username)}', ${code}, ${_moment}) returning *`)
+        const response: QueryResult = await bdClient.query(`insert into verification_codes values (default, '${pgFormat(email)}', ${code}, ${_moment}) returning *`)
 
         return queryRowToVerificationCode(response.rows[0])
     } catch (e) {

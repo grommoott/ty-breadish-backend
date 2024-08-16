@@ -12,7 +12,9 @@ class Login {
     post = [
         (0, _middlewares_1.checkBodyParams)(["username", "password"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const user = await _entities_1.User.fromAuth(req.body.username, req.body.password);
+            const username = req.body.username;
+            const password = req.body.password;
+            const user = await _entities_1.User.fromAuth(username, password);
             if (user instanceof Error) {
                 next(user);
                 return;

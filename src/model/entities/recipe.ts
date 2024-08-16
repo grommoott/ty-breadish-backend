@@ -24,12 +24,22 @@ class Recipe extends Item {
 
     // Methods
 
-    public async edit(data: { name: string, description: string, itemInfo: ItemInfo }): Promise<void | Error> {
+    public async edit(data: { name?: string, description?: string, itemInfo?: ItemInfo }): Promise<void | Error> {
         return await updateRecipe(this._id, data)
     }
 
     public async delete(): Promise<boolean | Error> {
         return await deleteRecipe(this._id)
+    }
+
+    public toListView(): object {
+        return {
+            id: this.id.id,
+            itemId: this.itemId.id,
+            name: this.name,
+            avgRate: this.avgRate.avgRate,
+            itemInfo: this.itemInfo
+        }
     }
 
     // Static constructors

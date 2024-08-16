@@ -3,8 +3,10 @@ import getItem from "@api/get/getItem";
 import getUser from "@api/get/getUser";
 import { pgFormat } from "@helpers";
 import { IItem, IReview, IUser, queryRowToReview } from "@interfaces";
-import { ItemId, Moment, Rate, ReviewId, UserId } from "@primitives";
+import { ItemId, Moment, ReviewId, UserId } from "@primitives";
+import { Rate } from "@enums";
 import { QueryResult } from "pg";
+import updateItemRate from "@api/put/updateItemRate";
 
 export default async function createReview(from: UserId, target: ItemId, content: string, rate: Rate, moment?: Moment): Promise<IReview | Error> {
     try {
@@ -35,6 +37,7 @@ export default async function createReview(from: UserId, target: ItemId, content
         })()
 
         const response: QueryResult = await bdClient.query(`insert into reviews values (default, ${from}, ${target}, '${pgFormat(content)}', '${pgFormat(rate)}', ${_moment}) returning *`)
+        await updateItemRate(target)
 
         return queryRowToReview(response.rows[0])
     } catch (e) {

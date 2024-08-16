@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express"
 import { Middleware } from "./middleware"
 
-function checkBodyParams(params: Array<string>): Middleware {
+function checkQueryParams(params: Array<string>): Middleware {
     return (req: Request, _: Response, next: NextFunction) => {
         for (let param of params) {
-            if (!(param in req.body)) {
+            if (!(param in req.query)) {
                 next(new Error("Invalid request", { cause: 400 }))
+                return
             }
         }
 
@@ -13,4 +14,4 @@ function checkBodyParams(params: Array<string>): Middleware {
     }
 }
 
-export { checkBodyParams }
+export { checkQueryParams }

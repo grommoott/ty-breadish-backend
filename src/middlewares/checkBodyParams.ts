@@ -6,6 +6,7 @@ function checkBodyParams(params: Array<string>): Middleware {
         for (let param of params) {
             if (!(param in req.body)) {
                 next(new Error("Invalid request", { cause: 400 }))
+                return
             }
         }
 

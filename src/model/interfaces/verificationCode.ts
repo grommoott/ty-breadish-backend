@@ -1,14 +1,14 @@
-import { Moment } from "@primitives";
+import { Email, Moment } from "@primitives";
 
 interface IVerificationCode {
-    username: string,
+    email: Email,
     code: number,
     moment: Moment
 }
 
 function queryRowToVerificationCode(row: any): IVerificationCode {
     if (!(
-        "username" in row &&
+        "email" in row &&
         "code" in row &&
         "moment" in row
     )) {
@@ -16,7 +16,7 @@ function queryRowToVerificationCode(row: any): IVerificationCode {
     }
 
     return {
-        username: row.username,
+        email: row.email,
         code: row.code,
         moment: new Moment(row.moment)
     }

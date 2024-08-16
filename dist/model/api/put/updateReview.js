@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = updateReview;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getReview_1 = __importDefault(require("@api/get/getReview"));
+const updateItemRate_1 = __importDefault(require("@api/put/updateItemRate"));
 const _helpers_1 = require("@helpers");
 async function updateReview(id, data) {
     try {
@@ -23,6 +24,7 @@ async function updateReview(id, data) {
             return `${key}=${valueConverter(key, val)}`;
         }).join(", ");
         await bdClient_1.default.query(`update reviews set ${setString} where id=${id}`);
+        await (0, updateItemRate_1.default)(reviewsWithId.target);
     }
     catch (e) {
         const msg = "Error in updateReview request: " + e;

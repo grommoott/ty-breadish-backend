@@ -10,7 +10,8 @@ const getUser_1 = __importDefault(require("@api/get/getUser"));
 const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
-async function createReview(from, target, content, rate, moment = null) {
+const updateItemRate_1 = __importDefault(require("@api/put/updateItemRate"));
+async function createReview(from, target, content, rate, moment) {
     try {
         const userWithId = await (0, getUser_1.default)(from);
         if (userWithId instanceof Error) {
@@ -25,7 +26,7 @@ async function createReview(from, target, content, rate, moment = null) {
             return new Error(`There is already review from ${from} to ${target}`);
         }
         const _moment = (() => {
-            if (moment === null) {
+            if (!moment) {
                 return _primitives_1.Moment.now();
             }
             else {
@@ -33,6 +34,7 @@ async function createReview(from, target, content, rate, moment = null) {
             }
         })();
         const response = await bdClient_1.default.query(`insert into reviews values (default, ${from}, ${target}, '${(0, _helpers_1.pgFormat)(content)}', '${(0, _helpers_1.pgFormat)(rate)}', ${_moment}) returning *`);
+        await (0, updateItemRate_1.default)(target);
         return (0, _interfaces_1.queryRowToReview)(response.rows[0]);
     }
     catch (e) {

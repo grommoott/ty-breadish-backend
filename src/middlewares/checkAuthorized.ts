@@ -14,6 +14,8 @@ const checkAuthorized: Middleware = (req, _, next) => {
         return
     }
 
+    req.body.accessTokenPayload = accessTokenPayload
+
     next()
 }
 

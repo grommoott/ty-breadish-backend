@@ -2,6 +2,8 @@ import { IMedia, isMediaIsNew } from "@interfaces";
 import { MediaId, Moment } from "@primitives";
 import getMedia from "@api/get/getMedia";
 import { Entity } from "./entity";
+import { Comment } from "./comment";
+import { CommentsSortOrder } from "@enums";
 
 class Media extends Entity {
 
@@ -21,6 +23,14 @@ class Media extends Entity {
 
     public get isEdited(): boolean {
         return this._media.isEdited
+    }
+
+    // Methods
+
+    public async getCommentsPage(sortOrder: CommentsSortOrder, page: number): Promise<Array<Comment> | Error> {
+        const comments: Array<Comment> | Error = await Comment.getCommentsPage(this._media.mediaId, sortOrder, page)
+
+        return comments
     }
 
     // Static constructors

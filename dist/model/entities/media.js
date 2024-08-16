@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Media = void 0;
 const getMedia_1 = __importDefault(require("@api/get/getMedia"));
 const entity_1 = require("./entity");
+const comment_1 = require("./comment");
 class Media extends entity_1.Entity {
     // Private fields
     _media;
@@ -18,6 +19,11 @@ class Media extends entity_1.Entity {
     }
     get isEdited() {
         return this._media.isEdited;
+    }
+    // Methods
+    async getCommentsPage(sortOrder, page) {
+        const comments = await comment_1.Comment.getCommentsPage(this._media.mediaId, sortOrder, page);
+        return comments;
     }
     // Static constructors
     static async fromMediaId(id) {

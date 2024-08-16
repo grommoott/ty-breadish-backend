@@ -32,12 +32,21 @@ class New extends Media {
 
     // Methods
 
-    public async edit(data: { title: string, content: string }): Promise<void | Error> {
+    public async edit(data: { title?: string, content?: string }): Promise<void | Error> {
         return await updateNew(this._id, data)
     }
 
     public async delete(): Promise<boolean | Error> {
         return await deleteNew(this._id)
+    }
+
+    public toListView(): object {
+        return {
+            id: this.id.id,
+            title: this.title,
+            mediaId: this.mediaId.id,
+            moment: this.moment.moment,
+        }
     }
 
     // Static constructors

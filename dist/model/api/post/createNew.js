@@ -8,10 +8,10 @@ const bdClient_1 = __importDefault(require("@api/bdClient"));
 const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
-async function createNew(title, content, moment = null) {
+async function createNew(title, content, moment) {
     try {
         const _moment = (() => {
-            if (moment === null) {
+            if (!moment) {
                 return _primitives_1.Moment.now();
             }
             else {

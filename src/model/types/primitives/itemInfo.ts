@@ -41,16 +41,7 @@ class ItemInfo implements IBDPrimitive {
     }
 
     public toJSON(): string {
-        const itemInfo: ItemInfoJson = {
-            cooking_method: this.cookingMethod,
-            ingredients: this.ingredients,
-            pfc: {
-                kkal: this.pfc.kkal,
-                protein: this.pfc.protein,
-                fat: this.pfc.fat,
-                carbs: this.pfc.carbs
-            }
-        }
+        const itemInfo = this.toNormalView()
 
         return JSON.stringify(itemInfo)
     }
@@ -60,7 +51,15 @@ class ItemInfo implements IBDPrimitive {
     }
 
     public serialize(): string {
-        return JSON.stringify(this)
+        return this.toJSON()
+    }
+
+    public toNormalView(): object {
+        return {
+            cookingMethod: this.cookingMethod,
+            ingredients: this.ingredients,
+            pfc: this.pfc
+        }
     }
 
     public constructor(cookingMethod: CookingMethod, ingredients: Ingredient[], pfc: PFC) {

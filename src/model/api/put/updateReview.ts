@@ -1,8 +1,10 @@
 import bdClient from "@api/bdClient";
 import getReview from "@api/get/getReview";
+import updateItemRate from "@api/put/updateItemRate";
 import { isEmpty, pgFormat } from "@helpers";
 import { IReview } from "@interfaces";
-import { Rate, ReviewId } from "@primitives";
+import { ReviewId } from "@primitives";
+import { Rate } from "@enums";
 
 export default async function updateReview(id: ReviewId, data: { content?: string, rate?: Rate }): Promise<void | Error> {
     try {
@@ -25,6 +27,7 @@ export default async function updateReview(id: ReviewId, data: { content?: strin
         }).join(", ")
 
         await bdClient.query(`update reviews set ${setString} where id=${id}`)
+        await updateItemRate(reviewsWithId.target)
     } catch (e) {
         const msg = "Error in updateReview request: " + e
         throw new Error(msg, { cause: 500 })

@@ -9,14 +9,14 @@ const getSessionByUserDevice_1 = __importDefault(require("@api/get/getSessionByU
 const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
-async function createSession(userId, deviceId, moment = null) {
+async function createSession(userId, deviceId, moment) {
     try {
         const sessionWithUserDevice = await (0, getSessionByUserDevice_1.default)(userId, deviceId);
         if (!(sessionWithUserDevice instanceof Error)) {
             return new Error(`There is already session with userId ${userId} and deviceId ${deviceId}`);
         }
         const _moment = (() => {
-            if (moment === null) {
+            if (!moment) {
                 return _primitives_1.Moment.now();
             }
             else {

@@ -15,6 +15,7 @@ const checkAuthorized = (req, _, next) => {
         next(accessTokenPayload);
         return;
     }
+    req.body.accessTokenPayload = accessTokenPayload;
     next();
 };
 exports.checkAuthorized = checkAuthorized;

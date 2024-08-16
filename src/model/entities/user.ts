@@ -1,9 +1,9 @@
 import getUserByUsername from "@api/get/getUserByUsername";
 import getUserRole from "@api/get/getUserRole";
 import updateUser from "@api/put/updateUser";
-import { ItemType, LikeType, OrderType, Role } from "@enums";
+import { ItemType, LikeType, OrderType, Role, Rate } from "@enums";
 import { IFeatured, ILike, IUser } from "@interfaces";
-import { Email, Hash, Id, ItemId, MediaId, Moment, ProductId, Rate, UserId } from "@primitives";
+import { Email, Hash, Id, ItemId, MediaId, Moment, ProductId, UserId } from "@primitives";
 import { Comment } from "./comment";
 import getUser from "@api/get/getUser";
 import { Review } from "./review";
@@ -14,6 +14,8 @@ import { Featured } from "./featured";
 import { OrderInfo } from "model/types/primitives/orderInfo";
 import { Order } from "./order";
 import { Entity } from "./entity";
+import featured from "routes/featured";
+import getUserByEmail from "@api/get/getUserByEmail";
 
 class User extends Entity {
 
@@ -23,6 +25,7 @@ class User extends Entity {
     private _role: Role | undefined
     private _liked: Array<Like> | undefined
     private _featured: Array<Featured> | undefined
+    private _orders: Array<Order> | undefined
 
     // Getters
 
@@ -86,6 +89,24 @@ class User extends Entity {
         return this._featured
     }
 
+    public async getOrders(): Promise<Array<Order> | Error> {
+        if (!this._orders) {
+            const orders: Array<Order> | Error = await Order.fromUser(this._user.id)
+
+            if (orders instanceof Error) {
+                return orders
+            }
+
+            this._orders = orders
+        }
+
+        return this._orders
+    }
+
+    public async isPasswordIsValid(password: string): Promise<boolean> {
+        return await this._user.passwordHash.compare(password)
+    }
+
     public async createComment(target: MediaId, content: string): Promise<Comment | Error> {
         const comment: Comment | Error = await Comment.create(this._user.id, target, content)
 
@@ -138,22 +159,18 @@ class User extends Entity {
 
     // Static constructors
 
-    public static async fromAuth(username: string, password: string): Promise<User | Error> {
+    public static async fromUsername(username: string): Promise<User | Error> {
         const user: IUser | Error = await getUserByUsername(username)
 
         if (user instanceof Error) {
-            return new Error(`User with such username(${username}) isn't exists`)
-        }
-
-        if (!(await user.passwordHash.compare(password))) {
-            return new Error(`Invalid password`)
+            return user
         }
 
         return new User(user)
     }
 
-    public static async fromUsername(username: string): Promise<User | Error> {
-        const user: IUser | Error = await getUserByUsername(username)
+    public static async fromEmail(email: Email): Promise<User | Error> {
+        const user: IUser | Error = await getUserByEmail(email)
 
         if (user instanceof Error) {
             return user

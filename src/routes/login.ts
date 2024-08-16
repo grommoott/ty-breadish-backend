@@ -9,10 +9,18 @@ class Login {
     public post: Array<Middleware> = [
         checkBodyParams(["username", "password"]),
         asyncErrorCatcher(async (req, res, next) => {
-            const user: User | Error = await User.fromAuth(req.body.username, req.body.password)
+            const username: string = req.body.username
+            const password: string = req.body.password
+
+            const user: User | Error = await User.fromUsername(username)
 
             if (user instanceof Error) {
                 next(user)
+                return
+            }
+
+            if (!user.isPasswordIsValid(password)) {
+                next(new Error("Invalid password"))
                 return
             }
 

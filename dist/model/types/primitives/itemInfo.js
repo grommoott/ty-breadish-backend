@@ -15,23 +15,21 @@ class ItemInfo {
         return new ItemInfo(obj.cooking_method, obj.ingredients, obj.pfc);
     }
     toJSON() {
-        const itemInfo = {
-            cooking_method: this.cookingMethod,
-            ingredients: this.ingredients,
-            pfc: {
-                kkal: this.pfc.kkal,
-                protein: this.pfc.protein,
-                fat: this.pfc.fat,
-                carbs: this.pfc.carbs
-            }
-        };
+        const itemInfo = this.toNormalView();
         return JSON.stringify(itemInfo);
     }
     toBDView() {
         return `'${(0, _helpers_1.pgFormat)(this.toJSON())}'`;
     }
     serialize() {
-        return JSON.stringify(this);
+        return this.toJSON();
+    }
+    toNormalView() {
+        return {
+            cookingMethod: this.cookingMethod,
+            ingredients: this.ingredients,
+            pfc: this.pfc
+        };
     }
     constructor(cookingMethod, ingredients, pfc) {
         this.cookingMethod = cookingMethod;

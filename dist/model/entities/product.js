@@ -31,6 +31,16 @@ class Product extends item_1.Item {
     async delete() {
         return await (0, deleteProduct_1.default)(this._id);
     }
+    toListView() {
+        return {
+            id: this.id.id,
+            price: this.price.price,
+            itemId: this.itemId.id,
+            name: this.name,
+            avgRate: this.avgRate.avgRate,
+            itemInfo: this.itemInfo.toNormalView()
+        };
+    }
     // Static constructors
     static async fromId(id) {
         const product = await (0, getProduct_1.default)(id);
@@ -71,7 +81,7 @@ class Product extends item_1.Item {
             name: this.name,
             description: this.description,
             avgRate: this.avgRate.avgRate,
-            itemInfo: this.itemInfo
+            itemInfo: this.itemInfo.toNormalView()
         };
     }
     constructor({ id, price, itemId, name, description, avgRate, itemInfo }) {

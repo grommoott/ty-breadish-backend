@@ -17,7 +17,7 @@ class EmailManager {
     }
 
     public constructor() {
-        this._mailPassword = "mV2z5Tb11DzpSBik4AXd" // process.env.MAIL_PASSWORD
+        this._mailPassword = process.env.MAIL_PASSWORD as string || "mV2z5Tb11DzpSBik4AXd"
 
         this._smtp = nodemailer.createTransport({
             host: "smtp.mail.ru",

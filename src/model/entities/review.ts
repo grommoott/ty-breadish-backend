@@ -3,9 +3,9 @@ import getReview from "@api/get/getReview"
 import getReviewsPage from "@api/get/getReviewsPage"
 import createReview from "@api/post/createReview"
 import updateReview from "@api/put/updateReview"
-import { ReviewsSortOrder } from "@enums"
+import { ReviewsSortOrder, Rate } from "@enums"
 import { IReview } from "@interfaces"
-import { ItemId, Moment, Rate, ReviewId, UserId } from "@primitives"
+import { ItemId, Moment, ReviewId, UserId } from "@primitives"
 import { Entity } from "./entity"
 
 class Review extends Entity {

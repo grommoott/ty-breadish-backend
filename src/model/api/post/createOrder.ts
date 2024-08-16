@@ -8,7 +8,7 @@ import { Moment, ProductId, UserId } from "@primitives";
 import { OrderInfo } from "model/types/primitives/orderInfo";
 import { QueryResult } from "pg";
 
-export default async function createOrder(from: UserId, orderType: OrderType, orderInfo: OrderInfo, products: Array<ProductId>, moment: Moment): Promise<IOrder | Error> {
+export default async function createOrder(from: UserId, orderType: OrderType, orderInfo: OrderInfo, products: Array<ProductId>, moment?: Moment): Promise<IOrder | Error> {
     try {
         const userWithId: IUser | Error = await getUser(from)
 
@@ -17,7 +17,7 @@ export default async function createOrder(from: UserId, orderType: OrderType, or
         }
 
         const _moment: Moment = (() => {
-            if (moment === null) {
+            if (!moment) {
                 return Moment.now()
             } else {
                 return moment

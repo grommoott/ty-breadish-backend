@@ -10,7 +10,7 @@ const getUserByUsername_1 = __importDefault(require("@api/get/getUserByUsername"
 const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
-async function createUser(username, passwordHash, email, moment = null) {
+async function createUser(username, passwordHash, email, moment) {
     try {
         const usersWithUsername = await (0, getUserByUsername_1.default)(username);
         if (!(usersWithUsername instanceof Error)) {
@@ -21,7 +21,7 @@ async function createUser(username, passwordHash, email, moment = null) {
             return new Error(`User with such email(${email}) is already exists`, { cause: 400 });
         }
         const _moment = (() => {
-            if (moment == null) {
+            if (!moment) {
                 return new _primitives_1.Moment(new Date().getTime());
             }
             else {

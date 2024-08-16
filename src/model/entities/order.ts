@@ -7,6 +7,7 @@ import { IOrder } from "@interfaces"
 import { Moment, OrderId, ProductId, UserId } from "@primitives"
 import { CourierOrderInfo, OrderInfo, PickUpOrderInfo } from "model/types/primitives/orderInfo"
 import { Entity } from "./entity"
+import getUserOrders from "@api/get/getUserOrders"
 
 class Order extends Entity {
 
@@ -64,6 +65,16 @@ class Order extends Entity {
         }
 
         return new Order(order)
+    }
+
+    public static async fromUser(id: UserId): Promise<Array<Order> | Error> {
+        const orders: Array<IOrder> | Error = await getUserOrders(id)
+
+        if (orders instanceof Error) {
+            return orders
+        }
+
+        return orders.map(order => new Order(order))
     }
 
     public static async create({ from, orderType, orderInfo, productIds }: { from: UserId, orderType: OrderType, orderInfo: OrderInfo, productIds: Array<ProductId> }): Promise<Order | Error> {

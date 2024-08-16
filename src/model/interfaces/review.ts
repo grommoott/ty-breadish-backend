@@ -1,4 +1,5 @@
-import { ItemId, Moment, Rate, ReviewId, UserId } from "@primitives"
+import { ItemId, Moment, ReviewId, UserId } from "@primitives"
+import { Rate } from "@enums"
 
 interface IReview {
     id: ReviewId,

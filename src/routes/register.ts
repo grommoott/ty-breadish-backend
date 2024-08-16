@@ -1,4 +1,3 @@
-import getUserByUsername from "@api/get/getUserByUsername"
 import { Session, User, VerificationCode } from "@entities"
 import { asyncErrorCatcher } from "@helpers"
 import { emailManager, VerificationCodeMail } from "@helpers/email"
@@ -12,33 +11,42 @@ class Register {
         checkBodyParams(["username", "password", "email"]),
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {
-            const user: User | Error = await User.fromUsername(req.body.username)
+            const username: string = req.body.username
+            const password: string = req.body.password
+            const email: Email = req.body.email
+
+            const user: User | Error = await User.fromUsername(username)
 
             if (!(user instanceof Error)) {
                 next(new Error("There is already user with such username"))
                 return
             }
 
-            const token: string = jwt.createRegisterToken(req.body.username, req.body.password, new Email(req.body.email))
+            const token: string = jwt.createRegisterToken(username, password, email)
 
-            let verificationCode: VerificationCode | Error = await VerificationCode.create(req.body.username)
+            let verificationCode: VerificationCode | Error = await VerificationCode.create(email)
 
             if (verificationCode instanceof Error) {
-                if (!verificationCode.message.startsWith("There is already verification code for user ")) {
+                if (!verificationCode.message.startsWith("There is already verification code for email ")) {
                     next(verificationCode)
                     return
                 }
 
-                verificationCode = await VerificationCode.fromUsername(req.body.username)
+                verificationCode = await VerificationCode.fromEmail(email)
 
                 if (verificationCode instanceof Error) {
                     next(verificationCode)
                     return
                 }
 
+                if (verificationCode.isFresh) {
+                    next("Another user already trying to register an account with this email, sorry you're late :(")
+                    return
+                }
+
                 await verificationCode.delete()
 
-                verificationCode = await VerificationCode.create(req.body.username)
+                verificationCode = await VerificationCode.create(email)
 
                 if (verificationCode instanceof Error) {
                     next(verificationCode)
@@ -46,7 +54,7 @@ class Register {
                 }
             }
 
-            emailManager.sendMail(new VerificationCodeMail(verificationCode), new Email(req.body.email))
+            emailManager.sendMail(new VerificationCodeMail(verificationCode), email)
 
             res.send({ registerToken: token })
         })
@@ -56,17 +64,32 @@ class Register {
         checkBodyParams(["verificationCode", "registerToken"]),
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {
-            const payload: RegisterToken | Error = jwt.getRegisterTokenPayload(req.body.registerToken)
+            const code: number = req.body.verificationCode
+            const registerToken = req.body.registerToken
+
+            const payload: RegisterToken | Error = jwt.getRegisterTokenPayload(registerToken)
 
             if (payload instanceof Error) {
                 next(payload)
                 return
             }
 
-            const verificationCode: VerificationCode | Error = await VerificationCode.fromUsername(payload.username)
+            const verificationCode: VerificationCode | Error = await VerificationCode.fromEmail(new Email(payload.email))
 
             if (verificationCode instanceof Error) {
                 next(verificationCode)
+                return
+            }
+
+            const isValid: boolean | Error = await verificationCode.compare(code)
+
+            if (isValid instanceof Error) {
+                next(isValid)
+                return
+            }
+
+            if (!isValid) {
+                next(new Error("Invalid verification code"))
                 return
             }
 

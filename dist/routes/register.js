@@ -15,31 +15,38 @@ class Register {
         (0, _middlewares_1.checkBodyParams)(["username", "password", "email"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const user = await _entities_1.User.fromUsername(req.body.username);
+            const username = req.body.username;
+            const password = req.body.password;
+            const email = req.body.email;
+            const user = await _entities_1.User.fromUsername(username);
             if (!(user instanceof Error)) {
                 next(new Error("There is already user with such username"));
                 return;
             }
-            const token = jwt_1.default.createRegisterToken(req.body.username, req.body.password, new _primitives_1.Email(req.body.email));
-            let verificationCode = await _entities_1.VerificationCode.create(req.body.username);
+            const token = jwt_1.default.createRegisterToken(username, password, email);
+            let verificationCode = await _entities_1.VerificationCode.create(username);
             if (verificationCode instanceof Error) {
                 if (!verificationCode.message.startsWith("There is already verification code for user ")) {
                     next(verificationCode);
                     return;
                 }
-                verificationCode = await _entities_1.VerificationCode.fromUsername(req.body.username);
+                verificationCode = await _entities_1.VerificationCode.fromUsername(username);
                 if (verificationCode instanceof Error) {
                     next(verificationCode);
                     return;
                 }
+                if (verificationCode.isFresh) {
+                    next("Another user already trying to register an account with such username, sorry you're late :(");
+                    return;
+                }
                 await verificationCode.delete();
-                verificationCode = await _entities_1.VerificationCode.create(req.body.username);
+                verificationCode = await _entities_1.VerificationCode.create(username);
                 if (verificationCode instanceof Error) {
                     next(verificationCode);
                     return;
                 }
             }
-            email_1.emailManager.sendMail(new email_1.VerificationCodeMail(verificationCode), new _primitives_1.Email(req.body.email));
+            email_1.emailManager.sendMail(new email_1.VerificationCodeMail(verificationCode), email);
             res.send({ registerToken: token });
         })
     ];
@@ -47,7 +54,9 @@ class Register {
         (0, _middlewares_1.checkBodyParams)(["verificationCode", "registerToken"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const payload = jwt_1.default.getRegisterTokenPayload(req.body.registerToken);
+            const code = req.body.verificationCode;
+            const registerToken = req.body.registerToken;
+            const payload = jwt_1.default.getRegisterTokenPayload(registerToken);
             if (payload instanceof Error) {
                 next(payload);
                 return;
@@ -55,6 +64,10 @@ class Register {
             const verificationCode = await _entities_1.VerificationCode.fromUsername(payload.username);
             if (verificationCode instanceof Error) {
                 next(verificationCode);
+                return;
+            }
+            if (verificationCode.code !== code) {
+                next(new Error("Invalid verification code"));
                 return;
             }
             if (!verificationCode.isFresh) {

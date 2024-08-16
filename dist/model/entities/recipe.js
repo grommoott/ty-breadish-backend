@@ -27,6 +27,15 @@ class Recipe extends item_1.Item {
     async delete() {
         return await (0, deleteRecipe_1.default)(this._id);
     }
+    toListView() {
+        return {
+            id: this.id.id,
+            itemId: this.itemId.id,
+            name: this.name,
+            avgRate: this.avgRate.avgRate,
+            itemInfo: this.itemInfo
+        };
+    }
     // Static constructors
     static async fromId(id) {
         const recipe = await (0, getRecipe_1.default)(id);

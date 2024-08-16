@@ -20,7 +20,6 @@ __exportStar(require("./hash"), exports);
 __exportStar(require("./id"), exports);
 __exportStar(require("./moment"), exports);
 __exportStar(require("./price"), exports);
-__exportStar(require("./rate"), exports);
 __exportStar(require("./itemInfo"), exports);
 __exportStar(require("./bdPrimitive"), exports);
 __exportStar(require("./orderInfo"), exports);

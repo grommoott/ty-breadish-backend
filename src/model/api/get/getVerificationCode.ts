@@ -1,17 +1,17 @@
 import { IUser, IVerificationCode, queryRowToVerificationCode } from "@interfaces";
-import { UserId } from "@primitives";
+import { Email, UserId } from "@primitives";
 import getUser from "./getUser";
 import { QueryResult } from "pg";
 import bdClient from "@api/bdClient";
 import getUserByUsername from "./getUserByUsername";
 import { pgFormat } from "@helpers";
 
-export default async function getVerificationCode(username: string): Promise<IVerificationCode | Error> {
+export default async function getVerificationCode(email: Email): Promise<IVerificationCode | Error> {
     try {
-        const response: QueryResult = await bdClient.query(`select * from verification_codes where "username"='${pgFormat(username)}'`)
+        const response: QueryResult = await bdClient.query(`select * from verification_codes where email='${pgFormat(email)}'`)
 
         if (response.rowCount == 0) {
-            return new Error(`There is no verification code for user ${username}`)
+            return new Error(`There is no verification code for user ${email}`)
         }
 
         return queryRowToVerificationCode(response.rows[0])

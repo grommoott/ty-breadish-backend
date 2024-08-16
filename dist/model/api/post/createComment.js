@@ -10,7 +10,7 @@ const getUser_1 = __importDefault(require("@api/get/getUser"));
 const _helpers_1 = require("@helpers");
 const _interfaces_1 = require("@interfaces");
 const _primitives_1 = require("@primitives");
-async function createComment(from, target, content, moment = null) {
+async function createComment(from, target, content, moment) {
     try {
         const userWithId = await (0, getUser_1.default)(from);
         if (userWithId instanceof Error) {
@@ -21,7 +21,7 @@ async function createComment(from, target, content, moment = null) {
             return mediaWithId;
         }
         const _moment = (() => {
-            if (moment == null) {
+            if (!moment) {
                 return new _primitives_1.Moment(new Date().getTime());
             }
             else {

@@ -34,6 +34,14 @@ class New extends media_1.Media {
     async delete() {
         return await (0, deleteNew_1.default)(this._id);
     }
+    toListView() {
+        return {
+            id: this.id.id,
+            title: this.title,
+            mediaId: this.mediaId.id,
+            moment: this.moment.moment,
+        };
+    }
     // Static constructors
     static async getNewsPage(page) {
         const news = await (0, getNewsPage_1.default)(page);

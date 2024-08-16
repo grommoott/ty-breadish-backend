@@ -1,10 +1,11 @@
 import bdClient from "@api/bdClient"
 import { pgFormat } from "@helpers"
+import { Email } from "@primitives"
 import { QueryResult } from "pg"
 
-export default async function deleteVerificationCode(username: string): Promise<boolean | Error> {
+export default async function deleteVerificationCode(email: Email): Promise<boolean | Error> {
     try {
-        const response: QueryResult = await bdClient.query(`delete from verification_codes where username='${pgFormat(username)}'`)
+        const response: QueryResult = await bdClient.query(`delete from verification_codes where email='${pgFormat(email)}'`)
 
         return response.rowCount != 0
     } catch (e) {

@@ -1,6 +1,6 @@
-function isInEnum(enumObject: any, value: string): boolean {
-    for (const val of enumObject) {
-        if (val === value) {
+function isInEnum(enumObject: any, value: any): boolean {
+    for (const val of Object.values(enumObject)) {
+        if (val == value) {
             return true
         }
     }

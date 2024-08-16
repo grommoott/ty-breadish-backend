@@ -21,3 +21,4 @@ __exportStar(require("./middleware"), exports);
 __exportStar(require("./contentJson"), exports);
 __exportStar(require("./errorHandler"), exports);
 __exportStar(require("./checkAdmin"), exports);
+__exportStar(require("./checkParams"), exports);

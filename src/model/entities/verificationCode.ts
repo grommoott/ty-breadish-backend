@@ -4,7 +4,7 @@ import createVerificationCode from "@api/post/createVerificationCode";
 import updateVerificationCode from "@api/put/updateVerificationCode";
 import { hour } from "@helpers/timeConstants";
 import { IVerificationCode } from "@interfaces";
-import { Moment } from "@primitives";
+import { Email, Moment } from "@primitives";
 
 class VerificationCode {
 
@@ -15,8 +15,8 @@ class VerificationCode {
 
     // Getters
 
-    public get username(): string {
-        return this._verificationCode.username
+    public get email(): Email {
+        return this._verificationCode.email
     }
 
     public get code(): number {
@@ -34,18 +34,32 @@ class VerificationCode {
     // Methods
 
     public async edit(data: { code?: number, moment?: Moment }): Promise<void | Error> {
-        return await updateVerificationCode(this._verificationCode.username, data)
+        return await updateVerificationCode(this._verificationCode.email, data)
     }
 
     public async delete(): Promise<boolean | Error> {
-        return await deleteVerificationCode(this._verificationCode.username)
+        return await deleteVerificationCode(this._verificationCode.email)
+    }
+
+    public async compare(code: number): Promise<boolean | Error> {
+        const result = code === this.code
+
+        if (result) {
+            const del: boolean | Error = await deleteVerificationCode(this.email)
+
+            if (del instanceof Error) {
+                return del
+            }
+        }
+
+        return result
     }
 
 
     // Static constructors
 
-    public static async fromUsername(username: string): Promise<VerificationCode | Error> {
-        const verificationCode: IVerificationCode | Error = await getVerificationCode(username)
+    public static async fromEmail(email: Email): Promise<VerificationCode | Error> {
+        const verificationCode: IVerificationCode | Error = await getVerificationCode(email)
 
         if (verificationCode instanceof Error) {
             return verificationCode
@@ -54,10 +68,10 @@ class VerificationCode {
         return new VerificationCode(verificationCode)
     }
 
-    public static async create(username: string): Promise<VerificationCode | Error> {
+    public static async create(email: Email): Promise<VerificationCode | Error> {
         const code = 100000 + Math.floor(900000 * Math.random())
 
-        const verificationCode: IVerificationCode | Error = await createVerificationCode(username, code)
+        const verificationCode: IVerificationCode | Error = await createVerificationCode(email, code)
 
         if (verificationCode instanceof Error) {
             return verificationCode
@@ -66,8 +80,8 @@ class VerificationCode {
         return new VerificationCode(verificationCode)
     }
 
-    private constructor({ username, code, moment }: IVerificationCode) {
-        this._verificationCode = { username, code, moment }
+    private constructor({ email, code, moment }: IVerificationCode) {
+        this._verificationCode = { email, code, moment }
     }
 }
 
