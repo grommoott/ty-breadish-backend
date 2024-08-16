@@ -11,11 +11,11 @@ const ips: Array<string> = new Array(
 )
 
 const checkYookassa: Middleware = (req, res, next) => {
-    console.log(req.ips)
-    if (ips.findIndex((val) => val === req.ip) == -1) {
-        next(new Error("Forbidden!", { cause: 403 }))
-        return
-    }
+    console.log(req)
+    // if (ips.findIndex((val) => val === req.ip) == -1) {
+    //     next(new Error("Forbidden!", { cause: 403 }))
+    //     return
+    // }
 
     next()
 }
