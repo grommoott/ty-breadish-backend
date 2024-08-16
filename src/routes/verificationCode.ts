@@ -15,11 +15,34 @@ class VerificationCodeRoute {
                 return
             }
 
-            const verificationCode: VerificationCode | Error = await VerificationCode.create(user.username)
+            let verificationCode: VerificationCode | Error = await VerificationCode.create(user.email)
 
             if (verificationCode instanceof Error) {
-                next(verificationCode)
-                return
+                if (!verificationCode.message.startsWith("There is already verification code for email ")) {
+                    next(verificationCode)
+                    return
+                }
+
+                verificationCode = await VerificationCode.fromEmail(user.email)
+
+                if (verificationCode instanceof Error) {
+                    next(verificationCode)
+                    return
+                }
+
+                const del: boolean | Error = await verificationCode.delete()
+
+                if (del instanceof Error) {
+                    next(del)
+                    return
+                }
+
+                verificationCode = await VerificationCode.create(user.email)
+
+                if (verificationCode instanceof Error) {
+                    next(verificationCode)
+                    return
+                }
             }
 
             emailManager.sendMail(new VerificationCodeMail(verificationCode), user.email)

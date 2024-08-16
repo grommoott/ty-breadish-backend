@@ -44,7 +44,12 @@ class Register {
                     return
                 }
 
-                await verificationCode.delete()
+                const del: boolean | Error = await verificationCode.delete()
+
+                if (del instanceof Error) {
+                    next(del)
+                    return
+                }
 
                 verificationCode = await VerificationCode.create(email)
 
