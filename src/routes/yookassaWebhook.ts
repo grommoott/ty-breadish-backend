@@ -6,7 +6,6 @@ class YookassaWebhook {
         checkYookassa,
         (req, res, next) => {
             console.log(req.body)
-
             res.sendStatus(200)
 
             next()
