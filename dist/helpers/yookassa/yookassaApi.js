@@ -18,13 +18,13 @@ class YookassaApi {
             }
         };
     }
-    _defaultAuth = {};
     async createPayment(amount, description, derirectUrl) {
         const response = await axios_1.default.post("https://api.yookassa.ru/v3/payments", {
             amount: {
                 value: amount.price,
                 currency: "RUB"
             },
+            capture: true,
             confirmation: {
                 type: "redirect",
                 return_url: derirectUrl
