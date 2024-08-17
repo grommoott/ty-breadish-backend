@@ -8,6 +8,7 @@ const ips: Array<string> = new Array(
 
 const checkYookassa: Middleware = (req, res, next) => {
     const ip: string | undefined = req.header("x-forwarded-for")?.split(", ").pop()
+    console.log(ip)
 
     if (ips.findIndex((val) => val === ip) == -1) {
         next(new Error("Forbidden!", { cause: 403 }))
