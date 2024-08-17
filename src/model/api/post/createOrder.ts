@@ -1,19 +1,30 @@
 import bdClient from "@api/bdClient";
+import getOrderByPaymentId from "@api/get/getOrderByPaymentId";
 import getProduct from "@api/get/getProduct";
 import getUser from "@api/get/getUser";
-import { OrderType } from "@enums";
+import { OrderType, PaymentStatuses } from "@enums";
 import { pgFormat } from "@helpers";
 import { IOrder, IProduct, IUser, queryRowsToOrder } from "@interfaces";
 import { Moment, ProductId, UserId } from "@primitives";
 import { OrderInfo } from "model/types/primitives/orderInfo";
 import { QueryResult } from "pg";
 
-export default async function createOrder(from: UserId, orderType: OrderType, orderInfo: OrderInfo, products: Array<ProductId>, moment?: Moment): Promise<IOrder | Error> {
+export default async function createOrder(from: UserId, paymentId: string, orderType: OrderType, orderInfo: OrderInfo, productIds: Array<ProductId>, moment?: Moment): Promise<IOrder | Error> {
     try {
         const userWithId: IUser | Error = await getUser(from)
 
         if (userWithId instanceof Error) {
             return userWithId
+        }
+
+        const orderWithPaymentId: IOrder | Error = await getOrderByPaymentId(paymentId)
+
+        if (!(orderWithPaymentId instanceof Error)) {
+            return new Error(`Order with such payment id(${paymentId}) is already exists`)
+        }
+
+        if (productIds.length == 0) {
+            return new Error(`Empty products list!`)
         }
 
         const _moment: Moment = (() => {
@@ -24,7 +35,7 @@ export default async function createOrder(from: UserId, orderType: OrderType, or
             }
         })()
 
-        const productsWithIdPromises: Array<Promise<IProduct | Error>> = products.map(async productId => {
+        const productsWithIdPromises: Array<Promise<IProduct | Error>> = productIds.map(async productId => {
             return await getProduct(productId)
         })
 
@@ -42,12 +53,10 @@ export default async function createOrder(from: UserId, orderType: OrderType, or
             }
         }
 
-        const paymentId = "payment_id" // get it from yookassa
-
-        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${pgFormat(paymentId)}', ${_moment}, '${pgFormat(orderType)}', '${pgFormat(JSON.stringify(orderInfo))}', -1) returning *`)
+        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${pgFormat(paymentId)}', '${PaymentStatuses.NotSucceeded}', ${_moment}, '${pgFormat(orderType)}', '${pgFormat(JSON.stringify(orderInfo))}', -1) returning *`)
         const order = responseOrders.rows[0]
 
-        const responseProducts: QueryResult = await bdClient.query(`insert into order_products_ids values ${products.map(productId => `(default, ${order.id}, ${productId})`).join(", ")} returning *`)
+        const responseProducts: QueryResult = await bdClient.query(`insert into order_products_ids values ${productIds.map(productId => `(default, ${order.id}, ${productId})`).join(", ")} returning *`)
 
         return queryRowsToOrder(responseOrders.rows[0], responseProducts.rows)
     } catch (e) {

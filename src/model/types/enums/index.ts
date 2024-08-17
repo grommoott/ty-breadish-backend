@@ -6,6 +6,7 @@ import { ReviewsSortOrder, ReviewsSortOrders } from "./reviewsSortOrder";
 import { Role, Roles } from "./role";
 import { OrderType, OrderTypes } from "./orderType"
 import { Rate, Rates } from "./rate"
+import { PaymentStatus, PaymentStatuses } from "./paymentStatus"
 
 export {
     CommentsSortOrder, CommentsSortOrders,
@@ -15,5 +16,6 @@ export {
     ReviewsSortOrder, ReviewsSortOrders,
     Role, Roles,
     OrderType, OrderTypes,
-    Rate, Rates
+    Rate, Rates,
+    PaymentStatus, PaymentStatuses
 }

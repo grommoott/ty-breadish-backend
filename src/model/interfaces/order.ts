@@ -1,4 +1,4 @@
-import { OrderType, OrderTypes } from "@enums";
+import { OrderType, OrderTypes, PaymentStatus } from "@enums";
 import { Moment, OrderId, ProductId, UserId } from "@primitives";
 import { OrderInfo } from "model/types/primitives/orderInfo";
 
@@ -6,6 +6,7 @@ interface IOrder {
     id: OrderId,
     from: UserId,
     paymentId: string,
+    paymentStatus: PaymentStatus,
     moment: Moment,
     orderType: OrderType,
     orderInfo: OrderInfo,
@@ -18,6 +19,7 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
         "id" in orderRow &&
         "from" in orderRow &&
         "payment_id" in orderRow &&
+        "payment_status" in orderRow &&
         "moment" in orderRow &&
         "order_type" in orderRow &&
         "order_info" in orderRow &&
@@ -63,6 +65,7 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
         id: new OrderId(orderRow.id),
         from: new UserId(orderRow.from),
         paymentId: orderRow.payment_id,
+        paymentStatus: orderRow.payment_status,
         moment: new Moment(orderRow.moment),
         orderType,
         orderInfo,

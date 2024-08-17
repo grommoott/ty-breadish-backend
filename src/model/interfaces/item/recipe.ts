@@ -3,6 +3,7 @@ import { IItem } from "./item"
 
 interface IRecipe extends IItem {
     id: RecipeId,
+    recipe: string
 }
 
 function isItemIsRecipe(item: IItem): item is IRecipe {
@@ -11,6 +12,7 @@ function isItemIsRecipe(item: IItem): item is IRecipe {
 
 function queryRowToRecipe(row: any): IRecipe {
     if (!("id" in row &&
+        "recipe" in row &&
         "item_id" in row &&
         "name" in row &&
         "description" in row &&
@@ -21,6 +23,7 @@ function queryRowToRecipe(row: any): IRecipe {
 
     return {
         id: new RecipeId(row.id),
+        recipe: row.recipe,
         itemId: new ItemId(row.item_id),
         name: row.name,
         description: row.description,

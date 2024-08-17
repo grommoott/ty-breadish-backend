@@ -13,6 +13,7 @@ class Recipe extends Item {
     // Private fields
 
     private _id: RecipeId
+    private _recipe: string
 
     private static _recipes: Array<Recipe> | undefined
 
@@ -22,9 +23,13 @@ class Recipe extends Item {
         return this._id
     }
 
+    public get recipe(): string {
+        return this._recipe
+    }
+
     // Methods
 
-    public async edit(data: { name?: string, description?: string, itemInfo?: ItemInfo }): Promise<void | Error> {
+    public async edit(data: { name?: string, description?: string, itemInfo?: ItemInfo, recipe?: string }): Promise<void | Error> {
         return await updateRecipe(this._id, data)
     }
 
@@ -78,14 +83,14 @@ class Recipe extends Item {
         return this._recipes
     }
 
-    public static async create(name: string, description: string, itemInfo: ItemInfo): Promise<Recipe | Error> {
-        const recipe: IRecipe | Error = await createRecipe(name, description, itemInfo)
+    public static async create(name: string, description: string, itemInfo: ItemInfo, recipe: string): Promise<Recipe | Error> {
+        const _recipe: IRecipe | Error = await createRecipe(name, description, itemInfo, recipe)
 
-        if (recipe instanceof Error) {
-            return recipe
+        if (_recipe instanceof Error) {
+            return _recipe
         }
 
-        return new Recipe(recipe)
+        return new Recipe(_recipe)
     }
 
     public override toNormalView(): object {
@@ -95,15 +100,16 @@ class Recipe extends Item {
             name: this.name,
             description: this.description,
             avgRate: this.avgRate.avgRate,
-            itemInfo: this.itemInfo
+            itemInfo: this.itemInfo,
+            recipe: this.recipe
         }
     }
 
-    private constructor({ id, itemId, name, description, avgRate, itemInfo }: IRecipe) {
+    private constructor({ id, itemId, name, description, avgRate, itemInfo, recipe }: IRecipe) {
         super({ itemId, name, description, avgRate, itemInfo })
 
-
         this._id = id
+        this._recipe = recipe
     }
 }
 

@@ -3,9 +3,8 @@ import getRecipe from "@api/get/getRecipe";
 import { isEmpty, pgFormat } from "@helpers";
 import { IRecipe } from "@interfaces";
 import { ItemInfo, RecipeId } from "@primitives";
-import { QueryResult } from "pg";
 
-export default async function updateRecipe(id: RecipeId, data: { name?: string, description?: string, itemInfo?: ItemInfo }): Promise<void | Error> {
+export default async function updateRecipe(id: RecipeId, data: { name?: string, description?: string, itemInfo?: ItemInfo, recipe?: string }): Promise<void | Error> {
     try {
         if (isEmpty(data)) {
             return new Error("There is nothing to do")

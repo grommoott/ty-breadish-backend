@@ -1,11 +1,11 @@
 import bdClient from "@api/bdClient";
 import getOrder from "@api/get/getOrder";
-import { OrderType, OrderTypes } from "@enums";
+import { OrderType, OrderTypes, PaymentStatus } from "@enums";
 import { isEmpty, pgFormat } from "@helpers";
 import { IOrder } from "@interfaces";
 import { IBDPrimitive, isOrderInfoIsCourierOrderInfo, isOrderInfoIsPickUpOrderInfo, Moment, OrderId, OrderInfo } from "@primitives";
 
-export default async function updateOrder(id: OrderId, data: { orderType?: OrderType, orderInfo?: OrderInfo, readyMoment?: Moment }): Promise<void | Error> {
+export default async function updateOrder(id: OrderId, data: { paymentStatus?: PaymentStatus, orderType?: OrderType, orderInfo?: OrderInfo, readyMoment?: Moment }): Promise<void | Error> {
     try {
         if (isEmpty(data)) {
             return new Error("There is nothing to do")
@@ -49,6 +49,9 @@ export default async function updateOrder(id: OrderId, data: { orderType?: Order
 
                 case "readyMoment":
                     return "ready_moment"
+
+                case "paymentStatus":
+                    return "payment_status"
 
                 default:
                     return name

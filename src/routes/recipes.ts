@@ -36,21 +36,22 @@ class Recipes {
 
     public postCreate: Array<Middleware> = [
         checkAdmin,
-        checkBodyParams(["name", "description", "itemInfo"]),
+        checkBodyParams(["name", "description", "itemInfo", "recipe"]),
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {
             const name: string = req.body.name
             const description: string = req.body.description
             const itemInfo: ItemInfo = req.body.itemInfo
+            const recipe: string = req.body.recipe
 
-            const recipe: Recipe | Error = await Recipe.create(name, description, itemInfo)
+            const _recipe: Recipe | Error = await Recipe.create(name, description, itemInfo, recipe)
 
-            if (recipe instanceof Error) {
-                next(recipe)
+            if (_recipe instanceof Error) {
+                next(_recipe)
                 return
             }
 
-            res.send(recipe.toNormalView())
+            res.send(_recipe.toNormalView())
         })
     ]
 
@@ -88,15 +89,16 @@ class Recipes {
             const name: string | undefined = req.body.name
             const description: string | undefined = req.body.description
             const itemInfo: ItemInfo | undefined = req.body.itemInfo
+            const recipe: string | undefined = req.body.recipe
 
-            const recipe: Recipe | Error = await Recipe.fromId(id)
+            const _recipe: Recipe | Error = await Recipe.fromId(id)
 
-            if (recipe instanceof Error) {
-                next(recipe)
+            if (_recipe instanceof Error) {
+                next(_recipe)
                 return
             }
 
-            const edit: void | Error = await recipe.edit({ name, description, itemInfo })
+            const edit: void | Error = await _recipe.edit({ name, description, itemInfo, recipe })
 
             if (edit instanceof Error) {
                 next(edit)

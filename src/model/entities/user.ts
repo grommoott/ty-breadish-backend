@@ -143,8 +143,8 @@ class User extends Entity {
         return featured
     }
 
-    public async createOrder(orderType: OrderType, orderInfo: OrderInfo, productIds: Array<ProductId>): Promise<Order | Error> {
-        const order: Order | Error = await Order.create({ from: this._user.id, orderType, orderInfo, productIds })
+    public async createOrder(paymentId: string, orderType: OrderType, orderInfo: OrderInfo, productIds: Array<ProductId>): Promise<Order | Error> {
+        const order: Order | Error = await Order.create({ from: this._user.id, paymentId, orderType, orderInfo, productIds })
 
         return order
     }
