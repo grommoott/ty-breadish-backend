@@ -2,20 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorHandler = errorHandler;
 function errorHandler(error, req, res, next) {
+    res.sendStatus(error.cause || 400);
     if (error.cause === 500) {
-        res.sendStatus(500);
+        next(error);
     }
-    else if (error.cause === 400) {
-        res.sendStatus(400);
-    }
-    else if (error.cause === 401) {
-        res.sendStatus(401);
-    }
-    else if (error.cause === 404) {
-        res.sendStatus(404);
-    }
-    else {
-        res.sendStatus(400);
-    }
-    next(error);
 }
