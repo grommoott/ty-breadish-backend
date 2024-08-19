@@ -7,6 +7,7 @@ function queryRowsToOrder(orderRow, productsRows) {
     if (!("id" in orderRow &&
         "from" in orderRow &&
         "payment_id" in orderRow &&
+        "payment_status" in orderRow &&
         "moment" in orderRow &&
         "order_type" in orderRow &&
         "order_info" in orderRow &&
@@ -43,6 +44,7 @@ function queryRowsToOrder(orderRow, productsRows) {
         id: new _primitives_1.OrderId(orderRow.id),
         from: new _primitives_1.UserId(orderRow.from),
         paymentId: orderRow.payment_id,
+        paymentStatus: orderRow.payment_status,
         moment: new _primitives_1.Moment(orderRow.moment),
         orderType,
         orderInfo,

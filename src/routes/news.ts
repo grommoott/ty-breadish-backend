@@ -3,6 +3,8 @@ import { asyncErrorCatcher } from "@helpers"
 import { checkAdmin, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
 import { NewId } from "@primitives"
 import path from "path"
+import images from "./images"
+import { ImageCategories } from "@enums"
 
 class News {
     public getPage: Array<Middleware> = [
@@ -118,16 +120,23 @@ class News {
         })
     ]
 
-    public getImages: Array<Middleware> = [
-        checkParams(["id"]),
-        asyncErrorCatcher(async (req, res, next) => {
-            const id: NewId = new NewId(req.params.id)
+    public getImages: Array<Middleware> = images.get(ImageCategories.News)
 
-            res.sendFile(path.join(__dirname, `../../data/images/news/${id}.webp`))
-
-            next()
-        })
+    public postImages: Array<Middleware> = [
+        checkAdmin,
+        ...images.postCreate(ImageCategories.News)
     ]
+
+    public deleteImages: Array<Middleware> = [
+        checkAdmin,
+        ...images.delete(ImageCategories.News)
+    ]
+
+    public putImages: Array<Middleware> = [
+        checkAdmin,
+        ...images.put(ImageCategories.News)
+    ]
+
 }
 
 export default new News()

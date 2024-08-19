@@ -8,6 +8,7 @@ function isItemIsRecipe(item) {
 }
 function queryRowToRecipe(row) {
     if (!("id" in row &&
+        "recipe" in row &&
         "item_id" in row &&
         "name" in row &&
         "description" in row &&
@@ -17,6 +18,7 @@ function queryRowToRecipe(row) {
     }
     return {
         id: new _primitives_1.RecipeId(row.id),
+        recipe: row.recipe,
         itemId: new _primitives_1.ItemId(row.item_id),
         name: row.name,
         description: row.description,

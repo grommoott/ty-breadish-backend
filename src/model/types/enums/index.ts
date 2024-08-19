@@ -7,6 +7,7 @@ import { Role, Roles } from "./role";
 import { OrderType, OrderTypes } from "./orderType"
 import { Rate, Rates } from "./rate"
 import { PaymentStatus, PaymentStatuses } from "./paymentStatus"
+import { ImageCategory, ImageCategories } from "./imageCategory"
 
 export {
     CommentsSortOrder, CommentsSortOrders,
@@ -17,5 +18,6 @@ export {
     Role, Roles,
     OrderType, OrderTypes,
     Rate, Rates,
-    PaymentStatus, PaymentStatuses
+    PaymentStatus, PaymentStatuses,
+    ImageCategory, ImageCategories
 }

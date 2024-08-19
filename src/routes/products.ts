@@ -3,6 +3,8 @@ import { asyncErrorCatcher } from "@helpers"
 import { checkAdmin, checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
 import { ItemInfo, Price, ProductId } from "@primitives"
 import path from "path"
+import images from "./images"
+import { ImageCategories } from "@enums"
 
 class Products {
     public getList: Array<Middleware> = [
@@ -109,15 +111,21 @@ class Products {
         })
     ]
 
-    public getImages: Array<Middleware> = [
-        checkParams(["id"]),
-        asyncErrorCatcher(async (req, res, next) => {
-            const id: ProductId = new ProductId(req.params.id)
+    public getImages: Array<Middleware> = images.get(ImageCategories.Products)
 
-            res.sendFile(path.join(__dirname, `../../data/images/produts/${id}.webp`))
+    public postImages: Array<Middleware> = [
+        checkAdmin,
+        ...images.postCreate(ImageCategories.Products)
+    ]
 
-            next()
-        })
+    public deleteImages: Array<Middleware> = [
+        checkAdmin,
+        ...images.delete(ImageCategories.Products)
+    ]
+
+    public putImages: Array<Middleware> = [
+        checkAdmin,
+        ...images.put(ImageCategories.Products)
     ]
 }
 

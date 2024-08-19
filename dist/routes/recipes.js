@@ -32,18 +32,19 @@ class Recipes {
     ];
     postCreate = [
         _middlewares_1.checkAdmin,
-        (0, _middlewares_1.checkBodyParams)(["name", "description", "itemInfo"]),
+        (0, _middlewares_1.checkBodyParams)(["name", "description", "itemInfo", "recipe"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const name = req.body.name;
             const description = req.body.description;
             const itemInfo = req.body.itemInfo;
-            const recipe = await _entities_1.Recipe.create(name, description, itemInfo);
-            if (recipe instanceof Error) {
-                next(recipe);
+            const recipe = req.body.recipe;
+            const _recipe = await _entities_1.Recipe.create(name, description, itemInfo, recipe);
+            if (_recipe instanceof Error) {
+                next(_recipe);
                 return;
             }
-            res.send(recipe.toNormalView());
+            res.send(_recipe.toNormalView());
         })
     ];
     delete = [
@@ -73,12 +74,13 @@ class Recipes {
             const name = req.body.name;
             const description = req.body.description;
             const itemInfo = req.body.itemInfo;
-            const recipe = await _entities_1.Recipe.fromId(id);
-            if (recipe instanceof Error) {
-                next(recipe);
+            const recipe = req.body.recipe;
+            const _recipe = await _entities_1.Recipe.fromId(id);
+            if (_recipe instanceof Error) {
+                next(_recipe);
                 return;
             }
-            const edit = await recipe.edit({ name, description, itemInfo });
+            const edit = await _recipe.edit({ name, description, itemInfo, recipe });
             if (edit instanceof Error) {
                 next(edit);
                 return;

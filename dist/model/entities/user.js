@@ -105,8 +105,8 @@ class User extends entity_1.Entity {
         this._featured?.push(featured);
         return featured;
     }
-    async createOrder(orderType, orderInfo, productIds) {
-        const order = await order_1.Order.create({ from: this._user.id, orderType, orderInfo, productIds });
+    async createOrder(paymentId, orderType, orderInfo, productIds) {
+        const order = await order_1.Order.create({ from: this._user.id, paymentId, orderType, orderInfo, productIds });
         return order;
     }
     async edit(data) {

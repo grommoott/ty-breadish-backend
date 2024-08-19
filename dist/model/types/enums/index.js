@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Rates = exports.OrderTypes = exports.Roles = exports.ReviewsSortOrders = exports.LikeTypes = exports.ItemsSortOrders = exports.ItemTypes = exports.CommentsSortOrders = void 0;
+exports.ImageCategories = exports.PaymentStatuses = exports.Rates = exports.OrderTypes = exports.Roles = exports.ReviewsSortOrders = exports.LikeTypes = exports.ItemsSortOrders = exports.ItemTypes = exports.CommentsSortOrders = void 0;
 const commentsSortOrder_1 = require("./commentsSortOrder");
 Object.defineProperty(exports, "CommentsSortOrders", { enumerable: true, get: function () { return commentsSortOrder_1.CommentsSortOrders; } });
 const itemType_1 = require("./itemType");
@@ -17,3 +17,7 @@ const orderType_1 = require("./orderType");
 Object.defineProperty(exports, "OrderTypes", { enumerable: true, get: function () { return orderType_1.OrderTypes; } });
 const rate_1 = require("./rate");
 Object.defineProperty(exports, "Rates", { enumerable: true, get: function () { return rate_1.Rates; } });
+const paymentStatus_1 = require("./paymentStatus");
+Object.defineProperty(exports, "PaymentStatuses", { enumerable: true, get: function () { return paymentStatus_1.PaymentStatuses; } });
+const imageCategory_1 = require("./imageCategory");
+Object.defineProperty(exports, "ImageCategories", { enumerable: true, get: function () { return imageCategory_1.ImageCategories; } });

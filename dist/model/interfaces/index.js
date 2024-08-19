@@ -27,3 +27,4 @@ __exportStar(require("./media/new"), exports);
 __exportStar(require("./order"), exports);
 __exportStar(require("./session"), exports);
 __exportStar(require("./verificationCode"), exports);
+__exportStar(require("./image"), exports);

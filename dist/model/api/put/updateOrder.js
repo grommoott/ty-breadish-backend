@@ -46,6 +46,8 @@ async function updateOrder(id, data) {
                     return "order_info";
                 case "readyMoment":
                     return "ready_moment";
+                case "paymentStatus":
+                    return "payment_status";
                 default:
                     return name;
             }

@@ -1,7 +1,9 @@
-import { User, VerificationCode } from "@entities"
+import { Image, User, VerificationCode } from "@entities"
 import { asyncErrorCatcher } from "@helpers"
 import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
-import { Email, Hash, UserId } from "@primitives"
+import { Email, Hash, ImageId, UserId } from "@primitives"
+import images from "./images"
+import { ImageCategories } from "@enums"
 
 class Users {
     public getUsernameAvailable: Array<Middleware> = [
@@ -173,6 +175,47 @@ class Users {
 
             next()
         })
+    ]
+
+    public getAvatars: Array<Middleware> = images.get(ImageCategories.Users)
+
+    private checkAvatarPermissions: Middleware =
+        asyncErrorCatcher(async (req, res, next) => {
+            const id: ImageId = new ImageId(req.params.id)
+
+            const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
+
+            if (user instanceof Error) {
+                next(user)
+                return
+            }
+
+            if (user.id.id != id.id) {
+                next(new Error("Forbidden!", { cause: 403 }))
+                return
+            }
+        })
+
+    public postAvatars: Array<Middleware> = [
+        checkAuthorized,
+        checkParams(["id"]),
+        this.checkAvatarPermissions,
+        ...images.postCreate(ImageCategories.Users, true)
+    ]
+
+    public deleteAvatars: Array<Middleware> = [
+        checkAuthorized,
+        checkParams(["id"]),
+        this.checkAvatarPermissions,
+        ...images.delete(ImageCategories.Users, true)
+    ]
+
+
+    public putAvatars: Array<Middleware> = [
+        checkAuthorized,
+        checkParams(["id"]),
+        this.checkAvatarPermissions,
+        ...images.put(ImageCategories.Users, true)
     ]
 }
 

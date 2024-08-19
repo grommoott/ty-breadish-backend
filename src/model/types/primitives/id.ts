@@ -85,6 +85,10 @@ class SessionId extends Id {
     private _: SessionId | null = null
 }
 
+class ImageId extends Id {
+    private _: ImageId | null = null
+}
+
 export {
     Id,
     CommentId,
@@ -98,5 +102,6 @@ export {
     MediaId,
     ItemId,
     OrderId,
-    SessionId
+    SessionId,
+    ImageId
 }

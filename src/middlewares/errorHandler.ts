@@ -7,6 +7,8 @@ function errorHandler(error: Error, req: Request, res: Response, next: NextFunct
         res.sendStatus(400)
     } else if (error.cause === 401) {
         res.sendStatus(401)
+    } else if (error.cause === 404) {
+        res.sendStatus(404)
     } else {
         res.sendStatus(400)
     }
