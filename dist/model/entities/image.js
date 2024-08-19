@@ -7,6 +7,7 @@ exports.Image = void 0;
 const deleteImage_1 = __importDefault(require("@api/delete/deleteImage"));
 const getImage_1 = __importDefault(require("@api/get/getImage"));
 const createImage_1 = __importDefault(require("@api/post/createImage"));
+const updateImage_1 = __importDefault(require("@api/put/updateImage"));
 class Image {
     // Private fields
     _image;
@@ -21,18 +22,21 @@ class Image {
         return this._image.extension;
     }
     // Methods
+    async edit({ extension }) {
+        return await (0, updateImage_1.default)(this._image.id, this._image.category, { extension });
+    }
     async delete() {
         return await (0, deleteImage_1.default)(this._image.id, this._image.category);
     }
     // Static constructors
-    async fromIdCategory(id, category) {
+    static async fromIdCategory(id, category) {
         const image = await (0, getImage_1.default)(id, category);
         if (image instanceof Error) {
             return image;
         }
         return new Image(image);
     }
-    async create(id, category, extension) {
+    static async create(id, category, extension) {
         const image = await (0, createImage_1.default)(id, category, extension);
         if (image instanceof Error) {
             return image;

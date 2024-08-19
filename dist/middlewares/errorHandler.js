@@ -11,6 +11,9 @@ function errorHandler(error, req, res, next) {
     else if (error.cause === 401) {
         res.sendStatus(401);
     }
+    else if (error.cause === 404) {
+        res.sendStatus(404);
+    }
     else {
         res.sendStatus(400);
     }

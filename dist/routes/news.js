@@ -7,7 +7,8 @@ const _entities_1 = require("@entities");
 const _helpers_1 = require("@helpers");
 const _middlewares_1 = require("@middlewares");
 const _primitives_1 = require("@primitives");
-const path_1 = __importDefault(require("path"));
+const images_1 = __importDefault(require("./images"));
+const _enums_1 = require("@enums");
 class News {
     getPage = [
         (0, _middlewares_1.checkParams)(["page"]),
@@ -93,13 +94,18 @@ class News {
             next();
         })
     ];
-    getImages = [
-        (0, _middlewares_1.checkParams)(["id"]),
-        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const id = new _primitives_1.NewId(req.params.id);
-            res.sendFile(path_1.default.join(__dirname, `../../data/images/news/${id}.webp`));
-            next();
-        })
+    getImages = images_1.default.get(_enums_1.ImageCategories.News);
+    postImages = [
+        _middlewares_1.checkAdmin,
+        ...images_1.default.postCreate(_enums_1.ImageCategories.News)
+    ];
+    deleteImages = [
+        _middlewares_1.checkAdmin,
+        ...images_1.default.delete(_enums_1.ImageCategories.News)
+    ];
+    putImages = [
+        _middlewares_1.checkAdmin,
+        ...images_1.default.put(_enums_1.ImageCategories.News)
     ];
 }
 exports.default = new News();

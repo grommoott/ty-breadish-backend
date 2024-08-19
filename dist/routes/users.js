@@ -1,9 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const _entities_1 = require("@entities");
 const _helpers_1 = require("@helpers");
 const _middlewares_1 = require("@middlewares");
 const _primitives_1 = require("@primitives");
+const images_1 = __importDefault(require("./images"));
+const _enums_1 = require("@enums");
 class Users {
     getUsernameAvailable = [
         (0, _middlewares_1.checkParams)(["username"]),
@@ -132,6 +137,37 @@ class Users {
             res.sendStatus(200);
             next();
         })
+    ];
+    getAvatars = images_1.default.get(_enums_1.ImageCategories.Users);
+    checkAvatarPermissions = (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+        const id = new _primitives_1.ImageId(req.params.id);
+        const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload.sub));
+        if (user instanceof Error) {
+            next(user);
+            return;
+        }
+        if (user.id.id != id.id) {
+            next(new Error("Forbidden!", { cause: 403 }));
+            return;
+        }
+    });
+    postAvatars = [
+        _middlewares_1.checkAuthorized,
+        (0, _middlewares_1.checkParams)(["id"]),
+        this.checkAvatarPermissions,
+        ...images_1.default.postCreate(_enums_1.ImageCategories.Users, true)
+    ];
+    deleteAvatars = [
+        _middlewares_1.checkAuthorized,
+        (0, _middlewares_1.checkParams)(["id"]),
+        this.checkAvatarPermissions,
+        ...images_1.default.delete(_enums_1.ImageCategories.Users, true)
+    ];
+    putAvatars = [
+        _middlewares_1.checkAuthorized,
+        (0, _middlewares_1.checkParams)(["id"]),
+        this.checkAvatarPermissions,
+        ...images_1.default.put(_enums_1.ImageCategories.Users, true)
     ];
 }
 exports.default = new Users();

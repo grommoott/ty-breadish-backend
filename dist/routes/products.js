@@ -7,7 +7,8 @@ const _entities_1 = require("@entities");
 const _helpers_1 = require("@helpers");
 const _middlewares_1 = require("@middlewares");
 const _primitives_1 = require("@primitives");
-const path_1 = __importDefault(require("path"));
+const images_1 = __importDefault(require("./images"));
+const _enums_1 = require("@enums");
 class Products {
     getList = [
         _middlewares_1.contentJson,
@@ -88,13 +89,18 @@ class Products {
             res.sendStatus(200);
         })
     ];
-    getImages = [
-        (0, _middlewares_1.checkParams)(["id"]),
-        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const id = new _primitives_1.ProductId(req.params.id);
-            res.sendFile(path_1.default.join(__dirname, `../../data/images/produts/${id}.webp`));
-            next();
-        })
+    getImages = images_1.default.get(_enums_1.ImageCategories.Products);
+    postImages = [
+        _middlewares_1.checkAdmin,
+        ...images_1.default.postCreate(_enums_1.ImageCategories.Products)
+    ];
+    deleteImages = [
+        _middlewares_1.checkAdmin,
+        ...images_1.default.delete(_enums_1.ImageCategories.Products)
+    ];
+    putImages = [
+        _middlewares_1.checkAdmin,
+        ...images_1.default.put(_enums_1.ImageCategories.Products)
     ];
 }
 exports.default = new Products();

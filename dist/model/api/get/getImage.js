@@ -11,7 +11,7 @@ async function getImage(id, category) {
     try {
         const response = await bdClient_1.default.query(`select * from images where id=${id} and category='${(0, _helpers_1.pgFormat)(category)}'`);
         if (response.rowCount == 0) {
-            return new Error(`Image with such id(${id}) in category ${category} isn't exists`);
+            return new Error(`Image with such id(${id}) in category ${category} isn't exists`, { cause: 404 });
         }
         return (0, _interfaces_1.queryRowToImage)(response.rows[0]);
     }
