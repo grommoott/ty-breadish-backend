@@ -38,7 +38,7 @@ apiRouter.post("/products/create", products.postCreate)
 apiRouter.delete("/products/id/:id", products.delete)
 apiRouter.put("/products", products.put)
 apiRouter.get("/products/images/id/:id", products.getImages)
-apiRouter.post("/products/images", products.postImages)
+apiRouter.post("/products/images/create", products.postImages)
 apiRouter.delete("/products/images/id/:id", products.deleteImages)
 apiRouter.put("/products/images", products.putImages)
 
@@ -48,7 +48,7 @@ apiRouter.post("/recipies/create", recipes.postCreate)
 apiRouter.delete("/recipies/id/:id", recipes.delete)
 apiRouter.put("/recipies", recipes.put)
 apiRouter.get("/recipies/images/id/:id", recipes.getImages)
-apiRouter.post("/recipies/images", recipes.postImages)
+apiRouter.post("/recipies/images/create", recipes.postImages)
 apiRouter.delete("/recipies/images/id/:id", recipes.deleteImages)
 apiRouter.put("/recipies/images", recipes.putImages)
 
@@ -74,7 +74,7 @@ apiRouter.post("/news/create", news.postCreate)
 apiRouter.put("/news", news.put)
 apiRouter.delete("/news/id/:id", news.delete)
 apiRouter.get("/news/images/id/:id", news.getImages)
-apiRouter.post("/news/images", news.postImages)
+apiRouter.post("/news/images/create", news.postImages)
 apiRouter.delete("/news/images/id/:id", news.deleteImages)
 apiRouter.put("/news/images", news.putImages)
 
@@ -97,9 +97,13 @@ apiRouter.get("/users/emailAvailable/:email", users.getEmailAvailable)
 apiRouter.delete("/users/verificationCode/:verificationCode/password/:password", users.delete)
 apiRouter.put("/users", users.put)
 apiRouter.get("/users/avatars/id/:id", users.getAvatars)
-apiRouter.post("/users/avatars", users.postAvatars)
+apiRouter.post("/users/avatars/create", users.postAvatars)
 apiRouter.delete("/users/avatars/id/:id", users.deleteAvatars)
 apiRouter.put("/users/avatars", users.putAvatars)
+
+apiRouter.post("/test", (req, res) => {
+    console.log(req.body)
+})
 
 // images
 

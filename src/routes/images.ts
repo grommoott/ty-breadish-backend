@@ -1,7 +1,7 @@
 import { Image } from "@entities"
 import { ImageCategory } from "@enums"
 import { asyncErrorCatcher } from "@helpers"
-import { checkAdmin, checkBodyParams, checkParams, Middleware } from "@middlewares"
+import { checkAdmin, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
 import { ImageId } from "@primitives"
 import path from "path"
 import multer from "multer"
@@ -43,6 +43,7 @@ class Images {
         return [
             upload.single("image"),
             simple ? () => { } : checkBodyParams(["id"]),
+            contentJson,
             asyncErrorCatcher(async (req, res, next) => {
                 if (!req.file) {
                     next(new Error("To post image you must send it"))
@@ -67,7 +68,7 @@ class Images {
 
                 await fs.rename(req.file?.path, path.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`))
 
-                res.sendStatus(201)
+                res.send(image)
 
                 next()
             })
@@ -99,7 +100,7 @@ class Images {
 
             await fs.rename(req.file.path, path.join(__dirname, `../../data/images/images/${image.id}.${image.extension}`))
 
-            res.sendStatus(201)
+            res.send(image)
 
             next()
         })

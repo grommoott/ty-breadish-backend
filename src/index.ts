@@ -8,6 +8,7 @@ import { errorHandler } from "@middlewares"
 import cookieParser from "cookie-parser"
 import { Payment, yookassaApi } from "@helpers/yookassa"
 import { Price } from "@primitives"
+import bodyParser from "body-parser"
 
 // Basic fields declaration and initialization
 const app = express()
@@ -17,6 +18,7 @@ const port = process.env.PORT || 8443
 app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use("/api", apiRouter)
 
