@@ -136,6 +136,7 @@ class Register {
             res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * minute })
             res.cookie("DeviceId", session.deviceId)
 
+
             res.send(user.toNormalView())
 
             next()

@@ -1,6 +1,7 @@
 import bdClient from "@api/bdClient"
 import deleteImage from "@api/delete/deleteImage"
 import getImage from "@api/get/getImage"
+import createBasicImage from "@api/post/createBasicImage"
 import createImage from "@api/post/createImage"
 import updateImage from "@api/put/updateImage"
 import { ImageCategory } from "@enums"
@@ -51,6 +52,16 @@ class Image {
 
     public static async create(id: ImageId, category: ImageCategory, extension: string): Promise<Image | Error> {
         const image: IImage | Error = await createImage(id, category, extension)
+
+        if (image instanceof Error) {
+            return image
+        }
+
+        return new Image(image)
+    }
+
+    public static async createBasic(extension: string): Promise<Image | Error> {
+        const image: IImage | Error = await createBasicImage(extension)
 
         if (image instanceof Error) {
             return image

@@ -2,7 +2,8 @@ const ImageCategories = {
     News: "news",
     Products: "products",
     Recipies: "recipes",
-    Users: "users"
+    Users: "users",
+    Images: "images"
 }
 
 type ImageCategory = typeof ImageCategories[keyof typeof ImageCategories]

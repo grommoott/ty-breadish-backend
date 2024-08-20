@@ -12,7 +12,10 @@ import orders from "./orders"
 import verificaitonCode from "./verificationCode"
 import users from "./users"
 import yookassaWebhook from "./yookassaWebhook"
-import recipies from "./recipies"
+import recipes from "./recipes"
+import images from "./images"
+import { ImageCategories } from "@enums"
+import { checkAdmin } from "@middlewares"
 
 const apiRouter: Router = express.Router()
 
@@ -39,15 +42,15 @@ apiRouter.post("/products/images", products.postImages)
 apiRouter.delete("/products/images/id/:id", products.deleteImages)
 apiRouter.put("/products/images", products.putImages)
 
-apiRouter.get("/recipies/id/:id", recipies.get)
-apiRouter.get("/recipies/list", recipies.getList)
-apiRouter.post("/recipies/create", recipies.postCreate)
-apiRouter.delete("/recipies/id/:id", recipies.delete)
-apiRouter.put("/recipies", recipies.put)
-apiRouter.get("/recipies/images/id/:id", recipies.getImages)
-apiRouter.post("/recipies/images", recipies.postImages)
-apiRouter.delete("/recipies/images/id/:id", recipies.deleteImages)
-apiRouter.put("/recipies/images", recipies.putImages)
+apiRouter.get("/recipies/id/:id", recipes.get)
+apiRouter.get("/recipies/list", recipes.getList)
+apiRouter.post("/recipies/create", recipes.postCreate)
+apiRouter.delete("/recipies/id/:id", recipes.delete)
+apiRouter.put("/recipies", recipes.put)
+apiRouter.get("/recipies/images/id/:id", recipes.getImages)
+apiRouter.post("/recipies/images", recipes.postImages)
+apiRouter.delete("/recipies/images/id/:id", recipes.deleteImages)
+apiRouter.put("/recipies/images", recipes.putImages)
 
 apiRouter.get("/featured", featured.get)
 apiRouter.post("/featured/create", featured.postCreate)
@@ -97,5 +100,12 @@ apiRouter.get("/users/avatars/id/:id", users.getAvatars)
 apiRouter.post("/users/avatars", users.postAvatars)
 apiRouter.delete("/users/avatars/id/:id", users.deleteAvatars)
 apiRouter.put("/users/avatars", users.putAvatars)
+
+// images
+
+apiRouter.get("/images/id/:id", images.get(ImageCategories.Images))
+apiRouter.post("/images/create", images.postCreateBasic)
+apiRouter.delete("/images/id/:id", [checkAdmin, ...images.delete(ImageCategories.Images)])
+apiRouter.put("/images", [checkAdmin, ...images.put(ImageCategories.Images)])
 
 export { apiRouter }

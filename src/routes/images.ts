@@ -1,11 +1,12 @@
 import { Image } from "@entities"
 import { ImageCategory } from "@enums"
 import { asyncErrorCatcher } from "@helpers"
-import { checkBodyParams, checkParams, Middleware } from "@middlewares"
+import { checkAdmin, checkBodyParams, checkParams, Middleware } from "@middlewares"
 import { ImageId } from "@primitives"
 import path from "path"
 import multer from "multer"
 import fs from "fs/promises"
+import { IImage } from "@interfaces"
 
 const upload = multer({ dest: path.join(__dirname, "../../data/images/") })
 
@@ -72,6 +73,37 @@ class Images {
             })
         ]
     }
+
+    public postCreateBasic: Array<Middleware> = [
+        checkAdmin,
+        upload.single("image"),
+        asyncErrorCatcher(async (req, res, next) => {
+            if (!req.file) {
+                next(new Error("To post image you must send it"))
+                return
+            }
+
+            const extension: string | Error = this.getExtension(req.file.path)
+
+            if (extension instanceof Error) {
+                next(extension)
+                return
+            }
+
+            const image: Image | Error = await Image.createBasic(extension)
+
+            if (image instanceof Error) {
+                next(image)
+                return
+            }
+
+            await fs.rename(req.file.path, path.join(__dirname, `../../data/images/images/${image.id}.${image.extension}`))
+
+            res.sendStatus(201)
+
+            next()
+        })
+    ]
 
     public delete: (category: ImageCategory, simple?: boolean) => Array<Middleware> = (category: ImageCategory, simple: boolean = false) => {
         return [
