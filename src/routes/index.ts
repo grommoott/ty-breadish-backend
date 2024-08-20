@@ -103,6 +103,7 @@ apiRouter.put("/users/avatars", users.putAvatars)
 
 apiRouter.post("/test", (req, res) => {
     console.log(req.body)
+    res.sendStatus(200)
 })
 
 // images
