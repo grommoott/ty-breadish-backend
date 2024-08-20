@@ -18,7 +18,7 @@ const port = process.env.PORT || 8443
 app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
-app.use(bodyParser.urlencoded())
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use("/api", apiRouter)
 
