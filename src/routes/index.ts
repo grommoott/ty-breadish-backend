@@ -101,12 +101,6 @@ apiRouter.post("/users/avatars/create", users.postAvatars)
 apiRouter.delete("/users/avatars/id/:id", users.deleteAvatars)
 apiRouter.put("/users/avatars", users.putAvatars)
 
-apiRouter.post("/test", (req, res) => {
-    console.log(req.body)
-
-    res.sendStatus(200)
-})
-
 // images
 
 apiRouter.get("/images/id/:id", images.get(ImageCategories.Images))

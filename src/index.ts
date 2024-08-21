@@ -18,7 +18,6 @@ const port = process.env.PORT || 8443
 app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
-app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use("/api", apiRouter)
 
@@ -32,6 +31,12 @@ app.get("/", async (req, res) => {
 
     res.send(payment)
     return
+})
+
+app.post("/api/test", bodyParser.urlencoded({ extended: false }), async (req, res) => {
+    console.log(req.body)
+
+    res.sendStatus(200)
 })
 
 app.use(errorHandler)
