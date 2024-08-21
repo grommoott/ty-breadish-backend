@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Image = void 0;
 const deleteImage_1 = __importDefault(require("@api/delete/deleteImage"));
 const getImage_1 = __importDefault(require("@api/get/getImage"));
+const createBasicImage_1 = __importDefault(require("@api/post/createBasicImage"));
 const createImage_1 = __importDefault(require("@api/post/createImage"));
 const updateImage_1 = __importDefault(require("@api/put/updateImage"));
 class Image {
@@ -38,6 +39,13 @@ class Image {
     }
     static async create(id, category, extension) {
         const image = await (0, createImage_1.default)(id, category, extension);
+        if (image instanceof Error) {
+            return image;
+        }
+        return new Image(image);
+    }
+    static async createBasic(extension) {
+        const image = await (0, createBasicImage_1.default)(extension);
         if (image instanceof Error) {
             return image;
         }

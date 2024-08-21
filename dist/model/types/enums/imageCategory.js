@@ -5,6 +5,7 @@ const ImageCategories = {
     News: "news",
     Products: "products",
     Recipies: "recipes",
-    Users: "users"
+    Users: "users",
+    Images: "images"
 };
 exports.ImageCategories = ImageCategories;

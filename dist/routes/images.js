@@ -37,6 +37,7 @@ class Images {
         return [
             upload.single("image"),
             simple ? () => { } : (0, _middlewares_1.checkBodyParams)(["id"]),
+            _middlewares_1.contentJson,
             (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
                 if (!req.file) {
                     next(new Error("To post image you must send it"));
@@ -54,11 +55,34 @@ class Images {
                     return;
                 }
                 await promises_1.default.rename(req.file?.path, path_1.default.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`));
-                res.sendStatus(201);
+                res.send(image);
                 next();
             })
         ];
     };
+    postCreateBasic = [
+        _middlewares_1.checkAdmin,
+        upload.single("image"),
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            if (!req.file) {
+                next(new Error("To post image you must send it"));
+                return;
+            }
+            const extension = this.getExtension(req.file.path);
+            if (extension instanceof Error) {
+                next(extension);
+                return;
+            }
+            const image = await _entities_1.Image.createBasic(extension);
+            if (image instanceof Error) {
+                next(image);
+                return;
+            }
+            await promises_1.default.rename(req.file.path, path_1.default.join(__dirname, `../../data/images/images/${image.id}.${image.extension}`));
+            res.send(image);
+            next();
+        })
+    ];
     delete = (category, simple = false) => {
         return [
             simple ? () => { } : (0, _middlewares_1.checkParams)(["id"]),

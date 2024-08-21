@@ -102,7 +102,7 @@ apiRouter.delete("/users/avatars/id/:id", users.deleteAvatars)
 apiRouter.put("/users/avatars", users.putAvatars)
 
 apiRouter.post("/test", (req, res) => {
-    console.log(req)
+    console.log(req.body)
 
     res.sendStatus(200)
 })
