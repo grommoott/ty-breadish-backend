@@ -134,7 +134,7 @@ class Register {
 
             res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 3 * month })
             res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * minute })
-            res.cookie("DeviceId", session.deviceId)
+            res.cookie("DeviceId", session.deviceId, { sameSite: "strict" })
 
 
             res.send(user.toNormalView())

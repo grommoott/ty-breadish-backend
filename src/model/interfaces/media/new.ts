@@ -14,7 +14,13 @@ function isMediaIsNew(media: IMedia): media is INew {
 }
 
 function queryRowToNew(row: any): INew {
-    if (!("id" in row && "title" in row && "content" in row && "media_id" in row && "moment" in row && "is_edited" in row)) {
+    if (!(
+        "id" in row &&
+        "title" in row &&
+        "content" in row &&
+        "media_id" in row &&
+        "moment" in row &&
+        "is_edited" in row)) {
         throw new Error("Invalid query row to convert into INew")
     }
 

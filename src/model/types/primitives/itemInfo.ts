@@ -13,12 +13,7 @@ type PFC = {
 type ItemInfoJson = {
     cooking_method: CookingMethod,
     ingredients: Ingredient[],
-    pfc: {
-        kkal: number,
-        protein: number,
-        fat: number,
-        carbs: number
-    }
+    pfc: PFC
 }
 
 class ItemInfo implements IBDPrimitive {

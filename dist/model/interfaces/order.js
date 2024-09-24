@@ -31,13 +31,15 @@ function queryRowsToOrder(orderRow, productsRows) {
         case _enums_1.OrderTypes.Courier:
             orderInfo = {
                 bakeryAddress: orderRow.order_info.bakeryAddress,
-                state: orderRow.order_info.state
+                state: orderRow.order_info.state,
+                productCounts: orderRow.order_info.productCounts
             };
         case _enums_1.OrderTypes.PickUp:
             orderInfo = {
                 bakeryAddress: orderRow.order_info.bakeryAddress,
                 deliveryAddress: orderRow.order_info.deliveryAddress,
-                state: orderRow.order_info.state
+                state: orderRow.order_info.state,
+                productCounts: orderRow.order_info.productCounts
             };
     }
     return {

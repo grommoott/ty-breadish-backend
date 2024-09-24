@@ -58,6 +58,54 @@ class Users {
         })
     ]
 
+    public getIsPasswordIsValid: Array<Middleware> = [
+        checkAuthorized,
+        checkParams(["password"]),
+        asyncErrorCatcher(async (req, res, next) => {
+            const password: string = req.params.password
+
+            const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
+
+            if (user instanceof Error) {
+                next(user)
+                return
+            }
+
+            res.send(await user.isPasswordIsValid(password))
+        })
+    ]
+
+    public getUsername: Array<Middleware> = [
+        checkParams(["id"]),
+        asyncErrorCatcher(async (req, res, next) => {
+            const id: UserId = new UserId(req.params.id)
+
+            const user: User | Error = await User.fromId(id)
+
+            if (user instanceof Error) {
+                next(user)
+                return
+            }
+
+            res.send(user.username)
+        })
+    ]
+
+    public get: Array<Middleware> = [
+        checkAuthorized,
+        contentJson,
+        asyncErrorCatcher(async (req, res, next) => {
+            const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
+
+            if (user instanceof Error) {
+                next(user)
+                return
+            }
+
+            res.send(user.toNormalView())
+        })
+    ]
+
     public delete: Array<Middleware> = [
         checkAuthorized,
         checkParams(["verificationCode", "password"]),
@@ -112,6 +160,7 @@ class Users {
             const newPassword: string | undefined = req.body.newPassword
             const email: Email | undefined = new Email(req.body.email)
             const code: number | undefined = req.body.verificationCode
+            const newCode: number | undefined = req.body.newVerificationCode
 
             const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
 
@@ -143,15 +192,13 @@ class Users {
                 }
             }
 
-            const newEmail: Email = email || user.email
-
             if (newPassword || email) {
                 if (!code) {
                     next(new Error("To update password or email you must also send verification code"))
                     return
                 }
 
-                const verificationCode: VerificationCode | Error = await VerificationCode.fromEmail(newEmail)
+                const verificationCode: VerificationCode | Error = await VerificationCode.fromEmail(user.email)
 
                 if (verificationCode instanceof Error) {
                     next(verificationCode)
@@ -161,6 +208,25 @@ class Users {
                 if (!verificationCode.compare(code)) {
                     next(new Error("Invalid verification code"))
                     return
+                }
+
+                if (email) {
+                    if (!newCode) {
+                        next(new Error("To update email you must alse send verification code wich sended on your new email"))
+                        return
+                    }
+
+                    const newVerificationCode: VerificationCode | Error = await VerificationCode.fromEmail(email)
+
+                    if (newVerificationCode instanceof Error) {
+                        next(newVerificationCode)
+                        return
+                    }
+
+                    if (!newVerificationCode.compare(code)) {
+                        next(new Error("Invalid new verification code"))
+                        return
+                    }
                 }
             }
 
@@ -177,7 +243,7 @@ class Users {
         })
     ]
 
-    public getAvatars: Array<Middleware> = images.get(ImageCategories.Users)
+    public getAvatars: Array<Middleware> = images.get(ImageCategories.Users, true)
 
     private checkAvatarPermissions: Middleware =
         asyncErrorCatcher(async (req, res, next) => {
@@ -196,24 +262,33 @@ class Users {
             }
         })
 
+    private setIdParam: Middleware =
+        asyncErrorCatcher(async (req, res, next) => {
+            req.params.id = req.body.accessTokenPayload.sub
+        })
+
+    private setIdParamInBody: Middleware =
+        asyncErrorCatcher(async (req, res, next) => {
+            req.body.id = req.body.accessTokenPayload.sub
+        })
+
     public postAvatars: Array<Middleware> = [
         checkAuthorized,
-        checkParams(["id"]),
+        this.setIdParamInBody,
         this.checkAvatarPermissions,
         ...images.postCreate(ImageCategories.Users, true)
     ]
 
     public deleteAvatars: Array<Middleware> = [
         checkAuthorized,
-        checkParams(["id"]),
+        this.setIdParam,
         this.checkAvatarPermissions,
         ...images.delete(ImageCategories.Users, true)
     ]
 
-
     public putAvatars: Array<Middleware> = [
         checkAuthorized,
-        checkParams(["id"]),
+        this.setIdParamInBody,
         this.checkAvatarPermissions,
         ...images.put(ImageCategories.Users, true)
     ]

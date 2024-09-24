@@ -7,6 +7,7 @@ exports.Media = void 0;
 const getMedia_1 = __importDefault(require("@api/get/getMedia"));
 const entity_1 = require("./entity");
 const comment_1 = require("./comment");
+const getCommentsCount_1 = __importDefault(require("@api/get/getCommentsCount"));
 class Media extends entity_1.Entity {
     // Private fields
     _media;
@@ -24,6 +25,10 @@ class Media extends entity_1.Entity {
     async getCommentsPage(sortOrder, page) {
         const comments = await comment_1.Comment.getCommentsPage(this._media.mediaId, sortOrder, page);
         return comments;
+    }
+    async getCommentsCount() {
+        const count = await (0, getCommentsCount_1.default)(this._media.mediaId);
+        return count;
     }
     // Static constructors
     static async fromMediaId(id) {

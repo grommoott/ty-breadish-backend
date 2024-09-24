@@ -3,14 +3,18 @@ import { CourierOrderState, PickUpOrderState, PickUpOrderStates } from "../enums
 
 interface PickUpOrderInfo {
     bakeryAddress: string,
-    state: PickUpOrderState
+    state: PickUpOrderState,
+    productCounts: { [id: number]: number }
 }
 
 interface CourierOrderInfo {
     bakeryAddress: string,
     deliveryAddress: string,
-    state: CourierOrderState
+    state: CourierOrderState,
+    productCounts: { [id: number]: number }
 }
+
+type OrderInfo = PickUpOrderInfo | CourierOrderInfo
 
 function isOrderInfoIsPickUpOrderInfo(orderInfo: OrderInfo): orderInfo is PickUpOrderInfo {
     return typeof (orderInfo as PickUpOrderInfo)?.bakeryAddress === "string" &&
@@ -22,7 +26,5 @@ function isOrderInfoIsCourierOrderInfo(orderInfo: OrderInfo): orderInfo is Couri
         typeof (orderInfo as CourierOrderInfo)?.deliveryAddress === "string" &&
         isInEnum(PickUpOrderStates, (orderInfo as PickUpOrderInfo)?.state)
 }
-
-type OrderInfo = PickUpOrderInfo | CourierOrderInfo
 
 export { PickUpOrderInfo, CourierOrderInfo, isOrderInfoIsPickUpOrderInfo, isOrderInfoIsCourierOrderInfo, OrderInfo }

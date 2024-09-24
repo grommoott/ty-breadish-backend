@@ -48,8 +48,8 @@ class AccessToken {
                 return
             }
 
-            res.cookie("RefreshToken", newRefreshToken, { secure: true, httpOnly: true, sameSite: true, maxAge: 2 * month })
-            res.cookie("AccessToken", newAccessToken, { secure: true, httpOnly: true, sameSite: true, maxAge: 20 * minute })
+            res.cookie("RefreshToken", newRefreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 2 * month })
+            res.cookie("AccessToken", newAccessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * minute })
 
             res.sendStatus(200)
 

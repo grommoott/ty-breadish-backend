@@ -1,10 +1,62 @@
-import { Comment, User } from "@entities"
+import { Comment, Media, User } from "@entities"
 import { CommentsSortOrder, CommentsSortOrders, Roles } from "@enums"
 import { asyncErrorCatcher, isInEnum } from "@helpers"
-import { checkAuthorized, checkBodyParams, checkParams, Middleware } from "@middlewares"
+import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
 import { CommentId, MediaId, UserId } from "@primitives"
 
 class Comments {
+    public getPage: Array<Middleware> = [
+        checkParams(["target", "sortOrder", "page"]),
+        contentJson,
+        asyncErrorCatcher(async (req, res, next) => {
+            const target: MediaId = new MediaId(req.params.target)
+            const sortOrder: CommentsSortOrder = req.params.sortOrder as CommentsSortOrder
+            const page: number = parseInt(req.params.page)
+
+            if (!isInEnum(CommentsSortOrders, sortOrder)) {
+                next(new Error("Invalid request!"))
+                return
+            }
+
+            const comments: Array<Comment> | Error = await Comment.getCommentsPage(target, sortOrder, page)
+
+            if (comments instanceof Error) {
+                next(comments)
+                return
+            }
+
+            res.send(comments.map(comment => comment.toNormalView()))
+
+            next()
+        })
+    ]
+
+    public getCount: Array<Middleware> = [
+        checkParams(["target"]),
+        contentJson,
+        asyncErrorCatcher(async (req, res, next) => {
+            const target: MediaId = new MediaId(req.params.target)
+
+            const media: Media | Error = await Media.fromMediaId(target)
+
+            if (media instanceof Error) {
+                next(media)
+                return
+            }
+
+            const count: number | Error = await media.getCommentsCount()
+
+            if (count instanceof Error) {
+                next(count)
+                return
+            }
+
+            res.send({ count: count })
+
+            next()
+        })
+    ]
+
     public postCreate: Array<Middleware> = [
         checkAuthorized,
         checkBodyParams(["target", "content"]),
@@ -27,31 +79,6 @@ class Comments {
             }
 
             res.send(comment.toNormalView())
-
-            next()
-        })
-    ]
-
-    public get: Array<Middleware> = [
-        checkParams(["target", "sortOrder", "page"]),
-        asyncErrorCatcher(async (req, res, next) => {
-            const target: MediaId = new MediaId(req.params.target)
-            const sortOrder: CommentsSortOrder = req.params.sortOrder as CommentsSortOrder
-            const page: number = parseInt(req.params.page)
-
-            if (!isInEnum(CommentsSortOrders, sortOrder)) {
-                next(new Error("Invalid request!"))
-                return
-            }
-
-            const comments: Array<Comment> | Error = await Comment.getCommentsPage(target, sortOrder, page)
-
-            if (comments instanceof Error) {
-                next(comments)
-                return
-            }
-
-            res.send(comments.map(comment => comment.toNormalView()))
 
             next()
         })

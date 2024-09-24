@@ -3,7 +3,7 @@ import getLikeParent from "@api/get/getLikeParent";
 import getUser from "@api/get/getUser";
 import { LikeType, LikeTypes } from "@enums";
 import { pgFormat } from "@helpers";
-import { IItem, ILike, IMedia, IReview, IUser, queryRowToLike } from "@interfaces";
+import { ILike, IMedia, IReview, IUser, queryRowToLike } from "@interfaces";
 import { Id, UserId } from "@primitives";
 import { QueryResult } from "pg";
 
@@ -15,7 +15,7 @@ export default async function createLike(from: UserId, target: Id, type: LikeTyp
             return userWithId
         }
 
-        const likeParent: IItem | IMedia | IReview | Error = await getLikeParent(target, type)
+        const likeParent: IMedia | IReview | Error = await getLikeParent(target, type)
 
         if (likeParent instanceof Error) {
             return likeParent

@@ -21,7 +21,7 @@ class Images {
         return extension
     }
 
-    public get: (category: ImageCategory) => Array<Middleware> = (category: ImageCategory) => {
+    public get: (category: ImageCategory, useDefaultImage?: boolean) => Array<Middleware> = (category: ImageCategory, useDefaultImage = false) => {
         return [
             checkParams(["id"]),
             asyncErrorCatcher(async (req, res, next) => {
@@ -30,6 +30,11 @@ class Images {
                 const image: Image | Error = await Image.fromIdCategory(id, category)
 
                 if (image instanceof Error) {
+                    if (useDefaultImage && image.cause === 404) {
+                        res.sendFile(path.join(__dirname, `../../data/images/${category}/default.png`))
+                        return
+                    }
+
                     next(image)
                     return
                 }

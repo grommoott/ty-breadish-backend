@@ -26,6 +26,6 @@ function queryRowToComment(row) {
         content: row.content,
         mediaId: new _primitives_1.MediaId(row.media_id),
         moment: new _primitives_1.Moment(row.moment),
-        isEdited: row.id_edited
+        isEdited: row.is_edited
     };
 }

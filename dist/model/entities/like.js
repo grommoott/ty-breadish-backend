@@ -9,6 +9,7 @@ const getLike_1 = __importDefault(require("@api/get/getLike"));
 const getUserLiked_1 = __importDefault(require("@api/get/getUserLiked"));
 const createLike_1 = __importDefault(require("@api/post/createLike"));
 const entity_1 = require("./entity");
+const getLikesCount_1 = __importDefault(require("@api/get/getLikesCount"));
 class Like extends entity_1.Entity {
     // Private fields
     _like;
@@ -50,6 +51,9 @@ class Like extends entity_1.Entity {
             return like;
         }
         return new Like(like);
+    }
+    static async getCount(target, type) {
+        return await (0, getLikesCount_1.default)(target, type);
     }
     toNormalView() {
         return {

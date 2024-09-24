@@ -20,22 +20,41 @@ class Likes {
             next();
         })
     ];
-    postCreate = [
-        _middlewares_1.checkAuthorized,
-        (0, _middlewares_1.checkBodyParams)(["target", "likeType"]),
+    getCount = [
+        (0, _middlewares_1.checkParams)(["target", "type"]),
+        _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const target = new _primitives_1.MediaId(req.body.target);
-            const likeType = req.body.likeType;
-            if (!(0, _helpers_1.isInEnum)(_enums_1.LikeTypes, likeType)) {
+            const target = new _primitives_1.Id(req.params.target);
+            const type = req.params.type;
+            if (!((0, _helpers_1.isInEnum)(_enums_1.LikeTypes, type))) {
                 next(new Error("Invalid request!"));
                 return;
             }
-            const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload));
+            const count = await _entities_1.Like.getCount(target, type);
+            if (count instanceof Error) {
+                next(count);
+                return;
+            }
+            res.send(count);
+            next();
+        })
+    ];
+    postCreate = [
+        _middlewares_1.checkAuthorized,
+        (0, _middlewares_1.checkBodyParams)(["target", "type"]),
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            const target = new _primitives_1.Id(req.body.target);
+            const type = req.body.type;
+            if (!(0, _helpers_1.isInEnum)(_enums_1.LikeTypes, type)) {
+                next(new Error("Invalid request!"));
+                return;
+            }
+            const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload.sub));
             if (user instanceof Error) {
                 next(user);
                 return;
             }
-            const like = await user.createLike(target, likeType);
+            const like = await user.createLike(target, type);
             if (like instanceof Error) {
                 next(like);
                 return;

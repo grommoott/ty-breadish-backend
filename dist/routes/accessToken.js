@@ -40,8 +40,8 @@ class AccessToken {
                 next(newAccessToken);
                 return;
             }
-            res.cookie("RefreshToken", newRefreshToken, { secure: true, httpOnly: true, sameSite: true, maxAge: 2 * timeConstants_1.month });
-            res.cookie("AccessToken", newAccessToken, { secure: true, httpOnly: true, sameSite: true, maxAge: 20 * timeConstants_1.minute });
+            res.cookie("RefreshToken", newRefreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 2 * timeConstants_1.month });
+            res.cookie("AccessToken", newAccessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * timeConstants_1.minute });
             res.sendStatus(200);
             next();
         })

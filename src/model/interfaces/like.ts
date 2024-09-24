@@ -19,7 +19,7 @@ function queryRowToLike(row: any): ILike {
     return {
         id: new LikeId(row.id),
         from: new UserId(row.from),
-        target: new Id(row.id),
+        target: new Id(row.target),
         type: row.type
     }
 }

@@ -106,7 +106,7 @@ class Register {
             }
             res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 3 * timeConstants_1.month });
             res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * timeConstants_1.minute });
-            res.cookie("DeviceId", session.deviceId);
+            res.cookie("DeviceId", session.deviceId, { sameSite: "strict" });
             res.send(user.toNormalView());
             next();
         })

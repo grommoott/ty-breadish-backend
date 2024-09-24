@@ -12,15 +12,13 @@ const _middlewares_1 = require("@middlewares");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const yookassa_1 = require("@helpers/yookassa");
 const _primitives_1 = require("@primitives");
-const body_parser_1 = __importDefault(require("body-parser"));
 // Basic fields declaration and initialization
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8443;
 // Middleware connection
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({ credentials: true, origin: ["http://localhost:5173", "http://localhost:4173"] }));
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
-app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use("/api", _routes_1.apiRouter);
 app.get("/", async (req, res) => {
     const payment = await yookassa_1.yookassaApi.createPayment(new _primitives_1.Price(100), "OK", "https://example.com");

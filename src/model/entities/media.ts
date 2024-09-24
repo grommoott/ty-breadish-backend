@@ -4,6 +4,7 @@ import getMedia from "@api/get/getMedia";
 import { Entity } from "./entity";
 import { Comment } from "./comment";
 import { CommentsSortOrder } from "@enums";
+import getCommentsCount from "@api/get/getCommentsCount";
 
 class Media extends Entity {
 
@@ -31,6 +32,12 @@ class Media extends Entity {
         const comments: Array<Comment> | Error = await Comment.getCommentsPage(this._media.mediaId, sortOrder, page)
 
         return comments
+    }
+
+    public async getCommentsCount(): Promise<number | Error> {
+        const count: number | Error = await getCommentsCount(this._media.mediaId)
+
+        return count
     }
 
     // Static constructors

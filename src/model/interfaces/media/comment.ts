@@ -33,7 +33,7 @@ function queryRowToComment(row: any) {
         content: row.content,
         mediaId: new MediaId(row.media_id),
         moment: new Moment(row.moment),
-        isEdited: row.id_edited
+        isEdited: row.is_edited
     }
 }
 

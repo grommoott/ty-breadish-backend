@@ -14,7 +14,6 @@ import { Featured } from "./featured";
 import { OrderInfo } from "model/types/primitives/orderInfo";
 import { Order } from "./order";
 import { Entity } from "./entity";
-import featured from "routes/featured";
 import getUserByEmail from "@api/get/getUserByEmail";
 
 class User extends Entity {

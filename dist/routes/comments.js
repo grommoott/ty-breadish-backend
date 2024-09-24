@@ -6,6 +6,45 @@ const _helpers_1 = require("@helpers");
 const _middlewares_1 = require("@middlewares");
 const _primitives_1 = require("@primitives");
 class Comments {
+    getPage = [
+        (0, _middlewares_1.checkParams)(["target", "sortOrder", "page"]),
+        _middlewares_1.contentJson,
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            const target = new _primitives_1.MediaId(req.params.target);
+            const sortOrder = req.params.sortOrder;
+            const page = parseInt(req.params.page);
+            if (!(0, _helpers_1.isInEnum)(_enums_1.CommentsSortOrders, sortOrder)) {
+                next(new Error("Invalid request!"));
+                return;
+            }
+            const comments = await _entities_1.Comment.getCommentsPage(target, sortOrder, page);
+            if (comments instanceof Error) {
+                next(comments);
+                return;
+            }
+            res.send(comments.map(comment => comment.toNormalView()));
+            next();
+        })
+    ];
+    getCount = [
+        (0, _middlewares_1.checkParams)(["target"]),
+        _middlewares_1.contentJson,
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            const target = new _primitives_1.MediaId(req.params.target);
+            const media = await _entities_1.Media.fromMediaId(target);
+            if (media instanceof Error) {
+                next(media);
+                return;
+            }
+            const count = await media.getCommentsCount();
+            if (count instanceof Error) {
+                next(count);
+                return;
+            }
+            res.send({ count: count });
+            next();
+        })
+    ];
     postCreate = [
         _middlewares_1.checkAuthorized,
         (0, _middlewares_1.checkBodyParams)(["target", "content"]),
@@ -23,25 +62,6 @@ class Comments {
                 return;
             }
             res.send(comment.toNormalView());
-            next();
-        })
-    ];
-    get = [
-        (0, _middlewares_1.checkParams)(["target", "sortOrder", "page"]),
-        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const target = new _primitives_1.MediaId(req.params.target);
-            const sortOrder = req.params.sortOrder;
-            const page = parseInt(req.params.page);
-            if (!(0, _helpers_1.isInEnum)(_enums_1.CommentsSortOrders, sortOrder)) {
-                next(new Error("Invalid request!"));
-                return;
-            }
-            const comments = await _entities_1.Comment.getCommentsPage(target, sortOrder, page);
-            if (comments instanceof Error) {
-                next(comments);
-                return;
-            }
-            res.send(comments.map(comment => comment.toNormalView()));
             next();
         })
     ];

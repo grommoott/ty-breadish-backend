@@ -8,14 +8,13 @@ import { errorHandler } from "@middlewares"
 import cookieParser from "cookie-parser"
 import { Payment, yookassaApi } from "@helpers/yookassa"
 import { Price } from "@primitives"
-import bodyParser from "body-parser"
 
 // Basic fields declaration and initialization
 const app = express()
 const port = process.env.PORT || 8443
 
 // Middleware connection
-app.use(cors())
+app.use(cors({ credentials: true, origin: ["http://localhost:5173", "http://localhost:4173"] }))
 app.use(express.json())
 app.use(cookieParser())
 
@@ -31,12 +30,6 @@ app.get("/", async (req, res) => {
 
     res.send(payment)
     return
-})
-
-app.post("/api/test", bodyParser.urlencoded({ extended: false }), async (req, res) => {
-    console.log(req.body)
-
-    res.sendStatus(200)
 })
 
 app.use(errorHandler)

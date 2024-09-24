@@ -6,6 +6,7 @@ import { LikeType } from "@enums"
 import { ILike } from "@interfaces"
 import { Id, LikeId, UserId } from "@primitives"
 import { Entity } from "./entity"
+import getLikesCount from "@api/get/getLikesCount"
 
 class Like extends Entity {
 
@@ -67,6 +68,10 @@ class Like extends Entity {
         }
 
         return new Like(like)
+    }
+
+    public static async getCount(target: Id, type: LikeType): Promise<number | Error> {
+        return await getLikesCount(target, type)
     }
 
     public override toNormalView(): object {

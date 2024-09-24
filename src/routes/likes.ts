@@ -2,7 +2,7 @@ import { Like, User } from "@entities"
 import { LikeType, LikeTypes } from "@enums"
 import { asyncErrorCatcher, isInEnum } from "@helpers"
 import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
-import { LikeId, MediaId, UserId } from "@primitives"
+import { Id, LikeId, UserId } from "@primitives"
 
 class Likes {
     public get: Array<Middleware> = [
@@ -24,26 +24,51 @@ class Likes {
         })
     ]
 
-    public postCreate: Array<Middleware> = [
-        checkAuthorized,
-        checkBodyParams(["target", "likeType"]),
+    public getCount: Array<Middleware> = [
+        checkParams(["target", "type"]),
+        contentJson,
         asyncErrorCatcher(async (req, res, next) => {
-            const target: MediaId = new MediaId(req.body.target)
-            const likeType: LikeType = req.body.likeType
+            const target: Id = new Id(req.params.target)
+            const type: LikeType = req.params.type as LikeType
 
-            if (!isInEnum(LikeTypes, likeType)) {
+            if (!(isInEnum(LikeTypes, type))) {
                 next(new Error("Invalid request!"))
                 return
             }
 
-            const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload))
+            const count: number | Error = await Like.getCount(target, type)
+
+            if (count instanceof Error) {
+                next(count)
+                return
+            }
+
+            res.send(count)
+
+            next()
+        })
+    ]
+
+    public postCreate: Array<Middleware> = [
+        checkAuthorized,
+        checkBodyParams(["target", "type"]),
+        asyncErrorCatcher(async (req, res, next) => {
+            const target: Id = new Id(req.body.target)
+            const type: LikeType = req.body.type
+
+            if (!isInEnum(LikeTypes, type)) {
+                next(new Error("Invalid request!"))
+                return
+            }
+
+            const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
 
             if (user instanceof Error) {
                 next(user)
                 return
             }
 
-            const like: Like | Error = await user.createLike(target, likeType)
+            const like: Like | Error = await user.createLike(target, type)
 
             if (like instanceof Error) {
                 next(like)

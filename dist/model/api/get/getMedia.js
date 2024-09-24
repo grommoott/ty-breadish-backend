@@ -9,11 +9,11 @@ const _interfaces_1 = require("@interfaces");
 async function getMedia(id) {
     try {
         const commentWithMediaId = await bdClient_1.default.query(`select * from comments where media_id=${id}`);
-        if (commentWithMediaId.rowCount == 1) {
+        if (commentWithMediaId.rowCount != 0) {
             return (0, _interfaces_1.queryRowToComment)(commentWithMediaId.rows[0]);
         }
         const newWithMediaId = await bdClient_1.default.query(`select * from news where media_id=${id}`);
-        if (newWithMediaId.rowCount == 1) {
+        if (newWithMediaId.rowCount != 0) {
             return (0, _interfaces_1.queryRowToNew)(newWithMediaId.rows[0]);
         }
         return new Error(`Media with such mediaId(${id}) isn't exists`);

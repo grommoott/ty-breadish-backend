@@ -1,6 +1,5 @@
 const LikeTypes = {
     Media: "media",
-    Item: "item",
     Review: "review"
 } as const
 

@@ -19,13 +19,17 @@ class Images {
         }
         return extension;
     }
-    get = (category) => {
+    get = (category, useDefaultImage = false) => {
         return [
             (0, _middlewares_1.checkParams)(["id"]),
             (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
                 const id = new _primitives_1.ImageId(req.params.id);
                 const image = await _entities_1.Image.fromIdCategory(id, category);
                 if (image instanceof Error) {
+                    if (useDefaultImage && image.cause === 404) {
+                        res.sendFile(path_1.default.join(__dirname, `../../data/images/${category}/default.png`));
+                        return;
+                    }
                     next(image);
                     return;
                 }

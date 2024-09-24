@@ -12,7 +12,7 @@ function queryRowToLike(row) {
     return {
         id: new _primitives_1.LikeId(row.id),
         from: new _primitives_1.UserId(row.from),
-        target: new _primitives_1.Id(row.id),
+        target: new _primitives_1.Id(row.target),
         type: row.type
     };
 }

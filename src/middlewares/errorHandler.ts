@@ -5,6 +5,7 @@ function errorHandler(error: Error, req: Request, res: Response, next: NextFunct
         next(error)
     }
 
+    res.statusMessage = error.message
     res.sendStatus(error.cause as number || 400)
 }
 

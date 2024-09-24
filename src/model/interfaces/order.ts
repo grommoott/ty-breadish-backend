@@ -50,14 +50,16 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
         case OrderTypes.Courier:
             orderInfo = {
                 bakeryAddress: orderRow.order_info.bakeryAddress,
-                state: orderRow.order_info.state
+                state: orderRow.order_info.state,
+                productCounts: orderRow.order_info.productCounts
             }
 
         case OrderTypes.PickUp:
             orderInfo = {
                 bakeryAddress: orderRow.order_info.bakeryAddress,
                 deliveryAddress: orderRow.order_info.deliveryAddress,
-                state: orderRow.order_info.state
+                state: orderRow.order_info.state,
+                productCounts: orderRow.order_info.productCounts
             }
     }
 

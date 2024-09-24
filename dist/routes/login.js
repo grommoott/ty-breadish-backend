@@ -46,9 +46,9 @@ class Login {
                 next(accessToken);
                 return;
             }
-            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: true, maxAge: 2 * timeConstants_1.month });
-            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: true, maxAge: 20 * timeConstants_1.minute });
-            res.cookie("DeviceId", session.deviceId);
+            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 2 * timeConstants_1.month });
+            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * timeConstants_1.minute });
+            res.cookie("DeviceId", session.deviceId, { sameSite: "strict" });
             res.send(user.toNormalView());
             next();
         })
