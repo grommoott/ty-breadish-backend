@@ -8,19 +8,19 @@ import { Rate, Rates } from "@enums"
 
 class Reviews {
     public getPage: Array<Middleware> = [
-        checkParams(["itemId", "sortOrder", "page"]),
+        checkParams(["target", "sortOrder", "page"]),
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {
-            const itemId: ItemId = new ItemId(req.params.itemId)
+            const target: ItemId = new ItemId(req.params.target)
             const sortOrder: ReviewsSortOrder = req.params.sortOrder as ReviewsSortOrder
-            const page: number = req.body.page
+            const page: number = parseInt(req.params.page)
 
-            if (isInEnum(ReviewsSortOrders, sortOrder)) {
+            if (!isInEnum(ReviewsSortOrders, sortOrder)) {
                 next(new Error("Invalid request!"))
                 return
             }
 
-            const reviews: Array<Review> | Error = await Review.getReviewsPage(itemId, sortOrder, page)
+            const reviews: Array<Review> | Error = await Review.getReviewsPage(target, sortOrder, page)
 
             if (reviews instanceof Error) {
                 next(reviews)

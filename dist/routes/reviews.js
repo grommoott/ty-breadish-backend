@@ -8,17 +8,17 @@ const _primitives_1 = require("@primitives");
 const _enums_2 = require("@enums");
 class Reviews {
     getPage = [
-        (0, _middlewares_1.checkParams)(["itemId", "sortOrder", "page"]),
+        (0, _middlewares_1.checkParams)(["target", "sortOrder", "page"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const itemId = new _primitives_1.ItemId(req.params.itemId);
+            const target = new _primitives_1.ItemId(req.params.target);
             const sortOrder = req.params.sortOrder;
-            const page = req.body.page;
-            if ((0, _helpers_1.isInEnum)(_enums_1.ReviewsSortOrders, sortOrder)) {
+            const page = parseInt(req.params.page);
+            if (!(0, _helpers_1.isInEnum)(_enums_1.ReviewsSortOrders, sortOrder)) {
                 next(new Error("Invalid request!"));
                 return;
             }
-            const reviews = await _entities_1.Review.getReviewsPage(itemId, sortOrder, page);
+            const reviews = await _entities_1.Review.getReviewsPage(target, sortOrder, page);
             if (reviews instanceof Error) {
                 next(reviews);
                 return;

@@ -18,19 +18,19 @@ export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsS
         const response: QueryResult = await (() => {
             switch (sortOrder) {
                 case ReviewsSortOrders.OldFirst:
-                    return bdClient.query(`select * from reviews order by moment limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
+                    return bdClient.query(`select * from reviews where target=${itemId.toBDView()} order by moment limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
 
                 case ReviewsSortOrders.NewFirst:
-                    return bdClient.query(`select * from reviews order by moment desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
+                    return bdClient.query(`select * from reviews where target=${itemId.toBDView()} order by moment desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
 
                 case ReviewsSortOrders.LikedFirst:
-                    return bdClient.query(`select * from reviews order by (select count(*) from likes where target=${itemId} and type='${pgFormat(LikeTypes.Review)}') desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
+                    return bdClient.query(`select * from reviews where target=${itemId.toBDView()} order by (select count(*) from likes where target=${itemId} and type='${pgFormat(LikeTypes.Review)}') desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
 
                 case ReviewsSortOrders.RatedFirst:
-                    return bdClient.query(`select * from reviews order by rate desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
+                    return bdClient.query(`select * from reviews where target=${itemId.toBDView()} order by rate desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
 
                 case ReviewsSortOrders.UnratedFirst:
-                    return bdClient.query(`select * from reviews order by rate limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
+                    return bdClient.query(`select * from reviews where target=${itemId.toBDView()} order by rate limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
             }
         })()
 

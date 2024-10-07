@@ -7,7 +7,7 @@ interface IRecipe extends IItem {
 }
 
 function isItemIsRecipe(item: IItem): item is IRecipe {
-    return (item as IRecipe)?.id instanceof RecipeId
+    return (item as IRecipe)?.id instanceof RecipeId && typeof (item as IRecipe)?.recipe == "string"
 }
 
 function queryRowToRecipe(row: any): IRecipe {

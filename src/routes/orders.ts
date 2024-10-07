@@ -70,8 +70,12 @@ class Orders {
                         return error
                     }
 
-                    prices.push(product.price.price)
-                    names.push(product.name)
+                    const count = orderInfo.productCounts[product.id.id]
+
+                    if (count > 0) {
+                        prices.push(product.price.price * count)
+                        names.push(product.name)
+                    }
                 }
             }))
 

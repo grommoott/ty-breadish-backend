@@ -8,7 +8,7 @@ interface IProduct extends IItem {
 
 function isItemIsProduct(item: IItem): item is IProduct {
     return (item as IProduct)?.id instanceof ProductId &&
-        (item as IProduct)?.id instanceof Price
+        (item as IProduct)?.price instanceof Price
 }
 
 function queryRowToProduct(row: any): IProduct {

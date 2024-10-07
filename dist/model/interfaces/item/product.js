@@ -5,7 +5,7 @@ exports.queryRowToProduct = queryRowToProduct;
 const _primitives_1 = require("@primitives");
 function isItemIsProduct(item) {
     return item?.id instanceof _primitives_1.ProductId &&
-        item?.id instanceof _primitives_1.Price;
+        item?.price instanceof _primitives_1.Price;
 }
 function queryRowToProduct(row) {
     if (!("id" in row &&

@@ -6,13 +6,14 @@ class ItemInfo {
     cookingMethod;
     ingredients;
     pfc;
+    mass;
     static fromJSON(json) {
         const itemInfo = JSON.parse(json);
         const pfc = { ...itemInfo.pfc };
-        return new ItemInfo(itemInfo.cooking_method, itemInfo.ingredients, pfc);
+        return new ItemInfo(itemInfo.cooking_method, itemInfo.ingredients, pfc, itemInfo.mass);
     }
     static fromObject(obj) {
-        return new ItemInfo(obj.cooking_method, obj.ingredients, obj.pfc);
+        return new ItemInfo(obj.cooking_method, obj.ingredients, obj.pfc, obj.mass);
     }
     toJSON() {
         const itemInfo = this.toNormalView();
@@ -28,13 +29,15 @@ class ItemInfo {
         return {
             cookingMethod: this.cookingMethod,
             ingredients: this.ingredients,
-            pfc: this.pfc
+            pfc: this.pfc,
+            mass: this.mass
         };
     }
-    constructor(cookingMethod, ingredients, pfc) {
+    constructor(cookingMethod, ingredients, pfc, mass) {
         this.cookingMethod = cookingMethod;
         this.ingredients = ingredients;
         this.pfc = pfc;
+        this.mass = mass;
     }
 }
 exports.ItemInfo = ItemInfo;

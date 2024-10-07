@@ -40,6 +40,7 @@ class New extends media_1.Media {
             title: this.title,
             mediaId: this.mediaId.id,
             moment: this.moment.moment,
+            isEdited: this.isEdited
         };
     }
     // Static constructors

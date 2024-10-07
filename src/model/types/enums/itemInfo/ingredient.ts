@@ -17,7 +17,7 @@ const Ingredients = {
     Pumpkin: "pumpkin",
     Tomato: "tomato",
     Watermelon: "watermelon"
-}
+} as const
 
 type Ingredient = typeof Ingredients[keyof typeof Ingredients]
 

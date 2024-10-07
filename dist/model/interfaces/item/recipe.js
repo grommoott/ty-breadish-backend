@@ -4,7 +4,7 @@ exports.isItemIsRecipe = isItemIsRecipe;
 exports.queryRowToRecipe = queryRowToRecipe;
 const _primitives_1 = require("@primitives");
 function isItemIsRecipe(item) {
-    return item?.id instanceof _primitives_1.RecipeId;
+    return item?.id instanceof _primitives_1.RecipeId && typeof item?.recipe == "string";
 }
 function queryRowToRecipe(row) {
     if (!("id" in row &&

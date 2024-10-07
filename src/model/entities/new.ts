@@ -46,6 +46,7 @@ class New extends Media {
             title: this.title,
             mediaId: this.mediaId.id,
             moment: this.moment.moment,
+            isEdited: this.isEdited
         }
     }
 

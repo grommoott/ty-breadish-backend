@@ -10,11 +10,11 @@ async function getItem(id) {
     try {
         const productWithId = await bdClient_1.default.query(`select * from products where item_id=${id}`);
         if (productWithId.rowCount == 1) {
-            (0, _interfaces_1.queryRowToProduct)(productWithId.rows[0]);
+            return (0, _interfaces_1.queryRowToProduct)(productWithId.rows[0]);
         }
-        const recipeWithId = await bdClient_1.default.query(`select * from recipe where item_id=${id}`);
+        const recipeWithId = await bdClient_1.default.query(`select * from recipes where item_id=${id}`);
         if (recipeWithId.rowCount == 1) {
-            (0, _interfaces_1.queryRowToRecipe)(recipeWithId.rows[0]);
+            return (0, _interfaces_1.queryRowToRecipe)(recipeWithId.rows[0]);
         }
         return new Error(`Item with such itemId(${id}) isn't exists`);
     }
