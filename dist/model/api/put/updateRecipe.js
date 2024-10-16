@@ -7,6 +7,7 @@ exports.default = updateRecipe;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getRecipe_1 = __importDefault(require("@api/get/getRecipe"));
 const _helpers_1 = require("@helpers");
+const _primitives_1 = require("@primitives");
 async function updateRecipe(id, data) {
     try {
         if ((0, _helpers_1.isEmpty)(data)) {
@@ -27,7 +28,7 @@ async function updateRecipe(id, data) {
         const valueConverter = (key, value) => {
             switch (key) {
                 case "itemInfo":
-                    return value.toBDView();
+                    return _primitives_1.ItemInfo.fromJSON(value).toBDView();
                 default:
                     return `'${(0, _helpers_1.pgFormat)(value)}'`;
             }

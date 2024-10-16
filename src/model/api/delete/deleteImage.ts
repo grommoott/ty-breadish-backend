@@ -16,7 +16,7 @@ export default async function deleteImage(id: ImageId, category: ImageCategory):
             return image
         }
 
-        await fs.rm(path.join(__dirname, `../../../../data/images/${category}/${id}.${image.extension}`))
+        fs.rm(path.join(__dirname, `../../../../data/images/${category}/${id}.${image.extension}`)).catch(e => e)
 
         const response: QueryResult = await bdClient.query(`delete from images where id=${id} and category='${pgFormat(category)}'`)
 

@@ -41,7 +41,7 @@ class Recipes {
         asyncErrorCatcher(async (req, res, next) => {
             const name: string = req.body.name
             const description: string = req.body.description
-            const itemInfo: ItemInfo = req.body.itemInfo
+            const itemInfo = ItemInfo.fromJSON(req.body.itemInfo)
             const recipe: string = req.body.recipe
 
             const _recipe: Recipe | Error = await Recipe.create(name, description, itemInfo, recipe)
@@ -111,21 +111,21 @@ class Recipes {
         })
     ]
 
-    public getImages: Array<Middleware> = images.get(ImageCategories.Recipies)
+    public getImages: Array<Middleware> = images.get(ImageCategories.Recipes)
 
     public postImages: Array<Middleware> = [
         checkAdmin,
-        ...images.postCreate(ImageCategories.Recipies)
+        ...images.postCreate(ImageCategories.Recipes)
     ]
 
     public deleteImages: Array<Middleware> = [
         checkAdmin,
-        ...images.delete(ImageCategories.Recipies)
+        ...images.delete(ImageCategories.Recipes)
     ]
 
     public putImages: Array<Middleware> = [
         checkAdmin,
-        ...images.put(ImageCategories.Recipies)
+        ...images.put(ImageCategories.Recipes)
     ]
 }
 

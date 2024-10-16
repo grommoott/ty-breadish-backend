@@ -11,14 +11,14 @@ type PFC = {
 }
 
 type ItemInfoJson = {
-    cooking_method: CookingMethod,
+    cookingMethod: CookingMethod[],
     ingredients: Ingredient[],
     pfc: PFC,
     mass: number
 }
 
 class ItemInfo implements IBDPrimitive {
-    public cookingMethod: CookingMethod
+    public cookingMethod: CookingMethod[]
 
     public ingredients: Ingredient[]
 
@@ -31,11 +31,11 @@ class ItemInfo implements IBDPrimitive {
 
         const pfc: PFC = { ...itemInfo.pfc }
 
-        return new ItemInfo(itemInfo.cooking_method, itemInfo.ingredients, pfc, itemInfo.mass)
+        return new ItemInfo(itemInfo.cookingMethod, itemInfo.ingredients, pfc, itemInfo.mass)
     }
 
     public static fromObject(obj: ItemInfoJson): ItemInfo {
-        return new ItemInfo(obj.cooking_method, obj.ingredients, obj.pfc, obj.mass)
+        return new ItemInfo(obj.cookingMethod, obj.ingredients, obj.pfc, obj.mass)
     }
 
     public toJSON(): string {
@@ -61,7 +61,7 @@ class ItemInfo implements IBDPrimitive {
         }
     }
 
-    public constructor(cookingMethod: CookingMethod, ingredients: Ingredient[], pfc: PFC, mass: number) {
+    public constructor(cookingMethod: CookingMethod[], ingredients: Ingredient[], pfc: PFC, mass: number) {
         this.cookingMethod = cookingMethod
         this.ingredients = ingredients
         this.pfc = pfc

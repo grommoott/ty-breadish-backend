@@ -15,7 +15,7 @@ async function deleteImage(id, category) {
         if (image instanceof Error) {
             return image;
         }
-        await promises_1.default.rm(path_1.default.join(__dirname, `../../../../data/images/${category}/${id}.${image.extension}`));
+        promises_1.default.rm(path_1.default.join(__dirname, `../../../../data/images/${category}/${id}.${image.extension}`)).catch(e => e);
         const response = await bdClient_1.default.query(`delete from images where id=${id} and category='${(0, _helpers_1.pgFormat)(category)}'`);
         return response.rowCount != 0;
     }

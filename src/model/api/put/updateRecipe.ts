@@ -29,7 +29,7 @@ export default async function updateRecipe(id: RecipeId, data: { name?: string, 
         const valueConverter: (key: string, value: any) => string = (key: string, value: any): string => {
             switch (key) {
                 case "itemInfo":
-                    return (value as ItemInfo).toBDView()
+                    return ItemInfo.fromJSON(value as string).toBDView()
 
                 default:
                     return `'${pgFormat(value)}'`

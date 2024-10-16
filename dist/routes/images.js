@@ -48,7 +48,7 @@ class Images {
                     return;
                 }
                 const id = new _primitives_1.ImageId(req.body.id);
-                const extension = this.getExtension(req.file.path);
+                const extension = this.getExtension(req.file.originalname);
                 if (extension instanceof Error) {
                     next(extension);
                     return;
@@ -72,7 +72,7 @@ class Images {
                 next(new Error("To post image you must send it"));
                 return;
             }
-            const extension = this.getExtension(req.file.path);
+            const extension = this.getExtension(req.file.originalname);
             if (extension instanceof Error) {
                 next(extension);
                 return;
@@ -117,14 +117,14 @@ class Images {
                     next(new Error("To post image you must send it"));
                     return;
                 }
-                const id = new _primitives_1.ImageId(req.params.id);
+                const id = new _primitives_1.ImageId(req.body.id);
                 const image = await _entities_1.Image.fromIdCategory(id, category);
                 if (image instanceof Error) {
                     next(image);
                     return;
                 }
                 await promises_1.default.rm(path_1.default.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`));
-                const extension = this.getExtension(req.file.path);
+                const extension = this.getExtension(req.file.originalname);
                 if (extension instanceof Error) {
                     next(extension);
                     return;

@@ -38,7 +38,7 @@ class Recipes {
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const name = req.body.name;
             const description = req.body.description;
-            const itemInfo = req.body.itemInfo;
+            const itemInfo = _primitives_1.ItemInfo.fromJSON(req.body.itemInfo);
             const recipe = req.body.recipe;
             const _recipe = await _entities_1.Recipe.create(name, description, itemInfo, recipe);
             if (_recipe instanceof Error) {
@@ -90,18 +90,18 @@ class Recipes {
             next();
         })
     ];
-    getImages = images_1.default.get(_enums_1.ImageCategories.Recipies);
+    getImages = images_1.default.get(_enums_1.ImageCategories.Recipes);
     postImages = [
         _middlewares_1.checkAdmin,
-        ...images_1.default.postCreate(_enums_1.ImageCategories.Recipies)
+        ...images_1.default.postCreate(_enums_1.ImageCategories.Recipes)
     ];
     deleteImages = [
         _middlewares_1.checkAdmin,
-        ...images_1.default.delete(_enums_1.ImageCategories.Recipies)
+        ...images_1.default.delete(_enums_1.ImageCategories.Recipes)
     ];
     putImages = [
         _middlewares_1.checkAdmin,
-        ...images_1.default.put(_enums_1.ImageCategories.Recipies)
+        ...images_1.default.put(_enums_1.ImageCategories.Recipes)
     ];
 }
 exports.default = new Recipes();

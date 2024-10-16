@@ -6,7 +6,6 @@ import { ImageId } from "@primitives"
 import path from "path"
 import multer from "multer"
 import fs from "fs/promises"
-import { IImage } from "@interfaces"
 
 const upload = multer({ dest: path.join(__dirname, "../../data/images/") })
 
@@ -57,7 +56,7 @@ class Images {
 
                 const id: ImageId = new ImageId(req.body.id)
 
-                const extension = this.getExtension(req.file.path)
+                const extension = this.getExtension(req.file.originalname)
 
                 if (extension instanceof Error) {
                     next(extension)
@@ -89,7 +88,7 @@ class Images {
                 return
             }
 
-            const extension: string | Error = this.getExtension(req.file.path)
+            const extension: string | Error = this.getExtension(req.file.originalname)
 
             if (extension instanceof Error) {
                 next(extension)
@@ -150,7 +149,7 @@ class Images {
                     return
                 }
 
-                const id: ImageId = new ImageId(req.params.id)
+                const id: ImageId = new ImageId(req.body.id)
 
                 const image: Image | Error = await Image.fromIdCategory(id, category)
 
@@ -161,7 +160,7 @@ class Images {
 
                 await fs.rm(path.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`))
 
-                const extension = this.getExtension(req.file.path)
+                const extension = this.getExtension(req.file.originalname)
 
                 if (extension instanceof Error) {
                     next(extension)

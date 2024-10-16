@@ -10,10 +10,10 @@ class ItemInfo {
     static fromJSON(json) {
         const itemInfo = JSON.parse(json);
         const pfc = { ...itemInfo.pfc };
-        return new ItemInfo(itemInfo.cooking_method, itemInfo.ingredients, pfc, itemInfo.mass);
+        return new ItemInfo(itemInfo.cookingMethod, itemInfo.ingredients, pfc, itemInfo.mass);
     }
     static fromObject(obj) {
-        return new ItemInfo(obj.cooking_method, obj.ingredients, obj.pfc, obj.mass);
+        return new ItemInfo(obj.cookingMethod, obj.ingredients, obj.pfc, obj.mass);
     }
     toJSON() {
         const itemInfo = this.toNormalView();

@@ -4,7 +4,7 @@ exports.ImageCategories = void 0;
 const ImageCategories = {
     News: "news",
     Products: "products",
-    Recipies: "recipes",
+    Recipes: "recipes",
     Users: "users",
     Images: "images"
 };

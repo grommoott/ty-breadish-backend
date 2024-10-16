@@ -6,7 +6,7 @@ import { QueryResult } from "pg"
 
 export default async function createBasicImage(extension: string): Promise<IImage | Error> {
     try {
-        const response: QueryResult = await bdClient.query(`insert into images values (default, nextval('image_id'), '${pgFormat(ImageCategories.Images)}', '${pgFormat(extension)}') returning *`)
+        const response: QueryResult = await bdClient.query(`insert into images values (nextval('image_id'), '${pgFormat(ImageCategories.Images)}', '${pgFormat(extension)}') returning *`)
 
         return queryRowToImage(response.rows[0])
     } catch (e) {

@@ -28,7 +28,7 @@ function queryRowToRecipe(row: any): IRecipe {
         name: row.name,
         description: row.description,
         avgRate: new AvgRate(row.avg_rate),
-        itemInfo: ItemInfo.fromJSON(row.item_info)
+        itemInfo: ItemInfo.fromObject(row.item_info)
     }
 }
 
