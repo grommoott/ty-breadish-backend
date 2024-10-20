@@ -6,7 +6,7 @@ import { QueryResult } from "pg";
 
 export default async function createProduct(name: string, description: string, price: Price, itemInfo: ItemInfo): Promise<IProduct> {
     try {
-        const response: QueryResult = await bdClient.query(`insert into products values (default, nextval('item_id'), '${pgFormat(name)}', '${pgFormat(description)}' ${price}, -1, '${itemInfo.toJSON()}') returning *`)
+        const response: QueryResult = await bdClient.query(`insert into products values (default, nextval('item_id'), '${pgFormat(name)}', '${pgFormat(description)}', ${price}, -1, '${pgFormat(itemInfo.toJSON())}') returning *`)
 
         return queryRowToProduct(response.rows[0])
     } catch (e) {

@@ -7,7 +7,8 @@
   "author": "grommoott",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc && node dist/index.js"
+    "dev": "tsc && node dist/index.js",
+    "loc": "./node_modules/.bin/cloc --exclude-dir node_modules,.meteor,.vscode,typings,typings-own,.git,.idea ./"
   },
   "dependencies": {
     "@types/axios": "^0.14.0",
@@ -53,5 +54,8 @@
     "@routes": "./dist/routes",
     "@middlewares": "./dist/middlewares",
     "@root": "./dist"
+  },
+  "devDependencies": {
+    "cloc": "^2.2.0-cloc"
   }
 }

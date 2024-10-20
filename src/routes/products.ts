@@ -44,7 +44,7 @@ class Products {
             const price: Price = req.body.price
             const name: string = req.body.name
             const description: string = req.body.description
-            const itemInfo: ItemInfo = req.body.itemInfo
+            const itemInfo: ItemInfo = ItemInfo.fromJSON(req.body.itemInfo)
 
             const product: Product | Error = await Product.create(price, name, description, itemInfo)
 

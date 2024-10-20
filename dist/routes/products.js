@@ -39,7 +39,7 @@ class Products {
             const price = req.body.price;
             const name = req.body.name;
             const description = req.body.description;
-            const itemInfo = req.body.itemInfo;
+            const itemInfo = _primitives_1.ItemInfo.fromJSON(req.body.itemInfo);
             const product = await _entities_1.Product.create(price, name, description, itemInfo);
             if (product instanceof Error) {
                 next(product);

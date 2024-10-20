@@ -480,6 +480,11 @@ chownr@^3.0.0:
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-3.0.0.tgz#9855e64ecd240a9cc4267ce8a4aa5d24a1da15e4"
   integrity sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==
 
+cloc@^2.2.0-cloc:
+  version "2.2.0-cloc"
+  resolved "https://registry.yarnpkg.com/cloc/-/cloc-2.2.0-cloc.tgz#a235f20abb9437ff7b85784b15e9f98c2610beef"
+  integrity sha512-h2sJRjD8v8fYPez2nGbdQC5DEolV1zOVQT/m3CWJXEhJtBs11wDduHvl+485uPhxnSjmlQCJfxYJruSz2nT38g==
+
 cmd-shim@^6.0.0:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/cmd-shim/-/cmd-shim-6.0.3.tgz#c491e9656594ba17ac83c4bd931590a9d6e26033"
