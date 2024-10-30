@@ -5,6 +5,7 @@ import jwt, { RegisterToken } from "@helpers/jwt"
 import { minute, month } from "@helpers/timeConstants"
 import { checkBodyParams, contentJson, Middleware } from "@middlewares"
 import { Email, Hash } from "@primitives"
+import config from "config"
 
 class Register {
     public postToken: Array<Middleware> = [
@@ -132,10 +133,9 @@ class Register {
                 return
             }
 
-            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 3 * month })
-            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * minute })
-            res.cookie("DeviceId", session.deviceId, { sameSite: "strict" })
-
+            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, domain: config.backendDomain, maxAge: 3 * month })
+            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, domain: config.backendDomain, maxAge: 20 * minute })
+            res.cookie("DeviceId", session.deviceId, { domain: config.backendDomain })
 
             res.send(user.toNormalView())
 

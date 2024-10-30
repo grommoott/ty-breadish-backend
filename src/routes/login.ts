@@ -3,6 +3,7 @@ import { asyncErrorCatcher } from "@helpers"
 import jwt from "@helpers/jwt"
 import { minute, month } from "@helpers/timeConstants"
 import { checkBodyParams, Middleware } from "@middlewares"
+import config from "config"
 
 
 class Login {
@@ -53,9 +54,9 @@ class Login {
                 return
             }
 
-            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 2 * month })
-            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * minute })
-            res.cookie("DeviceId", session.deviceId, { sameSite: "strict" })
+            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, domain: config.backendDomain, maxAge: 3 * month })
+            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, domain: config.backendDomain, maxAge: 20 * minute })
+            res.cookie("DeviceId", session.deviceId, { domain: config.backendDomain })
 
             res.send(user.toNormalView())
 
