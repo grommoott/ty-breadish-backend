@@ -14,7 +14,7 @@ const app = express()
 const port = process.env.PORT || 8443
 
 // Middleware connection
-app.use(cors({ credentials: true, origin: ["http://localhost:5173", "http://localhost:4173"] }))
+app.use(cors({ credentials: true, origin: ["http://localhost:5173", "http://localhost:4173", "https://ty-breadish.onrender.com"] }))
 app.use(express.json())
 app.use(cookieParser())
 
