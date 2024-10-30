@@ -3,7 +3,7 @@ import { asyncErrorCatcher } from "@helpers"
 import jwt from "@helpers/jwt"
 import { minute, month } from "@helpers/timeConstants"
 import { checkBodyParams, Middleware } from "@middlewares"
-import config from "config"
+import config from "../config"
 
 
 class Login {

@@ -5,7 +5,7 @@ import jwt, { RegisterToken } from "@helpers/jwt"
 import { minute, month } from "@helpers/timeConstants"
 import { checkBodyParams, contentJson, Middleware } from "@middlewares"
 import { Email, Hash } from "@primitives"
-import config from "config"
+import config from "../config"
 
 class Register {
     public postToken: Array<Middleware> = [
