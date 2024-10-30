@@ -23,7 +23,7 @@ export default async function getCommentsPage(mediaId: MediaId, sortOrder: Comme
                     return bdClient.query(`select * from comments where target=${mediaId} order by moment limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
 
                 case CommentsSortOrders.LikedFirst:
-                    return bdClient.query(`select * from comments where target=${mediaId} order by (select count(*) from likes where target=${mediaId}) desc limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
+                    return bdClient.query(`select * from comments where target=${mediaId} order by (select count(*) from likes where target=comments.media_id) desc limit ${config.commentsPageSize} offset ${config.commentsPageSize * page}`)
             }
         })()
 

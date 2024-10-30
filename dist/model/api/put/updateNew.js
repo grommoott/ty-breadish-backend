@@ -22,7 +22,7 @@ async function updateNew(id, data) {
         const setString = Object.entries(data).map(([key, val]) => {
             return `${key}=${valueConverter(key, val)}`;
         });
-        await bdClient_1.default.query(`update news set ${setString} where id=${id}`);
+        await bdClient_1.default.query(`update news set ${setString}, is_edited=TRUE where id=${id}`);
     }
     catch (e) {
         const msg = "Error in updateNew request: " + e;

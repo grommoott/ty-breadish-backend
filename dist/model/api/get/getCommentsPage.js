@@ -22,7 +22,7 @@ async function getCommentsPage(mediaId, sortOrder, page) {
                 case _enums_1.CommentsSortOrders.OldFirst:
                     return bdClient_1.default.query(`select * from comments where target=${mediaId} order by moment limit ${config_1.default.commentsPageSize} offset ${config_1.default.commentsPageSize * page}`);
                 case _enums_1.CommentsSortOrders.LikedFirst:
-                    return bdClient_1.default.query(`select * from comments where target=${mediaId} order by (select count(*) from likes where target=${mediaId}) desc limit ${config_1.default.commentsPageSize} offset ${config_1.default.commentsPageSize * page}`);
+                    return bdClient_1.default.query(`select * from comments where target=${mediaId} order by (select count(*) from likes where target=comments.media_id) desc limit ${config_1.default.commentsPageSize} offset ${config_1.default.commentsPageSize * page}`);
             }
         })();
         return response.rows.map(_interfaces_1.queryRowToComment);

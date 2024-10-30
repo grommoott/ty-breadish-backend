@@ -22,7 +22,7 @@ async function updateComment(id, data) {
         const setString = Object.entries(data).map(([key, val]) => {
             return `${key}=${valueConverter(key, val)}`;
         }).join(", ");
-        await bdClient_1.default.query(`update comments set ${setString} where id=${id}`);
+        await bdClient_1.default.query(`update comments set ${setString}, is_edited=TRUE where id=${id}`);
     }
     catch (e) {
         const msg = "Error in updateComment request: " + e;

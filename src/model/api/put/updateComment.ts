@@ -24,7 +24,7 @@ export default async function updateComment(id: CommentId, data: { content?: str
             return `${key}=${valueConverter(key, val)}`
         }).join(", ")
 
-        await bdClient.query(`update comments set ${setString} where id=${id}`)
+        await bdClient.query(`update comments set ${setString}, is_edited=TRUE where id=${id}`)
     } catch (e) {
         const msg = "Error in updateComment request: " + e
         throw new Error(msg, { cause: 500 })

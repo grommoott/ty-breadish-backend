@@ -19,15 +19,15 @@ async function getReviewsPage(itemId, sortOrder, page) {
         const response = await (() => {
             switch (sortOrder) {
                 case _enums_1.ReviewsSortOrders.OldFirst:
-                    return bdClient_1.default.query(`select * from reviews where target=${itemId.toBDView()} order by moment limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
+                    return bdClient_1.default.query(`select * from reviews where target=${itemId} order by moment limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
                 case _enums_1.ReviewsSortOrders.NewFirst:
-                    return bdClient_1.default.query(`select * from reviews where target=${itemId.toBDView()} order by moment desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
+                    return bdClient_1.default.query(`select * from reviews where target=${itemId} order by moment desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
                 case _enums_1.ReviewsSortOrders.LikedFirst:
-                    return bdClient_1.default.query(`select * from reviews where target=${itemId.toBDView()} order by (select count(*) from likes where target=${itemId} and type='${(0, _helpers_1.pgFormat)(_enums_1.LikeTypes.Review)}') desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
+                    return bdClient_1.default.query(`select * from reviews where target=${itemId} order by (select count(*) from likes where target=reviews.item_id and type='${(0, _helpers_1.pgFormat)(_enums_1.LikeTypes.Review)}') desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
                 case _enums_1.ReviewsSortOrders.RatedFirst:
-                    return bdClient_1.default.query(`select * from reviews where target=${itemId.toBDView()} order by rate desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
+                    return bdClient_1.default.query(`select * from reviews where target=${itemId} order by rate desc limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
                 case _enums_1.ReviewsSortOrders.UnratedFirst:
-                    return bdClient_1.default.query(`select * from reviews where target=${itemId.toBDView()} order by rate limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
+                    return bdClient_1.default.query(`select * from reviews where target=${itemId} order by rate limit ${config_1.default.reviewsPageSize} offset ${config_1.default.reviewsPageSize * page}`);
             }
         })();
         return response.rows.map(_interfaces_1.queryRowToReview);

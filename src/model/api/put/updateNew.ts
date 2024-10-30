@@ -3,7 +3,6 @@ import getNew from "@api/get/getNew";
 import { isEmpty, pgFormat } from "@helpers";
 import { INew } from "@interfaces";
 import { NewId } from "@primitives";
-import { QueryResult } from "pg";
 
 export default async function updateNew(id: NewId, data: { title?: string, content?: string }): Promise<void | Error> {
     try {
@@ -25,7 +24,7 @@ export default async function updateNew(id: NewId, data: { title?: string, conte
             return `${key}=${valueConverter(key, val)}`
         })
 
-        await bdClient.query(`update news set ${setString} where id=${id}`)
+        await bdClient.query(`update news set ${setString}, is_edited=TRUE where id=${id}`)
     } catch (e) {
         const msg = "Error in updateNew request: " + e
         throw new Error(msg, { cause: 500 })
