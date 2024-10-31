@@ -8,6 +8,7 @@ const _helpers_1 = require("@helpers");
 const jwt_1 = __importDefault(require("@helpers/jwt"));
 const timeConstants_1 = require("@helpers/timeConstants");
 const _middlewares_1 = require("@middlewares");
+const config_1 = __importDefault(require("../config"));
 class Login {
     post = [
         (0, _middlewares_1.checkBodyParams)(["username", "password"]),
@@ -46,9 +47,9 @@ class Login {
                 next(accessToken);
                 return;
             }
-            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 2 * timeConstants_1.month });
-            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * timeConstants_1.minute });
-            res.cookie("DeviceId", session.deviceId, { sameSite: "strict" });
+            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, domain: config_1.default.backendDomain, maxAge: 3 * timeConstants_1.month });
+            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, domain: config_1.default.backendDomain, maxAge: 20 * timeConstants_1.minute });
+            res.cookie("DeviceId", session.deviceId, { domain: config_1.default.backendDomain });
             res.send(user.toNormalView());
             next();
         })

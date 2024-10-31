@@ -1,3 +1,3 @@
 export default {
-    backendDomain: "ty-breadish-backend.onrender.com"
+    backendDomain: "localhost"//"ty-breadish-backend.onrender.com"
 }
