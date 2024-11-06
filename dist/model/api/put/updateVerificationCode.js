@@ -16,7 +16,7 @@ async function updateVerificationCode(email, data) {
         if (verificationCode instanceof Error) {
             return verificationCode;
         }
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${key}=${val}`;
         }).join(", ");
         await bdClient_1.default.query(`update verification_codes set ${setString} where email='${(0, _helpers_1.pgFormat)(email)}'`);

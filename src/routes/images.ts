@@ -7,9 +7,9 @@ import path from "path"
 import multer from "multer"
 import fs from "fs/promises"
 
-const upload = multer({ dest: path.join(__dirname, "../../data/images/") })
-
 class Images {
+    public upload = multer({ dest: path.join(__dirname, "../../data/images/") })
+
     private getExtension(path: string): string | Error {
         const extension = path.split(".").pop()
 
@@ -43,45 +43,68 @@ class Images {
         ]
     }
 
-    public postCreate: (category: ImageCategory, simple?: boolean) => Array<Middleware> = (category: ImageCategory, simple: boolean = false) => {
+    public getIsExists: (category: ImageCategory) => Array<Middleware> = (category: ImageCategory) => {
         return [
-            upload.single("image"),
-            simple ? () => { } : checkBodyParams(["id"]),
-            contentJson,
+            checkParams(["id"]),
             asyncErrorCatcher(async (req, res, next) => {
-                if (!req.file) {
-                    next(new Error("To post image you must send it"))
-                    return
-                }
+                const id: ImageId = new ImageId(req.params.id)
 
-                const id: ImageId = new ImageId(req.body.id)
-
-                const extension = this.getExtension(req.file.originalname)
-
-                if (extension instanceof Error) {
-                    next(extension)
-                    return
-                }
-
-                const image: Image | Error = await Image.create(id, category, extension)
+                const image: Image | Error = await Image.fromIdCategory(id, category)
 
                 if (image instanceof Error) {
-                    next(image)
+                    res.send(false)
+                    next()
                     return
                 }
 
-                await fs.rename(req.file?.path, path.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`))
-
-                res.send(image)
-
+                res.send(true)
                 next()
             })
         ]
     }
 
+    public postCreate:
+        (category: ImageCategory, simple?: boolean, upload?: boolean) => Array<Middleware> =
+        (category: ImageCategory, simple: boolean = false, upload: boolean = true) => {
+            return [
+                upload ? this.upload.single("image") : (req, res, next) => next(),
+                simple ? (req, res, next) => next() : checkBodyParams(["id"]),
+                contentJson,
+                asyncErrorCatcher(async (req, res, next) => {
+                    if (!req.file) {
+                        next(new Error("To post image you must send it"))
+                        return
+                    }
+
+                    const id: ImageId = new ImageId(req.body.id)
+
+                    const extension = this.getExtension(req.file.originalname)
+
+                    if (extension instanceof Error) {
+                        next(extension)
+                        return
+                    }
+
+                    const image: Image | Error = await Image.create(id, category, extension)
+
+                    if (image instanceof Error) {
+                        next(image)
+                        return
+                    }
+
+
+                    await fs.rename(req.file?.path, path.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`))
+
+                    res.send(image)
+
+                    next()
+                })
+            ]
+        }
+
     public postCreateBasic: Array<Middleware> = [
         checkAdmin,
-        upload.single("image"),
+        this.upload.single("image"),
         asyncErrorCatcher(async (req, res, next) => {
             if (!req.file) {
                 next(new Error("To post image you must send it"))
@@ -112,7 +135,7 @@ class Images {
 
     public delete: (category: ImageCategory, simple?: boolean) => Array<Middleware> = (category: ImageCategory, simple: boolean = false) => {
         return [
-            simple ? () => { } : checkParams(["id"]),
+            simple ? (req, res, next) => next() : checkParams(["id"]),
             asyncErrorCatcher(async (req, res, next) => {
                 const id: ImageId = new ImageId(req.params.id)
 
@@ -123,65 +146,76 @@ class Images {
                     return
                 }
 
-                await fs.rm(path.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`))
+                Promise.all([
+                    (async () => {
+                        try {
+                            await fs.rm(path.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`))
+                        } catch (e) { }
+                    })(),
+                    (async () => {
+                        const del: boolean | Error = await image.delete()
 
-                const del: boolean | Error = await image.delete()
+                        if (del instanceof Error) {
+                            next(del)
+                            return
+                        }
 
-                if (del instanceof Error) {
-                    next(del)
-                    return
-                }
+                    })()
+                ]).then(() => {
+                    res.sendStatus(200)
 
-                res.sendStatus(200)
+                    next()
 
-                next()
+                })
             })
         ]
     }
 
-    public put: (category: ImageCategory, simple?: boolean) => Array<Middleware> = (category: ImageCategory, simple: boolean = false) => {
-        return [
-            upload.single("image"),
-            simple ? () => { } : checkBodyParams(["id"]),
-            asyncErrorCatcher(async (req, res, next) => {
-                if (!req.file) {
-                    next(new Error("To post image you must send it"))
-                    return
-                }
+    public put:
+        (category: ImageCategory, simple?: boolean, upload?: boolean) => Array<Middleware> =
+        (category: ImageCategory, simple: boolean = false, upload: boolean = true) => {
+            return [
+                upload ? this.upload.single("image") : (req, res, next) => next(),
+                simple ? (req, res, next) => next() : checkBodyParams(["id"]),
+                asyncErrorCatcher(async (req, res, next) => {
+                    if (!req.file) {
+                        next(new Error("To post image you must send it"))
+                        return
+                    }
 
-                const id: ImageId = new ImageId(req.body.id)
+                    const id: ImageId = new ImageId(req.body.id)
 
-                const image: Image | Error = await Image.fromIdCategory(id, category)
+                    const image: Image | Error = await Image.fromIdCategory(id, category)
 
-                if (image instanceof Error) {
-                    next(image)
-                    return
-                }
+                    if (image instanceof Error) {
+                        next(image)
+                        return
+                    }
 
-                await fs.rm(path.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`))
+                    await fs.rm(path.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`))
 
-                const extension = this.getExtension(req.file.originalname)
+                    const extension = this.getExtension(req.file.originalname)
 
-                if (extension instanceof Error) {
-                    next(extension)
-                    return
-                }
+                    if (extension instanceof Error) {
+                        next(extension)
+                        return
+                    }
 
-                const edit: void | Error = await image.edit({ extension })
+                    const edit: void | Error = await image.edit({ extension })
 
-                if (edit instanceof Error) {
-                    next(edit)
-                    return
-                }
+                    if (edit instanceof Error) {
+                        next(edit)
+                        return
+                    }
 
-                await fs.rename(req.file.path, path.join(__dirname, `../../data/images/${category}/${id}.${extension}`))
+                    await fs.rename(req.file.path, path.join(__dirname, `../../data/images/${category}/${id}.${extension}`))
 
-                res.sendStatus(200)
+                    res.sendStatus(200)
 
-                next()
-            })
-        ]
-    }
+                    next()
+                })
+            ]
+        }
 }
 
 export default new Images()

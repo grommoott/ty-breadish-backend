@@ -26,23 +26,22 @@ class News {
         })
     ]
 
-    public get: Array<Middleware> = [
-        checkParams(["id"]),
+    public get: Array<Middleware> = [checkParams(["id"]),
         contentJson,
-        asyncErrorCatcher(async (req, res, next) => {
-            const id: NewId = new NewId(req.params.id)
+    asyncErrorCatcher(async (req, res, next) => {
+        const id: NewId = new NewId(req.params.id)
 
-            const aNew: New | Error = await New.fromId(id)
+        const aNew: New | Error = await New.fromId(id)
 
-            if (aNew instanceof Error) {
-                next(aNew)
-                return
-            }
+        if (aNew instanceof Error) {
+            next(aNew)
+            return
+        }
 
-            res.send(aNew.toNormalView())
+        res.send(aNew.toNormalView())
 
-            next()
-        })
+        next()
+    })
     ]
 
     public postCreate: Array<Middleware> = [
@@ -98,7 +97,7 @@ class News {
         asyncErrorCatcher(async (req, res, next) => {
             const id: NewId = new NewId(req.body.id)
             const title: string | undefined = req.body.title
-            const content: string | undefined = req.body.title
+            const content: string | undefined = req.body.content
 
             const aNew: New | Error = await New.fromId(id)
 
@@ -121,6 +120,8 @@ class News {
     ]
 
     public getImages: Array<Middleware> = images.get(ImageCategories.News)
+
+    public getIsImageExists: Array<Middleware> = images.getIsExists(ImageCategories.News)
 
     public postImages: Array<Middleware> = [
         checkAdmin,

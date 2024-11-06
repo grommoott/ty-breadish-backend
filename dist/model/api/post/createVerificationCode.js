@@ -23,7 +23,7 @@ async function createVerificationCode(email, code, moment) {
         if (!(verificationCode instanceof Error)) {
             return new Error(`There is already verification code for email ${email}`);
         }
-        const response = await bdClient_1.default.query(`insert into verification_codes values (default, '${(0, _helpers_1.pgFormat)(email)}', ${code}, ${_moment}) returning *`);
+        const response = await bdClient_1.default.query(`insert into verification_codes values (default, '${(0, _helpers_1.pgFormat)(email)}', ${code}, ${_moment}) on conflict (email) do update set code=${code}, moment=${_moment} returning *`);
         return (0, _interfaces_1.queryRowToVerificationCode)(response.rows[0]);
     }
     catch (e) {

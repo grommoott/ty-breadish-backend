@@ -113,6 +113,8 @@ class Recipes {
 
     public getImages: Array<Middleware> = images.get(ImageCategories.Recipes)
 
+    public getIsImageExists: Array<Middleware> = images.getIsExists(ImageCategories.Recipes)
+
     public postImages: Array<Middleware> = [
         checkAdmin,
         ...images.postCreate(ImageCategories.Recipes)

@@ -39,7 +39,7 @@ export default async function updateSession(id: SessionId, data: { refreshTokenI
             }
         }
 
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${nameConverter(key)}=${valueConverter(key, val)}`
         }).join(", ")
 

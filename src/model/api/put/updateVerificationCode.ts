@@ -2,7 +2,7 @@ import bdClient from "@api/bdClient";
 import getVerificationCode from "@api/get/getVerificationCode";
 import { isEmpty, pgFormat } from "@helpers";
 import { IVerificationCode } from "@interfaces";
-import { Email, Moment, UserId } from "@primitives";
+import { Email, Moment } from "@primitives";
 
 export default async function updateVerificationCode(email: Email, data: { code?: number, moment?: Moment }): Promise<void | Error> {
     try {
@@ -16,7 +16,7 @@ export default async function updateVerificationCode(email: Email, data: { code?
             return verificationCode
         }
 
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${key}=${val}`
         }).join(", ")
 

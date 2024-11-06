@@ -20,7 +20,7 @@ export default async function updateComment(id: CommentId, data: { content?: str
             return `'${pgFormat(value)}'`
         }
 
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${key}=${valueConverter(key, val)}`
         }).join(", ")
 

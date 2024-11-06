@@ -10,8 +10,8 @@ const _primitives_1 = require("@primitives");
 const path_1 = __importDefault(require("path"));
 const multer_1 = __importDefault(require("multer"));
 const promises_1 = __importDefault(require("fs/promises"));
-const upload = (0, multer_1.default)({ dest: path_1.default.join(__dirname, "../../data/images/") });
 class Images {
+    upload = (0, multer_1.default)({ dest: path_1.default.join(__dirname, "../../data/images/") });
     getExtension(path) {
         const extension = path.split(".").pop();
         if (!extension || ["png", "jpg", "jpeg", "webp"].findIndex(ex => ex === extension) == -1) {
@@ -37,10 +37,26 @@ class Images {
             })
         ];
     };
-    postCreate = (category, simple = false) => {
+    getIsExists = (category) => {
         return [
-            upload.single("image"),
-            simple ? () => { } : (0, _middlewares_1.checkBodyParams)(["id"]),
+            (0, _middlewares_1.checkParams)(["id"]),
+            (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+                const id = new _primitives_1.ImageId(req.params.id);
+                const image = await _entities_1.Image.fromIdCategory(id, category);
+                if (image instanceof Error) {
+                    res.send(false);
+                    next();
+                    return;
+                }
+                res.send(true);
+                next();
+            })
+        ];
+    };
+    postCreate = (category, simple = false, upload = true) => {
+        return [
+            upload ? this.upload.single("image") : (req, res, next) => next(),
+            simple ? (req, res, next) => next() : (0, _middlewares_1.checkBodyParams)(["id"]),
             _middlewares_1.contentJson,
             (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
                 if (!req.file) {
@@ -66,7 +82,7 @@ class Images {
     };
     postCreateBasic = [
         _middlewares_1.checkAdmin,
-        upload.single("image"),
+        this.upload.single("image"),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             if (!req.file) {
                 next(new Error("To post image you must send it"));
@@ -89,7 +105,7 @@ class Images {
     ];
     delete = (category, simple = false) => {
         return [
-            simple ? () => { } : (0, _middlewares_1.checkParams)(["id"]),
+            simple ? (req, res, next) => next() : (0, _middlewares_1.checkParams)(["id"]),
             (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
                 const id = new _primitives_1.ImageId(req.params.id);
                 const image = await _entities_1.Image.fromIdCategory(id, category);
@@ -97,21 +113,31 @@ class Images {
                     next(image);
                     return;
                 }
-                await promises_1.default.rm(path_1.default.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`));
-                const del = await image.delete();
-                if (del instanceof Error) {
-                    next(del);
-                    return;
-                }
-                res.sendStatus(200);
-                next();
+                Promise.all([
+                    (async () => {
+                        try {
+                            await promises_1.default.rm(path_1.default.join(__dirname, `../../data/images/${category}/${id}.${image.extension}`));
+                        }
+                        catch (e) { }
+                    })(),
+                    (async () => {
+                        const del = await image.delete();
+                        if (del instanceof Error) {
+                            next(del);
+                            return;
+                        }
+                    })()
+                ]).then(() => {
+                    res.sendStatus(200);
+                    next();
+                });
             })
         ];
     };
-    put = (category, simple = false) => {
+    put = (category, simple = false, upload = true) => {
         return [
-            upload.single("image"),
-            simple ? () => { } : (0, _middlewares_1.checkBodyParams)(["id"]),
+            upload ? this.upload.single("image") : (req, res, next) => next(),
+            simple ? (req, res, next) => next() : (0, _middlewares_1.checkBodyParams)(["id"]),
             (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
                 if (!req.file) {
                     next(new Error("To post image you must send it"));

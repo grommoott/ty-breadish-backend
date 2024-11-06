@@ -20,7 +20,7 @@ export default async function updateNew(id: NewId, data: { title?: string, conte
             return `'${pgFormat(value)}'`
         }
 
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${key}=${valueConverter(key, val)}`
         })
 

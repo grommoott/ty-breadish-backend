@@ -113,6 +113,8 @@ class Products {
 
     public getImages: Array<Middleware> = images.get(ImageCategories.Products)
 
+    public getIsImageExists: Array<Middleware> = images.getIsExists(ImageCategories.Products)
+
     public postImages: Array<Middleware> = [
         checkAdmin,
         ...images.postCreate(ImageCategories.Products)

@@ -7,6 +7,7 @@ exports.default = updateProduct;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getProduct_1 = __importDefault(require("@api/get/getProduct"));
 const _helpers_1 = require("@helpers");
+const _primitives_1 = require("@primitives");
 async function updateProduct(id, data) {
     try {
         if ((0, _helpers_1.isEmpty)(data)) {
@@ -27,14 +28,14 @@ async function updateProduct(id, data) {
         const valueConverter = (key, value) => {
             switch (key) {
                 case "itemInfo":
-                    return value.toBDView();
+                    return _primitives_1.ItemInfo.fromJSON(value).toBDView();
                 case "price":
                     return value.toBDView();
                 default:
                     return `'${(0, _helpers_1.pgFormat)(value)}'`;
             }
         };
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${nameConverter(key)}=${valueConverter(key, val)}`;
         });
         await bdClient_1.default.query(`update products set ${setString} where id=${id}`);

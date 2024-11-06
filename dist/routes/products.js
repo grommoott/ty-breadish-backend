@@ -90,6 +90,7 @@ class Products {
         })
     ];
     getImages = images_1.default.get(_enums_1.ImageCategories.Products);
+    getIsImageExists = images_1.default.getIsExists(_enums_1.ImageCategories.Products);
     postImages = [
         _middlewares_1.checkAdmin,
         ...images_1.default.postCreate(_enums_1.ImageCategories.Products)

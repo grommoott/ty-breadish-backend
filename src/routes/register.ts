@@ -133,9 +133,9 @@ class Register {
                 return
             }
 
-            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, domain: config.backendDomain, maxAge: 3 * month })
-            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, domain: config.backendDomain, maxAge: 20 * minute })
-            res.cookie("DeviceId", session.deviceId, { domain: config.backendDomain })
+            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "none", domain: config.backendDomain, maxAge: 3 * month })
+            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "none", domain: config.backendDomain, maxAge: 20 * minute })
+            res.cookie("DeviceId", session.deviceId, { domain: config.backendDomain, sameSite: "none" })
 
             res.send(user.toNormalView())
 

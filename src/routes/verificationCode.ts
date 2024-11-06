@@ -1,21 +1,16 @@
-import { User, VerificationCode } from "@entities"
+import { VerificationCode } from "@entities"
 import { asyncErrorCatcher } from "@helpers"
 import { emailManager, VerificationCodeMail } from "@helpers/email"
-import { checkAuthorized, Middleware } from "@middlewares"
-import { UserId } from "@primitives"
+import { checkBodyParams, Middleware } from "@middlewares"
+import { Email } from "@primitives"
 
 class VerificationCodeRoute {
     public postCreate: Array<Middleware> = [
-        checkAuthorized,
+        checkBodyParams(["email"]),
         asyncErrorCatcher(async (req, res, next) => {
-            const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
+            const email: Email = new Email(req.body.email)
 
-            if (user instanceof Error) {
-                next(user)
-                return
-            }
-
-            let verificationCode: VerificationCode | Error = await VerificationCode.create(user.email)
+            let verificationCode: VerificationCode | Error = await VerificationCode.create(email)
 
             if (verificationCode instanceof Error) {
                 if (!verificationCode.message.startsWith("There is already verification code for email ")) {
@@ -23,7 +18,7 @@ class VerificationCodeRoute {
                     return
                 }
 
-                verificationCode = await VerificationCode.fromEmail(user.email)
+                verificationCode = await VerificationCode.fromEmail(email)
 
                 if (verificationCode instanceof Error) {
                     next(verificationCode)
@@ -37,7 +32,7 @@ class VerificationCodeRoute {
                     return
                 }
 
-                verificationCode = await VerificationCode.create(user.email)
+                verificationCode = await VerificationCode.create(email)
 
                 if (verificationCode instanceof Error) {
                     next(verificationCode)
@@ -45,7 +40,7 @@ class VerificationCodeRoute {
                 }
             }
 
-            emailManager.sendMail(new VerificationCodeMail(verificationCode), user.email)
+            emailManager.sendMail(new VerificationCodeMail(verificationCode), email)
 
             res.sendStatus(200)
         })

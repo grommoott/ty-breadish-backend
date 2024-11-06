@@ -57,7 +57,7 @@ export default async function updateUser(id: UserId, data: { username?: string, 
             }
         }
 
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${nameConverter(key)}=${valueConverter(key, val)}`
         }).join(",")
 

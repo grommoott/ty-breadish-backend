@@ -4,19 +4,22 @@ import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware 
 import { Email, Hash, ImageId, UserId } from "@primitives"
 import images from "./images"
 import { ImageCategories } from "@enums"
+import bodyParser, { urlencoded } from "body-parser"
+import multer from "multer"
+import path from "path"
 
 class Users {
     public getUsernameAvailable: Array<Middleware> = [
         checkParams(["username"]),
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {
-            const username: string = req.params.username
+            const username: string = atob(req.params.username)
 
             const user: User | Error = await User.fromUsername(username)
 
             if (user instanceof Error) {
                 if (user.message.startsWith("User with such username")) {
-                    res.send(false)
+                    res.send(true)
 
                     next()
                     return
@@ -26,7 +29,7 @@ class Users {
                 return
             }
 
-            res.send(true)
+            res.send(false)
 
             next()
         })
@@ -36,13 +39,13 @@ class Users {
         checkParams(["email"]),
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {
-            const email: Email = new Email(req.params.email)
+            const email: Email = new Email(atob(req.params.email))
 
             const user: User | Error = await User.fromEmail(email)
 
             if (user instanceof Error) {
                 if (user.message.startsWith("User with such email")) {
-                    res.send(false)
+                    res.send(true)
 
                     next()
                     return
@@ -52,7 +55,7 @@ class Users {
                 return
             }
 
-            res.send(true)
+            res.send(false)
 
             next()
         })
@@ -62,7 +65,7 @@ class Users {
         checkAuthorized,
         checkParams(["password"]),
         asyncErrorCatcher(async (req, res, next) => {
-            const password: string = req.params.password
+            const password: string = atob(req.params.password)
 
             const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
 
@@ -111,7 +114,7 @@ class Users {
         checkParams(["verificationCode", "password"]),
         asyncErrorCatcher(async (req, res, next) => {
             const code: number = parseInt(req.params.verificationCode)
-            const password: string = req.params.password
+            const password: string = atob(req.params.password)
 
             const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
 
@@ -120,7 +123,7 @@ class Users {
                 return
             }
 
-            if (!await user.isPasswordIsValid(password)) { // TODO
+            if (!(await user.isPasswordIsValid(password))) { // TODO
                 next(new Error("Invalid password!"))
                 return
             }
@@ -158,7 +161,7 @@ class Users {
 
             const username: string | undefined = req.body.username
             const newPassword: string | undefined = req.body.newPassword
-            const email: Email | undefined = new Email(req.body.email)
+            const email: Email | undefined = req.body.email == undefined ? undefined : new Email(req.body.email)
             const code: number | undefined = req.body.verificationCode
             const newCode: number | undefined = req.body.newVerificationCode
 
@@ -169,7 +172,7 @@ class Users {
                 return
             }
 
-            if (!user.isPasswordIsValid(password)) {
+            if (!(await user.isPasswordIsValid(password))) {
                 next(new Error("Invalid password!"))
                 return
             }
@@ -205,7 +208,7 @@ class Users {
                     return
                 }
 
-                if (!verificationCode.compare(code)) {
+                if (!(await verificationCode.compare(code))) {
                     next(new Error("Invalid verification code"))
                     return
                 }
@@ -223,14 +226,14 @@ class Users {
                         return
                     }
 
-                    if (!newVerificationCode.compare(code)) {
+                    if (!(await newVerificationCode.compare(code))) {
                         next(new Error("Invalid new verification code"))
                         return
                     }
                 }
             }
 
-            const edit: void | Error = await user.edit({ username, passwordHash: newPassword ? new Hash(newPassword) : undefined, email: email })
+            const edit: void | Error = await user.edit({ username, passwordHash: newPassword ? await Hash.hashPassword(newPassword) : undefined, email: email })
 
             if (edit instanceof Error) {
                 next(edit)
@@ -245,52 +248,42 @@ class Users {
 
     public getAvatars: Array<Middleware> = images.get(ImageCategories.Users, true)
 
-    private checkAvatarPermissions: Middleware =
-        asyncErrorCatcher(async (req, res, next) => {
-            const id: ImageId = new ImageId(req.params.id)
-
-            const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
-
-            if (user instanceof Error) {
-                next(user)
-                return
-            }
-
-            if (user.id.id != id.id) {
-                next(new Error("Forbidden!", { cause: 403 }))
-                return
-            }
-        })
+    public getIsAvatarExists: Array<Middleware> = images.getIsExists(ImageCategories.Users)
 
     private setIdParam: Middleware =
         asyncErrorCatcher(async (req, res, next) => {
             req.params.id = req.body.accessTokenPayload.sub
+            next()
         })
 
-    private setIdParamInBody: Middleware =
+    private checkPermissions: Middleware =
         asyncErrorCatcher(async (req, res, next) => {
-            req.body.id = req.body.accessTokenPayload.sub
+            if (req.body.accessTokenPayload.sub != req.body.id) {
+                next(new Error("Forbidden", { cause: 403 }))
+                return
+            }
+
+            next()
         })
 
     public postAvatars: Array<Middleware> = [
+        images.upload.single("image"),
         checkAuthorized,
-        this.setIdParamInBody,
-        this.checkAvatarPermissions,
-        ...images.postCreate(ImageCategories.Users, true)
+        this.checkPermissions,
+        ...images.postCreate(ImageCategories.Users, true, false)
     ]
 
     public deleteAvatars: Array<Middleware> = [
         checkAuthorized,
         this.setIdParam,
-        this.checkAvatarPermissions,
         ...images.delete(ImageCategories.Users, true)
     ]
 
     public putAvatars: Array<Middleware> = [
+        images.upload.single("image"),
         checkAuthorized,
-        this.setIdParamInBody,
-        this.checkAvatarPermissions,
-        ...images.put(ImageCategories.Users, true)
+        this.checkPermissions,
+        ...images.put(ImageCategories.Users, true, false)
     ]
 }
 

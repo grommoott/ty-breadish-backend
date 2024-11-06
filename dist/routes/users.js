@@ -14,18 +14,18 @@ class Users {
         (0, _middlewares_1.checkParams)(["username"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const username = req.params.username;
+            const username = atob(req.params.username);
             const user = await _entities_1.User.fromUsername(username);
             if (user instanceof Error) {
                 if (user.message.startsWith("User with such username")) {
-                    res.send(false);
+                    res.send(true);
                     next();
                     return;
                 }
                 next(user);
                 return;
             }
-            res.send(true);
+            res.send(false);
             next();
         })
     ];
@@ -33,18 +33,18 @@ class Users {
         (0, _middlewares_1.checkParams)(["email"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const email = new _primitives_1.Email(req.params.email);
+            const email = new _primitives_1.Email(atob(req.params.email));
             const user = await _entities_1.User.fromEmail(email);
             if (user instanceof Error) {
                 if (user.message.startsWith("User with such email")) {
-                    res.send(false);
+                    res.send(true);
                     next();
                     return;
                 }
                 next(user);
                 return;
             }
-            res.send(true);
+            res.send(false);
             next();
         })
     ];
@@ -52,7 +52,7 @@ class Users {
         _middlewares_1.checkAuthorized,
         (0, _middlewares_1.checkParams)(["password"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const password = req.params.password;
+            const password = atob(req.params.password);
             const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload.sub));
             if (user instanceof Error) {
                 next(user);
@@ -90,13 +90,13 @@ class Users {
         (0, _middlewares_1.checkParams)(["verificationCode", "password"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const code = parseInt(req.params.verificationCode);
-            const password = req.params.password;
+            const password = atob(req.params.password);
             const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload.sub));
             if (user instanceof Error) {
                 next(user);
                 return;
             }
-            if (!await user.isPasswordIsValid(password)) { // TODO
+            if (!(await user.isPasswordIsValid(password))) { // TODO
                 next(new Error("Invalid password!"));
                 return;
             }
@@ -125,7 +125,7 @@ class Users {
             const password = req.body.password;
             const username = req.body.username;
             const newPassword = req.body.newPassword;
-            const email = new _primitives_1.Email(req.body.email);
+            const email = req.body.email == undefined ? undefined : new _primitives_1.Email(req.body.email);
             const code = req.body.verificationCode;
             const newCode = req.body.newVerificationCode;
             const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload.sub));
@@ -133,7 +133,7 @@ class Users {
                 next(user);
                 return;
             }
-            if (!user.isPasswordIsValid(password)) {
+            if (!(await user.isPasswordIsValid(password))) {
                 next(new Error("Invalid password!"));
                 return;
             }
@@ -161,7 +161,7 @@ class Users {
                     next(verificationCode);
                     return;
                 }
-                if (!verificationCode.compare(code)) {
+                if (!(await verificationCode.compare(code))) {
                     next(new Error("Invalid verification code"));
                     return;
                 }
@@ -175,13 +175,13 @@ class Users {
                         next(newVerificationCode);
                         return;
                     }
-                    if (!newVerificationCode.compare(code)) {
+                    if (!(await newVerificationCode.compare(code))) {
                         next(new Error("Invalid new verification code"));
                         return;
                     }
                 }
             }
-            const edit = await user.edit({ username, passwordHash: newPassword ? new _primitives_1.Hash(newPassword) : undefined, email: email });
+            const edit = await user.edit({ username, passwordHash: newPassword ? await _primitives_1.Hash.hashPassword(newPassword) : undefined, email: email });
             if (edit instanceof Error) {
                 next(edit);
                 return;
@@ -191,41 +191,34 @@ class Users {
         })
     ];
     getAvatars = images_1.default.get(_enums_1.ImageCategories.Users, true);
-    checkAvatarPermissions = (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-        const id = new _primitives_1.ImageId(req.params.id);
-        const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload.sub));
-        if (user instanceof Error) {
-            next(user);
-            return;
-        }
-        if (user.id.id != id.id) {
-            next(new Error("Forbidden!", { cause: 403 }));
-            return;
-        }
-    });
+    getIsAvatarExists = images_1.default.getIsExists(_enums_1.ImageCategories.Users);
     setIdParam = (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
         req.params.id = req.body.accessTokenPayload.sub;
+        next();
     });
-    setIdParamInBody = (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-        req.body.id = req.body.accessTokenPayload.sub;
+    checkPermissions = (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+        if (req.body.accessTokenPayload.sub != req.body.id) {
+            next(new Error("Forbidden", { cause: 403 }));
+            return;
+        }
+        next();
     });
     postAvatars = [
+        images_1.default.upload.single("image"),
         _middlewares_1.checkAuthorized,
-        this.setIdParamInBody,
-        this.checkAvatarPermissions,
-        ...images_1.default.postCreate(_enums_1.ImageCategories.Users, true)
+        this.checkPermissions,
+        ...images_1.default.postCreate(_enums_1.ImageCategories.Users, true, false)
     ];
     deleteAvatars = [
         _middlewares_1.checkAuthorized,
         this.setIdParam,
-        this.checkAvatarPermissions,
         ...images_1.default.delete(_enums_1.ImageCategories.Users, true)
     ];
     putAvatars = [
+        images_1.default.upload.single("image"),
         _middlewares_1.checkAuthorized,
-        this.setIdParamInBody,
-        this.checkAvatarPermissions,
-        ...images_1.default.put(_enums_1.ImageCategories.Users, true)
+        this.checkPermissions,
+        ...images_1.default.put(_enums_1.ImageCategories.Users, true, false)
     ];
 }
 exports.default = new Users();

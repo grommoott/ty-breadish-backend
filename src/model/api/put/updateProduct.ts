@@ -3,7 +3,6 @@ import getProduct from "@api/get/getProduct";
 import { isEmpty, pgFormat } from "@helpers";
 import { IProduct } from "@interfaces";
 import { ItemInfo, Price, ProductId } from "@primitives";
-import { QueryResult } from "pg";
 
 export default async function updateProduct(id: ProductId, data: { price?: Price, name?: string, description?: string, itemInfo?: ItemInfo }): Promise<void | Error> {
     try {
@@ -30,7 +29,7 @@ export default async function updateProduct(id: ProductId, data: { price?: Price
         const valueConverter: (key: string, value: any) => string = (key: string, value: any): string => {
             switch (key) {
                 case "itemInfo":
-                    return (value as ItemInfo).toBDView()
+                    return ItemInfo.fromJSON(value as string).toBDView()
 
                 case "price":
                     return (value as Price).toBDView()
@@ -40,7 +39,7 @@ export default async function updateProduct(id: ProductId, data: { price?: Price
             }
         }
 
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${nameConverter(key)}=${valueConverter(key, val)}`
         })
 

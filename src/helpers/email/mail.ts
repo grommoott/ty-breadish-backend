@@ -26,4 +26,16 @@ class VerificationCodeMail extends Mail {
     }
 }
 
-export { Mail, VerificationCodeMail }
+class PasswordMail extends Mail {
+    private static _template: HandlebarsTemplateDelegate = (() => {
+        const markup = fs.readFileSync(path.join(__dirname, "../../../hbs/email/verifyCodeMail.hbs")).toString()
+        return handlebars.compile(markup)
+    })()
+
+    public constructor(password: string) {
+        super("Password", `This is your password: ${password}`, PasswordMail._template({ password }))
+    }
+
+}
+
+export { Mail, VerificationCodeMail, PasswordMail }

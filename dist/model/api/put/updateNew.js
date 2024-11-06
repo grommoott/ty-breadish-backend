@@ -19,7 +19,7 @@ async function updateNew(id, data) {
         const valueConverter = (_, value) => {
             return `'${(0, _helpers_1.pgFormat)(value)}'`;
         };
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${key}=${valueConverter(key, val)}`;
         });
         await bdClient_1.default.query(`update news set ${setString}, is_edited=TRUE where id=${id}`);

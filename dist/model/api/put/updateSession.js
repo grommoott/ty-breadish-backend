@@ -34,7 +34,7 @@ async function updateSession(id, data) {
                     return `${(0, _helpers_1.pgFormat)(val)}`;
             }
         };
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${nameConverter(key)}=${valueConverter(key, val)}`;
         }).join(", ");
         await bdClient_1.default.query(`update sessions set ${setString} where id=${id}`);

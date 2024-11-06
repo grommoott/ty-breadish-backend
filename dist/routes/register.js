@@ -105,9 +105,9 @@ class Register {
                 next(accessToken);
                 return;
             }
-            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, domain: config_1.default.backendDomain, maxAge: 3 * timeConstants_1.month });
-            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, domain: config_1.default.backendDomain, maxAge: 20 * timeConstants_1.minute });
-            res.cookie("DeviceId", session.deviceId, { domain: config_1.default.backendDomain });
+            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "none", domain: config_1.default.backendDomain, maxAge: 3 * timeConstants_1.month });
+            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "none", domain: config_1.default.backendDomain, maxAge: 20 * timeConstants_1.minute });
+            res.cookie("DeviceId", session.deviceId, { domain: config_1.default.backendDomain, sameSite: "none" });
             res.send(user.toNormalView());
             next();
         })

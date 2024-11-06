@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VerificationCodeMail = exports.Mail = void 0;
+exports.PasswordMail = exports.VerificationCodeMail = exports.Mail = void 0;
 const fs_1 = __importDefault(require("fs"));
 const hbs_1 = require("hbs");
 const path_1 = __importDefault(require("path"));
@@ -28,3 +28,13 @@ class VerificationCodeMail extends Mail {
     }
 }
 exports.VerificationCodeMail = VerificationCodeMail;
+class PasswordMail extends Mail {
+    static _template = (() => {
+        const markup = fs_1.default.readFileSync(path_1.default.join(__dirname, "../../../hbs/email/verifyCodeMail.hbs")).toString();
+        return hbs_1.handlebars.compile(markup);
+    })();
+    constructor(password) {
+        super("Password", `This is your password: ${password}`, PasswordMail._template({ password }));
+    }
+}
+exports.PasswordMail = PasswordMail;

@@ -36,7 +36,7 @@ export default async function updateRecipe(id: RecipeId, data: { name?: string, 
             }
         }
 
-        const setString = Object.entries(data).map(([key, val]) => {
+        const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${nameConverter(key)}=${valueConverter(key, val)}`
         })
 

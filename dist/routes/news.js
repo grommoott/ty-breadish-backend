@@ -24,8 +24,7 @@ class News {
             next();
         })
     ];
-    get = [
-        (0, _middlewares_1.checkParams)(["id"]),
+    get = [(0, _middlewares_1.checkParams)(["id"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const id = new _primitives_1.NewId(req.params.id);
@@ -79,7 +78,7 @@ class News {
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const id = new _primitives_1.NewId(req.body.id);
             const title = req.body.title;
-            const content = req.body.title;
+            const content = req.body.content;
             const aNew = await _entities_1.New.fromId(id);
             if (aNew instanceof Error) {
                 next(aNew);
@@ -95,6 +94,7 @@ class News {
         })
     ];
     getImages = images_1.default.get(_enums_1.ImageCategories.News);
+    getIsImageExists = images_1.default.getIsExists(_enums_1.ImageCategories.News);
     postImages = [
         _middlewares_1.checkAdmin,
         ...images_1.default.postCreate(_enums_1.ImageCategories.News)
