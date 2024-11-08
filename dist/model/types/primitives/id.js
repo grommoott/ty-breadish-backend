@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImageId = exports.SessionId = exports.OrderId = exports.ItemId = exports.MediaId = exports.UserId = exports.ReviewId = exports.RecipeId = exports.ProductId = exports.NewId = exports.LikeId = exports.FeaturedId = exports.CommentId = exports.Id = void 0;
+exports.BakeryId = exports.ImageId = exports.SessionId = exports.OrderId = exports.ItemId = exports.MediaId = exports.UserId = exports.ReviewId = exports.RecipeId = exports.ProductId = exports.NewId = exports.LikeId = exports.FeaturedId = exports.CommentId = exports.Id = void 0;
 class Id {
     _id;
     get id() {
@@ -81,3 +81,7 @@ class ImageId extends Id {
     _ = null;
 }
 exports.ImageId = ImageId;
+class BakeryId extends Id {
+    _ = null;
+}
+exports.BakeryId = BakeryId;

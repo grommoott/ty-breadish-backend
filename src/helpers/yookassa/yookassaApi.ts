@@ -2,13 +2,14 @@ import { Price } from "@primitives";
 import { Payment } from "./payment";
 import { v4 as uuid } from "uuid"
 import axios from "axios";
+import config from "../../config";
 
 class YookassaApi {
     private generateDefaultHeaders() {
         return {
             auth: {
-                password: "test_93Etl27AQaZPLT_rwLrwpGuc5lsP2QarOaxI2cEcBAY",
-                username: "441129"
+                password: config.yookassaPassword,
+                username: config.yookassaUsername
             },
             headers: {
                 "Idempotence-Key": uuid()

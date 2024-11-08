@@ -1,10 +1,11 @@
 import { Order, Product, User } from "@entities"
-import { OrderType, OrderTypes } from "@enums"
+import { CourierOrderState, CourierOrderStates, OrderType, OrderTypes, PickUpOrderState, PickUpOrderStates } from "@enums"
 import { asyncErrorCatcher, isInEnum } from "@helpers"
 import { Payment, yookassaApi } from "@helpers/yookassa"
 import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
-import { OrderId, OrderInfo, Price, ProductId, UserId } from "@primitives"
+import { BakeryId, CourierOrderInfo, isOrderInfoIsPickUpOrderInfo, OrderId, OrderInfo, PickUpOrderInfo, Price, ProductId, UserId } from "@primitives"
 import { maxPaymentDescriptionSize } from "./config"
+import { checkBaker } from "@middlewares"
 
 class Orders {
     public get: Array<Middleware> = [
@@ -28,6 +29,24 @@ class Orders {
             res.send(orders.map(order => order.toNormalView()))
 
             next()
+        })
+    ]
+
+    public getByBakeryId: Array<Middleware> = [
+        checkBaker,
+        checkParams(["id"]),
+        contentJson,
+        asyncErrorCatcher(async (req, res, next) => {
+            const id: BakeryId = new BakeryId(req.params.id)
+
+            const response: Array<Order> | Error = await Order.fromBakeryId(id)
+
+            if (response instanceof Error) {
+                next(response)
+                return
+            }
+
+            res.send(response.map(order => order.toNormalView()))
         })
     ]
 
@@ -157,6 +176,103 @@ class Orders {
 
             if (!refund) {
                 next(new Error("Error! Try again later, sorry for the inconvinience", { cause: 500 }))
+                return
+            }
+
+            res.sendStatus(200)
+
+            next()
+        })
+    ]
+
+    public putChangeState: Array<Middleware> = [
+        checkBaker,
+        checkBodyParams(["id", "state"]),
+        asyncErrorCatcher(async (req, res, next) => {
+            const id: OrderId = new OrderId(req.body.id)
+
+            const order: Order | Error = await Order.fromId(id)
+
+            if (order instanceof Error) {
+                next(order)
+                return
+            }
+
+            let state: PickUpOrderState | CourierOrderState = req.body.state
+
+            switch (order.orderType) {
+                case OrderTypes.PickUp:
+                    if (!isInEnum(PickUpOrderStates, state)) {
+                        next(new Error("Invalid request"))
+                        return
+                    }
+                    break
+
+                case OrderTypes.Courier:
+                    if (!isInEnum(CourierOrderStates, state)) {
+                        next(new Error("Invalid request"))
+                        return
+                    }
+                    break
+            }
+
+            let response: void | Error
+
+            switch (order.orderType) {
+                case OrderTypes.PickUp:
+                    const pickUpOrderInfo: PickUpOrderInfo = order.orderInfo as PickUpOrderInfo
+
+                    response = await order.edit<PickUpOrderInfo>({
+                        orderInfo: {
+                            bakeryId: pickUpOrderInfo.bakeryId,
+                            productCounts: pickUpOrderInfo.productCounts,
+                            state: state as PickUpOrderState
+                        }
+                    })
+                    break
+
+                case OrderTypes.Courier:
+                    const courierOrderInfo: CourierOrderInfo = order.orderInfo as CourierOrderInfo
+
+                    response = await order.edit<CourierOrderInfo>({
+                        orderInfo: {
+                            bakeryId: courierOrderInfo.bakeryId,
+                            productCounts: courierOrderInfo.productCounts,
+                            deliveryAddress: courierOrderInfo.deliveryAddress,
+                            state: state as CourierOrderState
+                        }
+                    })
+                    break
+            }
+
+            if (response instanceof Error) {
+                next(response)
+                return
+            }
+
+            res.sendStatus(200)
+
+            next()
+        })
+    ]
+
+    public putMarkAsCompleted: Array<Middleware> = [
+        checkBaker,
+        checkBodyParams(["id"]),
+        asyncErrorCatcher(async (req, res, next) => {
+            const id: OrderId = new OrderId(req.body.id)
+
+            const order: Order | Error = await Order.fromId(id)
+
+            if (order instanceof Error) {
+                next(order)
+                return
+            }
+
+            const response: boolean | Error = await order.delete()
+
+            if (response instanceof Error) {
+                next(response)
                 return
             }
 

@@ -20,8 +20,10 @@ const users_1 = __importDefault(require("./users"));
 const yookassaWebhook_1 = __importDefault(require("./yookassaWebhook"));
 const recipes_1 = __importDefault(require("./recipes"));
 const images_1 = __importDefault(require("./images"));
+const bakeries_1 = __importDefault(require("./bakeries"));
 const _enums_1 = require("@enums");
 const _middlewares_1 = require("@middlewares");
+const maps_1 = __importDefault(require("./maps"));
 const apiRouter = express_1.default.Router();
 exports.apiRouter = apiRouter;
 // Authorization & Authentication
@@ -29,6 +31,7 @@ apiRouter.post("/register", register_1.default.post);
 apiRouter.post("/register/token", register_1.default.postToken);
 apiRouter.post("/login", login_1.default.post);
 apiRouter.post("/sendRecoveryPassword", login_1.default.recoveryPasswordPost);
+apiRouter.get("/logout", login_1.default.getLogout);
 apiRouter.get("/accessToken", accessToken_1.default.get);
 apiRouter.post("/verificationCode/create", verificationCode_1.default.postCreate);
 // Items
@@ -81,8 +84,11 @@ apiRouter.post("/likes/create", likes_1.default.postCreate);
 apiRouter.delete("/likes/id/:id", likes_1.default.delete);
 // Order
 apiRouter.get("/orders", orders_1.default.get);
+apiRouter.get("/orders/byBakeryId/id/:id", orders_1.default.getByBakeryId);
 apiRouter.post("/orders/create", orders_1.default.postCreate);
 apiRouter.delete("/orders/id/:id", orders_1.default.delete);
+apiRouter.put("/orders/changeOrderState", orders_1.default.putChangeState);
+apiRouter.put("/orders/markAsCompleted", orders_1.default.putMarkAsCompleted);
 apiRouter.post("/yookassaWebhook", yookassaWebhook_1.default.post);
 // User
 apiRouter.get("/users/usernameAvailable/:username", users_1.default.getUsernameAvailable);
@@ -97,9 +103,18 @@ apiRouter.get("/users/avatars/isExists/id/:id", users_1.default.getIsAvatarExist
 apiRouter.post("/users/avatars/create", users_1.default.postAvatars);
 apiRouter.delete("/users/avatars", users_1.default.deleteAvatars);
 apiRouter.put("/users/avatars", users_1.default.putAvatars);
-// images
+// Images
 apiRouter.get("/images/id/:id", images_1.default.get(_enums_1.ImageCategories.Images));
 apiRouter.get("/images/isExists/id/:id", images_1.default.getIsExists(_enums_1.ImageCategories.Images));
 apiRouter.post("/images/create", images_1.default.postCreateBasic);
 apiRouter.delete("/images/id/:id", [_middlewares_1.checkAdmin, ...images_1.default.delete(_enums_1.ImageCategories.Images)]);
 apiRouter.put("/images", [_middlewares_1.checkAdmin, ...images_1.default.put(_enums_1.ImageCategories.Images)]);
+// Bakeries
+apiRouter.get("/bakeries/id/:id", bakeries_1.default.get);
+apiRouter.get("/bakeries/list", bakeries_1.default.getList);
+apiRouter.post("/bakeries/create", bakeries_1.default.postCreate);
+apiRouter.delete("/bakeries/id/:id", bakeries_1.default.delete);
+apiRouter.put("/bakeries", bakeries_1.default.put);
+// Maps
+apiRouter.get("/maps/tiles/x/:x/y/:y/z/:z", maps_1.default.getTile);
+apiRouter.get("/maps/geocoding/fromCoords/longitude/:longitude/latitude/:latitude", maps_1.default.getFromCoords);

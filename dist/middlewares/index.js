@@ -23,3 +23,4 @@ __exportStar(require("./errorHandler"), exports);
 __exportStar(require("./checkAdmin"), exports);
 __exportStar(require("./checkParams"), exports);
 __exportStar(require("./checkYookassa"), exports);
+__exportStar(require("./checkBaker"), exports);

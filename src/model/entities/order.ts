@@ -4,12 +4,13 @@ import createOrder from "@api/post/createOrder"
 import updateOrder from "@api/put/updateOrder"
 import { OrderType, PaymentStatus } from "@enums"
 import { IOrder } from "@interfaces"
-import { Moment, OrderId, Price, ProductId, UserId } from "@primitives"
+import { BakeryId, Moment, OrderId, Price, ProductId, UserId } from "@primitives"
 import { OrderInfo } from "model/types/primitives/orderInfo"
 import { Entity } from "./entity"
 import getUserOrders from "@api/get/getUserOrders"
 import getOrderByPaymentId from "@api/get/getOrderByPaymentId"
 import { Product } from "./product"
+import getOrdersByBakeryId from "@api/get/getOrdersByBakeryId"
 
 class Order extends Entity {
 
@@ -88,7 +89,7 @@ class Order extends Entity {
     }
 
 
-    public async edit(data: { paymentStatus: PaymentStatus, orderType?: OrderType, orderInfo?: OrderInfo, readyMoment?: Moment }): Promise<void | Error> {
+    public async edit<T extends OrderInfo>(data: { paymentStatus?: PaymentStatus, orderType?: OrderType, orderInfo?: T, readyMoment?: Moment }): Promise<void | Error> {
         return await updateOrder(this._order.id, data)
     }
 
@@ -116,6 +117,16 @@ class Order extends Entity {
         }
 
         return new Order(order)
+    }
+
+    public static async fromBakeryId(id: BakeryId): Promise<Array<Order> | Error> {
+        const response: Array<IOrder> | Error = await getOrdersByBakeryId(id)
+
+        if (response instanceof Error) {
+            return response
+        }
+
+        return response.map(order => new Order(order))
     }
 
     public static async fromUser(id: UserId): Promise<Array<Order> | Error> {

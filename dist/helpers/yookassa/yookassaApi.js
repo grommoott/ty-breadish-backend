@@ -6,12 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.yookassaApi = void 0;
 const uuid_1 = require("uuid");
 const axios_1 = __importDefault(require("axios"));
+const config_1 = __importDefault(require("../../config"));
 class YookassaApi {
     generateDefaultHeaders() {
         return {
             auth: {
-                password: "test_93Etl27AQaZPLT_rwLrwpGuc5lsP2QarOaxI2cEcBAY",
-                username: "441129"
+                password: config_1.default.yookassaPassword,
+                username: config_1.default.yookassaUsername
             },
             headers: {
                 "Idempotence-Key": (0, uuid_1.v4)()

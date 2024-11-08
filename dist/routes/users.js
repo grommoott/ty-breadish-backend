@@ -82,7 +82,12 @@ class Users {
                 next(user);
                 return;
             }
-            res.send(user.toNormalView());
+            const role = await user.getRole();
+            if (role instanceof Error) {
+                next(role);
+                return;
+            }
+            res.send(user.toNormalView({ role }));
         })
     ];
     delete = [

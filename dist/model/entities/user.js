@@ -144,12 +144,13 @@ class User extends entity_1.Entity {
         }
         return new User(user);
     }
-    toNormalView() {
+    toNormalView({ role }) {
         return {
             id: this._user.id.id,
             username: this._user.username,
             email: this._user.email.email,
-            moment: this._user.moment.moment
+            moment: this._user.moment.moment,
+            role: role
         };
     }
     constructor({ id, username, passwordHash, email, moment }) {

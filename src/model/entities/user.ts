@@ -198,12 +198,13 @@ class User extends Entity {
         return new User(user)
     }
 
-    public override toNormalView(): object {
+    public override toNormalView({ role }: { role: Role }): object {
         return {
             id: this._user.id.id,
             username: this._user.username,
             email: this._user.email.email,
-            moment: this._user.moment.moment
+            moment: this._user.moment.moment,
+            role: role
         }
     }
 

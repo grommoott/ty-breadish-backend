@@ -13,7 +13,7 @@ export default async function getOrder(id: OrderId): Promise<IOrder | Error> {
 
         const order = response.rows[0]
 
-        const products = await bdClient.query(`select * from order_products_ids where order=${order}`)
+        const products = await bdClient.query(`select * from order_products_ids where order=${order.id}`)
 
         return queryRowsToOrder(order, products.rows)
     } catch (e) {

@@ -9,6 +9,9 @@ import { Rate, Rates } from "./rate"
 import { PaymentStatus, PaymentStatuses } from "./paymentStatus"
 import { ImageCategory, ImageCategories } from "./imageCategory"
 
+export * from "./orderInfo"
+export * from "./itemInfo"
+
 export {
     CommentsSortOrder, CommentsSortOrders,
     ItemType, ItemTypes,

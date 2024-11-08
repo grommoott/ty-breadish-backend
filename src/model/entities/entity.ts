@@ -1,5 +1,5 @@
 abstract class Entity {
-    public abstract toNormalView(): object
+    public abstract toNormalView(additionalParams?: any): object
 }
 
 export { Entity }

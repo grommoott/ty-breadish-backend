@@ -28,3 +28,4 @@ __exportStar(require("./order"), exports);
 __exportStar(require("./session"), exports);
 __exportStar(require("./verificationCode"), exports);
 __exportStar(require("./image"), exports);
+__exportStar(require("./bakery"), exports);

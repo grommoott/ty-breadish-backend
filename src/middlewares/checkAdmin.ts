@@ -6,7 +6,7 @@ const checkAdmin: Middleware = (req, _, next) => {
     const accessToken: string = req.cookies?.AccessToken
 
     if (!accessToken) {
-        next(new Error("Unauthrized!", { cause: 401 }))
+        next(new Error("Unauthorized!", { cause: 401 }))
         return
     }
 

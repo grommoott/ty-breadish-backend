@@ -7,6 +7,7 @@ const yookassa_1 = require("@helpers/yookassa");
 const _middlewares_1 = require("@middlewares");
 const _primitives_1 = require("@primitives");
 const config_1 = require("./config");
+const _middlewares_2 = require("@middlewares");
 class Orders {
     get = [
         _middlewares_1.checkAuthorized,
@@ -24,6 +25,20 @@ class Orders {
             }
             res.send(orders.map(order => order.toNormalView()));
             next();
+        })
+    ];
+    getByBakeryId = [
+        _middlewares_2.checkBaker,
+        (0, _middlewares_1.checkParams)(["id"]),
+        _middlewares_1.contentJson,
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            const id = new _primitives_1.BakeryId(req.params.id);
+            const response = await _entities_1.Order.fromBakeryId(id);
+            if (response instanceof Error) {
+                next(response);
+                return;
+            }
+            res.send(response.map(order => order.toNormalView()));
         })
     ];
     postCreate = [
@@ -123,6 +138,82 @@ class Orders {
             }
             if (!refund) {
                 next(new Error("Error! Try again later, sorry for the inconvinience", { cause: 500 }));
+                return;
+            }
+            res.sendStatus(200);
+            next();
+        })
+    ];
+    putChangeState = [
+        _middlewares_2.checkBaker,
+        (0, _middlewares_1.checkBodyParams)(["id", "state"]),
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            const id = new _primitives_1.OrderId(req.body.id);
+            const order = await _entities_1.Order.fromId(id);
+            if (order instanceof Error) {
+                next(order);
+                return;
+            }
+            let state = req.body.state;
+            switch (order.orderType) {
+                case _enums_1.OrderTypes.PickUp:
+                    if (!(0, _helpers_1.isInEnum)(_enums_1.PickUpOrderStates, state)) {
+                        next(new Error("Invalid request"));
+                        return;
+                    }
+                    break;
+                case _enums_1.OrderTypes.Courier:
+                    if (!(0, _helpers_1.isInEnum)(_enums_1.CourierOrderStates, state)) {
+                        next(new Error("Invalid request"));
+                        return;
+                    }
+                    break;
+            }
+            let response;
+            switch (order.orderType) {
+                case _enums_1.OrderTypes.PickUp:
+                    const pickUpOrderInfo = order.orderInfo;
+                    response = await order.edit({
+                        orderInfo: {
+                            bakeryId: pickUpOrderInfo.bakeryId,
+                            productCounts: pickUpOrderInfo.productCounts,
+                            state: state
+                        }
+                    });
+                    break;
+                case _enums_1.OrderTypes.Courier:
+                    const courierOrderInfo = order.orderInfo;
+                    response = await order.edit({
+                        orderInfo: {
+                            bakeryId: courierOrderInfo.bakeryId,
+                            productCounts: courierOrderInfo.productCounts,
+                            deliveryAddress: courierOrderInfo.deliveryAddress,
+                            state: state
+                        }
+                    });
+                    break;
+            }
+            if (response instanceof Error) {
+                next(response);
+                return;
+            }
+            res.sendStatus(200);
+            next();
+        })
+    ];
+    putMarkAsCompleted = [
+        _middlewares_2.checkBaker,
+        (0, _middlewares_1.checkBodyParams)(["id"]),
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            const id = new _primitives_1.OrderId(req.body.id);
+            const order = await _entities_1.Order.fromId(id);
+            if (order instanceof Error) {
+                next(order);
+                return;
+            }
+            const response = await order.delete();
+            if (response instanceof Error) {
+                next(response);
                 return;
             }
             res.sendStatus(200);

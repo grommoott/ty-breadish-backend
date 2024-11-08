@@ -9,7 +9,7 @@ const _enums_1 = require("@enums");
 const checkAdmin = (req, _, next) => {
     const accessToken = req.cookies?.AccessToken;
     if (!accessToken) {
-        next(new Error("Unauthrized!", { cause: 401 }));
+        next(new Error("Unauthorized!", { cause: 401 }));
         return;
     }
     const accessTokenPayload = jwt_1.default.getAccessTokenPayload(req.cookies?.AccessToken);

@@ -2,7 +2,7 @@ import { Email, Moment, UserId } from "@primitives"
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { Session, User } from "@entities"
 import { v4 as uuid } from "uuid"
-import { weekSeconds } from "./timeConstants"
+import { minute, minuteSeconds, week, weekSeconds } from "./timeConstants"
 import { Role } from "@enums"
 
 type AccessToken = {
@@ -29,7 +29,7 @@ type RegisterToken = {
 class Jwt {
     private _secret: string
 
-    public async createAccessToken(user: User, lifetime: number = 1800): Promise<string | Error> {
+    public async createAccessToken(user: User, lifetime: number = 20 * minuteSeconds): Promise<string | Error> {
         const date = Math.floor(new Date().getTime() / 1000)
 
         const role: Role | Error = await user.getRole()

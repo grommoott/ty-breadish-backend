@@ -1,10 +1,9 @@
-import { CommentId, MediaId, Moment, UserId } from "@primitives";
+import { CommentId, MediaId, UserId } from "@primitives";
 import updateComment from "@api/put/updateComment";
 import { Media } from "./media";
-import { CommentsSortOrder, CommentsSortOrders } from "@enums";
-import { IComment, IMedia, isMediaIsComment, isMediaIsNew } from "@interfaces";
+import { CommentsSortOrder } from "@enums";
+import { IComment, IMedia, isMediaIsNew } from "@interfaces";
 import getCommentsPage from "@api/get/getCommentsPage";
-import { isJSDocCommentContainingNode } from "typescript";
 import getComment from "@api/get/getComment";
 import createComment from "@api/post/createComment";
 import getMedia from "@api/get/getMedia";

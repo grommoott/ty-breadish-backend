@@ -7,10 +7,9 @@ const _entities_1 = require("@entities");
 const _helpers_1 = require("@helpers");
 const email_1 = require("@helpers/email");
 const jwt_1 = __importDefault(require("@helpers/jwt"));
-const timeConstants_1 = require("@helpers/timeConstants");
 const _middlewares_1 = require("@middlewares");
 const _primitives_1 = require("@primitives");
-const config_1 = __importDefault(require("../config"));
+const authCookies_1 = require("@helpers/authCookies");
 class Register {
     postToken = [
         (0, _middlewares_1.checkBodyParams)(["username", "password", "email"]),
@@ -105,10 +104,13 @@ class Register {
                 next(accessToken);
                 return;
             }
-            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "none", domain: config_1.default.backendDomain, maxAge: 3 * timeConstants_1.month });
-            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "none", domain: config_1.default.backendDomain, maxAge: 20 * timeConstants_1.minute });
-            res.cookie("DeviceId", session.deviceId, { domain: config_1.default.backendDomain, sameSite: "none" });
-            res.send(user.toNormalView());
+            (0, authCookies_1.setAuthCookies)(res, accessToken, refreshToken, session.deviceId);
+            const role = await user.getRole();
+            if (role instanceof Error) {
+                next(role);
+                return;
+            }
+            res.send(user.toNormalView({ role }));
             next();
         })
     ];

@@ -89,6 +89,10 @@ class ImageId extends Id {
     private _: ImageId | null = null
 }
 
+class BakeryId extends Id {
+    private _: BakeryId | null = null
+}
+
 export {
     Id,
     CommentId,
@@ -103,5 +107,6 @@ export {
     ItemId,
     OrderId,
     SessionId,
-    ImageId
+    ImageId,
+    BakeryId
 }

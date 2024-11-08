@@ -13,7 +13,7 @@ async function getOrder(id) {
             return new Error(`Order with such id(${id}) isn't exists`);
         }
         const order = response.rows[0];
-        const products = await bdClient_1.default.query(`select * from order_products_ids where order=${order}`);
+        const products = await bdClient_1.default.query(`select * from order_products_ids where order=${order.id}`);
         return (0, _interfaces_1.queryRowsToOrder)(order, products.rows);
     }
     catch (e) {

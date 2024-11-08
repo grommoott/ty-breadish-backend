@@ -1,11 +1,11 @@
 import { Session, User, VerificationCode } from "@entities"
 import { asyncErrorCatcher } from "@helpers"
 import jwt from "@helpers/jwt"
-import { minute, month } from "@helpers/timeConstants"
 import { checkBodyParams, Middleware } from "@middlewares"
-import config from "../config"
 import { emailManager, PasswordMail } from "@helpers/email"
 import { Hash } from "@primitives"
+import { clearAuthCookies, setAuthCookies } from "@helpers"
+import { Role } from "@enums"
 
 
 class Login {
@@ -60,11 +60,16 @@ class Login {
                 return
             }
 
-            res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "none", domain: config.backendDomain, maxAge: 3 * month })
-            res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "none", domain: config.backendDomain, maxAge: 20 * minute })
-            res.cookie("DeviceId", session.deviceId, { domain: config.backendDomain, sameSite: "none" })
+            setAuthCookies(res, accessToken, refreshToken, session.deviceId)
 
-            res.send(user.toNormalView())
+            const role: Role | Error = await user.getRole()
+
+            if (role instanceof Error) {
+                next(role)
+                return
+            }
+
+            res.send(user.toNormalView({ role }))
 
             next()
         })]
@@ -106,6 +111,16 @@ class Login {
             emailManager.sendMail(new PasswordMail(password), user.email)
 
             res.send(200)
+        })
+    ]
+
+    public getLogout: Array<Middleware> = [
+        asyncErrorCatcher(async (_, res, next) => {
+            clearAuthCookies(res)
+
+            res.sendStatus(200)
+
+            next()
         })
     ]
 }

@@ -30,13 +30,13 @@ function queryRowsToOrder(orderRow, productsRows) {
     switch (orderType) {
         case _enums_1.OrderTypes.Courier:
             orderInfo = {
-                bakeryAddress: orderRow.order_info.bakeryAddress,
+                bakeryId: new _primitives_1.BakeryId(orderRow.order_info.bakeryId),
                 state: orderRow.order_info.state,
                 productCounts: orderRow.order_info.productCounts
             };
         case _enums_1.OrderTypes.PickUp:
             orderInfo = {
-                bakeryAddress: orderRow.order_info.bakeryAddress,
+                bakeryId: new _primitives_1.BakeryId(orderRow.order_info.bakeryId),
                 deliveryAddress: orderRow.order_info.deliveryAddress,
                 state: orderRow.order_info.state,
                 productCounts: orderRow.order_info.productCounts

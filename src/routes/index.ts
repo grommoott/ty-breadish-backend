@@ -14,8 +14,10 @@ import users from "./users"
 import yookassaWebhook from "./yookassaWebhook"
 import recipes from "./recipes"
 import images from "./images"
+import bakeries from "./bakeries"
 import { ImageCategories } from "@enums"
 import { checkAdmin } from "@middlewares"
+import maps from "./maps"
 
 const apiRouter: Router = express.Router()
 
@@ -26,6 +28,7 @@ apiRouter.post("/register/token", register.postToken)
 
 apiRouter.post("/login", login.post)
 apiRouter.post("/sendRecoveryPassword", login.recoveryPasswordPost)
+apiRouter.get("/logout", login.getLogout)
 
 apiRouter.get("/accessToken", accessToken.get)
 
@@ -91,8 +94,11 @@ apiRouter.delete("/likes/id/:id", likes.delete)
 // Order
 
 apiRouter.get("/orders", orders.get)
+apiRouter.get("/orders/byBakeryId/id/:id", orders.getByBakeryId)
 apiRouter.post("/orders/create", orders.postCreate)
 apiRouter.delete("/orders/id/:id", orders.delete)
+apiRouter.put("/orders/changeOrderState", orders.putChangeState)
+apiRouter.put("/orders/markAsCompleted", orders.putMarkAsCompleted)
 
 apiRouter.post("/yookassaWebhook", yookassaWebhook.post)
 
@@ -111,12 +117,25 @@ apiRouter.post("/users/avatars/create", users.postAvatars)
 apiRouter.delete("/users/avatars", users.deleteAvatars)
 apiRouter.put("/users/avatars", users.putAvatars)
 
-// images
+// Images
 
 apiRouter.get("/images/id/:id", images.get(ImageCategories.Images))
 apiRouter.get("/images/isExists/id/:id", images.getIsExists(ImageCategories.Images))
 apiRouter.post("/images/create", images.postCreateBasic)
 apiRouter.delete("/images/id/:id", [checkAdmin, ...images.delete(ImageCategories.Images)])
 apiRouter.put("/images", [checkAdmin, ...images.put(ImageCategories.Images)])
+
+// Bakeries
+
+apiRouter.get("/bakeries/id/:id", bakeries.get)
+apiRouter.get("/bakeries/list", bakeries.getList)
+apiRouter.post("/bakeries/create", bakeries.postCreate)
+apiRouter.delete("/bakeries/id/:id", bakeries.delete)
+apiRouter.put("/bakeries", bakeries.put)
+
+// Maps
+
+apiRouter.get("/maps/tiles/x/:x/y/:y/z/:z", maps.getTile)
+apiRouter.get("/maps/geocoding/fromCoords/longitude/:longitude/latitude/:latitude", maps.getFromCoords)
 
 export { apiRouter }

@@ -1,5 +1,5 @@
 import { OrderType, OrderTypes, PaymentStatus } from "@enums";
-import { Moment, OrderId, ProductId, UserId } from "@primitives";
+import { BakeryId, Moment, OrderId, ProductId, UserId } from "@primitives";
 import { OrderInfo } from "model/types/primitives/orderInfo";
 
 interface IOrder {
@@ -49,14 +49,14 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
     switch (orderType) {
         case OrderTypes.Courier:
             orderInfo = {
-                bakeryAddress: orderRow.order_info.bakeryAddress,
+                bakeryId: new BakeryId(orderRow.order_info.bakeryId),
                 state: orderRow.order_info.state,
                 productCounts: orderRow.order_info.productCounts
             }
 
         case OrderTypes.PickUp:
             orderInfo = {
-                bakeryAddress: orderRow.order_info.bakeryAddress,
+                bakeryId: new BakeryId(orderRow.order_info.bakeryId),
                 deliveryAddress: orderRow.order_info.deliveryAddress,
                 state: orderRow.order_info.state,
                 productCounts: orderRow.order_info.productCounts

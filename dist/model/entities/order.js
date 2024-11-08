@@ -13,6 +13,7 @@ const entity_1 = require("./entity");
 const getUserOrders_1 = __importDefault(require("@api/get/getUserOrders"));
 const getOrderByPaymentId_1 = __importDefault(require("@api/get/getOrderByPaymentId"));
 const product_1 = require("./product");
+const getOrdersByBakeryId_1 = __importDefault(require("@api/get/getOrdersByBakeryId"));
 class Order extends entity_1.Entity {
     // Private fields
     _order;
@@ -86,6 +87,13 @@ class Order extends entity_1.Entity {
             return order;
         }
         return new Order(order);
+    }
+    static async fromBakeryId(id) {
+        const response = await (0, getOrdersByBakeryId_1.default)(id);
+        if (response instanceof Error) {
+            return response;
+        }
+        return response.map(order => new Order(order));
     }
     static async fromUser(id) {
         const orders = await (0, getUserOrders_1.default)(id);

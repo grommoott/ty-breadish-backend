@@ -10,7 +10,7 @@ const uuid_1 = require("uuid");
 const timeConstants_1 = require("./timeConstants");
 class Jwt {
     _secret;
-    async createAccessToken(user, lifetime = 1800) {
+    async createAccessToken(user, lifetime = 20 * timeConstants_1.minuteSeconds) {
         const date = Math.floor(new Date().getTime() / 1000);
         const role = await user.getRole();
         if (role instanceof Error) {

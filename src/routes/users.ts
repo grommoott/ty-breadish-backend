@@ -3,7 +3,7 @@ import { asyncErrorCatcher } from "@helpers"
 import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
 import { Email, Hash, ImageId, UserId } from "@primitives"
 import images from "./images"
-import { ImageCategories } from "@enums"
+import { ImageCategories, Role } from "@enums"
 import bodyParser, { urlencoded } from "body-parser"
 import multer from "multer"
 import path from "path"
@@ -105,7 +105,14 @@ class Users {
                 return
             }
 
-            res.send(user.toNormalView())
+            const role: Role | Error = await user.getRole()
+
+            if (role instanceof Error) {
+                next(role)
+                return
+            }
+
+            res.send(user.toNormalView({ role }))
         })
     ]
 
