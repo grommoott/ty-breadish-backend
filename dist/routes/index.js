@@ -31,7 +31,7 @@ apiRouter.post("/register", register_1.default.post);
 apiRouter.post("/register/token", register_1.default.postToken);
 apiRouter.post("/login", login_1.default.post);
 apiRouter.post("/sendRecoveryPassword", login_1.default.recoveryPasswordPost);
-apiRouter.get("/logout", login_1.default.getLogout);
+apiRouter.post("/logout", login_1.default.postLogout);
 apiRouter.get("/accessToken", accessToken_1.default.get);
 apiRouter.post("/verificationCode/create", verificationCode_1.default.postCreate);
 // Items
@@ -83,7 +83,8 @@ apiRouter.get("/likes/count/target/:target/type/:type", likes_1.default.getCount
 apiRouter.post("/likes/create", likes_1.default.postCreate);
 apiRouter.delete("/likes/id/:id", likes_1.default.delete);
 // Order
-apiRouter.get("/orders", orders_1.default.get);
+apiRouter.get("orders/id/:id", orders_1.default.get);
+apiRouter.get("/orders/list", orders_1.default.getList);
 apiRouter.get("/orders/byBakeryId/id/:id", orders_1.default.getByBakeryId);
 apiRouter.post("/orders/create", orders_1.default.postCreate);
 apiRouter.delete("/orders/id/:id", orders_1.default.delete);
@@ -118,3 +119,4 @@ apiRouter.put("/bakeries", bakeries_1.default.put);
 // Maps
 apiRouter.get("/maps/tiles/x/:x/y/:y/z/:z", maps_1.default.getTile);
 apiRouter.get("/maps/geocoding/fromCoords/longitude/:longitude/latitude/:latitude", maps_1.default.getFromCoords);
+apiRouter.get("/maps/geocoding/fromQuery/query/:query", maps_1.default.getFromQuery);

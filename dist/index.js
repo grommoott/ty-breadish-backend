@@ -19,6 +19,10 @@ const port = process.env.PORT || 8443;
 app.use((0, cors_1.default)({ credentials: true, origin: ["http://localhost:5173", "http://localhost:4173", "https://ty-breadish.onrender.com"] }));
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
+app.use((req, res, next) => {
+    console.log(req.cookies);
+    next();
+});
 app.use("/api", _routes_1.apiRouter);
 app.get("/", async (req, res) => {
     const payment = await yookassa_1.yookassaApi.createPayment(new _primitives_1.Price(100), "OK", "https://example.com");

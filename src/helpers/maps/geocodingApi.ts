@@ -27,8 +27,7 @@ class GeocodingApi {
 
             return features.map((feature: any) => Coords.fromObject(feature.coordinates))
         } catch (e) {
-            const msg = "Error in fromQuery request: " + e
-            return new Error(msg)
+            return new Array()
         }
     }
 }

@@ -39,7 +39,7 @@ class Maps {
         (0, _middlewares_1.checkParams)(["query"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const query = req.params.query;
+            const query = atob(req.params.query);
             const response = await maps_1.geocodingApi.fromQuery(query);
             if (response instanceof Error) {
                 next(response);

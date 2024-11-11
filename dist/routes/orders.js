@@ -10,6 +10,21 @@ const config_1 = require("./config");
 const _middlewares_2 = require("@middlewares");
 class Orders {
     get = [
+        _middlewares_2.checkBaker,
+        (0, _middlewares_1.checkParams)(["id"]),
+        _middlewares_1.contentJson,
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            const id = new _primitives_1.OrderId(req.params.id);
+            const order = await _entities_1.Order.fromId(id);
+            if (order instanceof Error) {
+                next(order);
+                return;
+            }
+            res.send(order.toNormalView());
+            next();
+        })
+    ];
+    getList = [
         _middlewares_1.checkAuthorized,
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {

@@ -90,9 +90,10 @@ class Login {
             res.send(200);
         })
     ];
-    getLogout = [
-        (0, _helpers_1.asyncErrorCatcher)(async (_, res, next) => {
+    postLogout = [
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             (0, _helpers_2.clearAuthCookies)(res);
+            console.log(req.cookies);
             res.sendStatus(200);
             next();
         })

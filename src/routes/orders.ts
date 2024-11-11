@@ -3,12 +3,32 @@ import { CourierOrderState, CourierOrderStates, OrderType, OrderTypes, PickUpOrd
 import { asyncErrorCatcher, isInEnum } from "@helpers"
 import { Payment, yookassaApi } from "@helpers/yookassa"
 import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
-import { BakeryId, CourierOrderInfo, isOrderInfoIsPickUpOrderInfo, OrderId, OrderInfo, PickUpOrderInfo, Price, ProductId, UserId } from "@primitives"
+import { BakeryId, CourierOrderInfo, OrderId, OrderInfo, PickUpOrderInfo, Price, ProductId, UserId } from "@primitives"
 import { maxPaymentDescriptionSize } from "./config"
 import { checkBaker } from "@middlewares"
 
 class Orders {
     public get: Array<Middleware> = [
+        checkBaker,
+        checkParams(["id"]),
+        contentJson,
+        asyncErrorCatcher(async (req, res, next) => {
+            const id: OrderId = new OrderId(req.params.id)
+
+            const order: Order | Error = await Order.fromId(id)
+
+            if (order instanceof Error) {
+                next(order)
+                return
+            }
+
+            res.send(order.toNormalView())
+
+            next()
+        })
+    ]
+
+    public getList: Array<Middleware> = [
         checkAuthorized,
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {

@@ -28,7 +28,7 @@ apiRouter.post("/register/token", register.postToken)
 
 apiRouter.post("/login", login.post)
 apiRouter.post("/sendRecoveryPassword", login.recoveryPasswordPost)
-apiRouter.get("/logout", login.getLogout)
+apiRouter.post("/logout", login.postLogout)
 
 apiRouter.get("/accessToken", accessToken.get)
 
@@ -93,7 +93,8 @@ apiRouter.delete("/likes/id/:id", likes.delete)
 
 // Order
 
-apiRouter.get("/orders", orders.get)
+apiRouter.get("orders/id/:id", orders.get)
+apiRouter.get("/orders/list", orders.getList)
 apiRouter.get("/orders/byBakeryId/id/:id", orders.getByBakeryId)
 apiRouter.post("/orders/create", orders.postCreate)
 apiRouter.delete("/orders/id/:id", orders.delete)
@@ -137,5 +138,6 @@ apiRouter.put("/bakeries", bakeries.put)
 
 apiRouter.get("/maps/tiles/x/:x/y/:y/z/:z", maps.getTile)
 apiRouter.get("/maps/geocoding/fromCoords/longitude/:longitude/latitude/:latitude", maps.getFromCoords)
+apiRouter.get("/maps/geocoding/fromQuery/query/:query", maps.getFromQuery)
 
 export { apiRouter }

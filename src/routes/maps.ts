@@ -49,7 +49,7 @@ class Maps {
         checkParams(["query"]),
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {
-            const query: string = req.params.query
+            const query: string = atob(req.params.query)
 
             const response: Array<Coords> | Error = await geocodingApi.fromQuery(query)
 
