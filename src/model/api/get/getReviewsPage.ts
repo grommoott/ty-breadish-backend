@@ -24,7 +24,7 @@ export default async function getReviewsPage(itemId: ItemId, sortOrder: ReviewsS
                     return bdClient.query(`select * from reviews where target=${itemId} order by moment desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
 
                 case ReviewsSortOrders.LikedFirst:
-                    return bdClient.query(`select * from reviews where target=${itemId} order by (select count(*) from likes where target=reviews.item_id and type='${pgFormat(LikeTypes.Review)}') desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
+                    return bdClient.query(`select * from reviews where target=${itemId} order by (select count(*) from likes where target=reviews.id and type='${pgFormat(LikeTypes.Review)}') desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)
 
                 case ReviewsSortOrders.RatedFirst:
                     return bdClient.query(`select * from reviews where target=${itemId} order by rate desc limit ${config.reviewsPageSize} offset ${config.reviewsPageSize * page}`)

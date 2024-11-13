@@ -11,7 +11,6 @@ function setAuthCookies(res: Response, accessToken: string, refreshToken: string
 function clearAuthCookies(res: Response) {
     res.clearCookie("RefreshToken")
     res.clearCookie("AccessToken")
-    res.clearCookie("DeviceId")
 }
 
 export { setAuthCookies, clearAuthCookies }

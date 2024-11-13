@@ -31,6 +31,7 @@ class Login {
                     return _entities_1.Session.fromUserDevice(user, deviceId);
                 }
                 else {
+                    console.log("Наши дела плохи это конец эпохи");
                     return _entities_1.Session.create(user);
                 }
             })();
@@ -57,6 +58,7 @@ class Login {
                 next(role);
                 return;
             }
+            console.log(user);
             res.send(user.toNormalView({ role }));
             next();
         })
@@ -80,20 +82,19 @@ class Login {
                 next(new Error("Invalid verification code!"));
                 return;
             }
-            const password = (Math.random() * (1 << 32)).toString(16);
+            const password = Math.round(Math.random() * (1 << 32)).toString(16);
             const response = await user.edit({ passwordHash: await _primitives_1.Hash.hashPassword(password) });
             if (response instanceof Error) {
                 next(response);
                 return;
             }
             email_1.emailManager.sendMail(new email_1.PasswordMail(password), user.email);
-            res.send(200);
+            res.sendStatus(200);
         })
     ];
     postLogout = [
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             (0, _helpers_2.clearAuthCookies)(res);
-            console.log(req.cookies);
             res.sendStatus(200);
             next();
         })

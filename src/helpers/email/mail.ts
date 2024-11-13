@@ -28,7 +28,7 @@ class VerificationCodeMail extends Mail {
 
 class PasswordMail extends Mail {
     private static _template: HandlebarsTemplateDelegate = (() => {
-        const markup = fs.readFileSync(path.join(__dirname, "../../../hbs/email/verifyCodeMail.hbs")).toString()
+        const markup = fs.readFileSync(path.join(__dirname, "../../../hbs/email/passwordMail.hbs")).toString()
         return handlebars.compile(markup)
     })()
 

@@ -34,6 +34,7 @@ class Login {
                 if (deviceId) {
                     return Session.fromUserDevice(user, deviceId)
                 } else {
+                    console.log("Наши дела плохи это конец эпохи")
                     return Session.create(user)
                 }
             })()
@@ -100,7 +101,7 @@ class Login {
                 return
             }
 
-            const password = (Math.random() * (1 << 32)).toString(16)
+            const password = Math.round(Math.random() * (1 << 32)).toString(16)
 
             const response: void | Error = await user.edit({ passwordHash: await Hash.hashPassword(password) })
 
@@ -111,15 +112,13 @@ class Login {
 
             emailManager.sendMail(new PasswordMail(password), user.email)
 
-            res.send(200)
+            res.sendStatus(200)
         })
     ]
 
     public postLogout: Array<Middleware> = [
         asyncErrorCatcher(async (req, res, next) => {
             clearAuthCookies(res)
-
-            console.log(req.cookies)
 
             res.sendStatus(200)
 

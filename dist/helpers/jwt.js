@@ -93,7 +93,7 @@ class Jwt {
                 iat: payload.iat || (() => { throw new Error("Invalid iat"); })(),
                 exp: payload.exp || (() => { throw new Error("Invalid exp"); })(),
                 jti: payload.jti || (() => { throw new Error("Invalid jti"); })(),
-                dvi: payload.dvi || (() => { throw new Error("Invalid dvi"); })()
+                // dvi: payload.dvi || (() => { throw new Error("Invalid dvi") })()
             };
         }
         catch (e) {

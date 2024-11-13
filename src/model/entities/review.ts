@@ -7,6 +7,7 @@ import { ReviewsSortOrder, Rate } from "@enums"
 import { IReview } from "@interfaces"
 import { ItemId, Moment, ReviewId, UserId } from "@primitives"
 import { Entity } from "./entity"
+import getReviewsPagesCount from "@api/get/getReviewsPagesCount"
 
 class Review extends Entity {
 
@@ -60,6 +61,10 @@ class Review extends Entity {
         }
 
         return reviews.map(review => new Review(review))
+    }
+
+    public static async getReviewsPagesCount(itemId: ItemId): Promise<number | Error> {
+        return await getReviewsPagesCount(itemId)
     }
 
     public static async fromId(id: ReviewId): Promise<Review | Error> {

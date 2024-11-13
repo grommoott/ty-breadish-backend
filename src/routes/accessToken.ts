@@ -27,7 +27,8 @@ class AccessToken {
                 return
             }
 
-            const session: Session | Error = await Session.fromUserDevice(user, payload.dvi)
+            const deviceId: string = req.cookies?.DeviceId
+            const session: Session | Error = await Session.fromUserDevice(user, deviceId)
 
             if (session instanceof Error) {
                 next(session)

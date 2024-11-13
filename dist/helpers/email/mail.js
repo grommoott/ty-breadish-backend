@@ -30,7 +30,7 @@ class VerificationCodeMail extends Mail {
 exports.VerificationCodeMail = VerificationCodeMail;
 class PasswordMail extends Mail {
     static _template = (() => {
-        const markup = fs_1.default.readFileSync(path_1.default.join(__dirname, "../../../hbs/email/verifyCodeMail.hbs")).toString();
+        const markup = fs_1.default.readFileSync(path_1.default.join(__dirname, "../../../hbs/email/passwordMail.hbs")).toString();
         return hbs_1.handlebars.compile(markup);
     })();
     constructor(password) {

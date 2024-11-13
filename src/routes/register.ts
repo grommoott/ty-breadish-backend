@@ -14,7 +14,7 @@ class Register {
         asyncErrorCatcher(async (req, res, next) => {
             const username: string = req.body.username
             const password: string = req.body.password
-            const email: Email = req.body.email
+            const email: Email = new Email(req.body.email)
 
             const user: User | Error = await User.fromUsername(username)
 
@@ -37,11 +37,6 @@ class Register {
 
                 if (verificationCode instanceof Error) {
                     next(verificationCode)
-                    return
-                }
-
-                if (verificationCode.isFresh) {
-                    next("Another user already trying to register an account with this email, sorry you're late :(")
                     return
                 }
 
@@ -112,6 +107,7 @@ class Register {
             }
 
             const deviceId: string = req.cookies?.DeviceId
+
             const session: Session | Error = await Session.create(user, deviceId)
 
             if (session instanceof Error) {

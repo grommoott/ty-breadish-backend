@@ -15,5 +15,4 @@ function setAuthCookies(res, accessToken, refreshToken, deviceId) {
 function clearAuthCookies(res) {
     res.clearCookie("RefreshToken");
     res.clearCookie("AccessToken");
-    res.clearCookie("DeviceId");
 }

@@ -25,7 +25,8 @@ class AccessToken {
                 next(user);
                 return;
             }
-            const session = await _entities_1.Session.fromUserDevice(user, payload.dvi);
+            const deviceId = req.cookies?.DeviceId;
+            const session = await _entities_1.Session.fromUserDevice(user, deviceId);
             if (session instanceof Error) {
                 next(session);
                 return;

@@ -10,6 +10,7 @@ const getReviewsPage_1 = __importDefault(require("@api/get/getReviewsPage"));
 const createReview_1 = __importDefault(require("@api/post/createReview"));
 const updateReview_1 = __importDefault(require("@api/put/updateReview"));
 const entity_1 = require("./entity");
+const getReviewsPagesCount_1 = __importDefault(require("@api/get/getReviewsPagesCount"));
 class Review extends entity_1.Entity {
     // Private fields
     _review;
@@ -46,6 +47,9 @@ class Review extends entity_1.Entity {
             return reviews;
         }
         return reviews.map(review => new Review(review));
+    }
+    static async getReviewsPagesCount(itemId) {
+        return await (0, getReviewsPagesCount_1.default)(itemId);
     }
     static async fromId(id) {
         const review = await (0, getReview_1.default)(id);

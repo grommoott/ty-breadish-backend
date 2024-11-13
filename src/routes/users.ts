@@ -113,6 +113,8 @@ class Users {
             }
 
             res.send(user.toNormalView({ role }))
+
+            next()
         })
     ]
 

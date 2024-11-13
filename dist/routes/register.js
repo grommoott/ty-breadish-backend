@@ -17,7 +17,7 @@ class Register {
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const username = req.body.username;
             const password = req.body.password;
-            const email = req.body.email;
+            const email = new _primitives_1.Email(req.body.email);
             const user = await _entities_1.User.fromUsername(username);
             if (!(user instanceof Error)) {
                 next(new Error("There is already user with such username"));
@@ -33,10 +33,6 @@ class Register {
                 verificationCode = await _entities_1.VerificationCode.fromEmail(email);
                 if (verificationCode instanceof Error) {
                     next(verificationCode);
-                    return;
-                }
-                if (verificationCode.isFresh) {
-                    next("Another user already trying to register an account with this email, sorry you're late :(");
                     return;
                 }
                 const del = await verificationCode.delete();
