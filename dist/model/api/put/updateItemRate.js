@@ -14,7 +14,7 @@ async function updateItemRate(itemId) {
             return item;
         }
         if ((0, _interfaces_1.isItemIsRecipe)(item)) {
-            await bdClient_1.default.query(`update recipies set avg_rate=(select avg(cast(cast(rate as text) as integer)) from reviews where target=${itemId}) where item_id=${itemId}`);
+            await bdClient_1.default.query(`update recipes set avg_rate=(select avg(cast(cast(rate as text) as integer)) from reviews where target=${itemId}) where item_id=${itemId}`);
             return;
         }
         if ((0, _interfaces_1.isItemIsProduct)(item)) {

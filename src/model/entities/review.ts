@@ -8,6 +8,7 @@ import { IReview } from "@interfaces"
 import { ItemId, Moment, ReviewId, UserId } from "@primitives"
 import { Entity } from "./entity"
 import getReviewsPagesCount from "@api/get/getReviewsPagesCount"
+import getReviewByItemUser from "@api/get/getReviewByItemUser"
 
 class Review extends Entity {
 
@@ -69,6 +70,16 @@ class Review extends Entity {
 
     public static async fromId(id: ReviewId): Promise<Review | Error> {
         const review: IReview | Error = await getReview(id)
+
+        if (review instanceof Error) {
+            return review
+        }
+
+        return new Review(review)
+    }
+
+    public static async fromItemUser(target: ItemId, user: UserId): Promise<Review | Error> {
+        const review: IReview | Error = await getReviewByItemUser(target, user)
 
         if (review instanceof Error) {
             return review

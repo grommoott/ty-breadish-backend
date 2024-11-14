@@ -1,4 +1,4 @@
-import { ItemId, Moment, ReviewId, UserId } from "@primitives";
+import { ReviewId } from "@primitives";
 import createSimpleGetRequest from "./helpers";
 import { IReview, queryRowToReview } from "@interfaces";
 

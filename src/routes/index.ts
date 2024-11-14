@@ -63,6 +63,7 @@ apiRouter.post("/featured/create", featured.postCreate)
 apiRouter.delete("/featured/id/:id", featured.delete)
 
 apiRouter.get("/reviews/target/:target/sortOrder/:sortOrder/page/:page", reviews.getPage)
+apiRouter.get("/reviews/byItemUser/target/:target", reviews.getByItemUser)
 apiRouter.post("/reviews/create", reviews.postCreate)
 apiRouter.delete("/reviews/id/:id", reviews.delete)
 apiRouter.put("/reviews", reviews.put)

@@ -59,6 +59,7 @@ apiRouter.get("/featured", featured_1.default.get);
 apiRouter.post("/featured/create", featured_1.default.postCreate);
 apiRouter.delete("/featured/id/:id", featured_1.default.delete);
 apiRouter.get("/reviews/target/:target/sortOrder/:sortOrder/page/:page", reviews_1.default.getPage);
+apiRouter.get("/reviews/byItemUser/target/:target", reviews_1.default.getByItemUser);
 apiRouter.post("/reviews/create", reviews_1.default.postCreate);
 apiRouter.delete("/reviews/id/:id", reviews_1.default.delete);
 apiRouter.put("/reviews", reviews_1.default.put);

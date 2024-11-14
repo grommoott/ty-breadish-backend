@@ -27,6 +27,26 @@ class Reviews {
             next();
         })
     ];
+    getByItemUser = [
+        _middlewares_1.checkAuthorized,
+        (0, _middlewares_1.checkParams)(["target"]),
+        _middlewares_1.contentJson,
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            const target = new _primitives_1.ItemId(req.params.target);
+            const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload.sub));
+            if (user instanceof Error) {
+                next(user);
+                return;
+            }
+            const review = await _entities_1.Review.fromItemUser(target, user.id);
+            if (review instanceof Error) {
+                next(review);
+                return;
+            }
+            res.send(review.toNormalView());
+            next();
+        })
+    ];
     postCreate = [
         _middlewares_1.checkAuthorized,
         (0, _middlewares_1.checkBodyParams)(["target", "content", "rate"]),

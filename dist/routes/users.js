@@ -87,7 +87,6 @@ class Users {
                 next(role);
                 return;
             }
-            console.log(user);
             res.send(user.toNormalView({ role }));
             next();
         })

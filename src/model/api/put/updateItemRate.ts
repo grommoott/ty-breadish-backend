@@ -12,7 +12,7 @@ export default async function updateItemRate(itemId: ItemId): Promise<void | Err
         }
 
         if (isItemIsRecipe(item)) {
-            await bdClient.query(`update recipies set avg_rate=(select avg(cast(cast(rate as text) as integer)) from reviews where target=${itemId}) where item_id=${itemId}`)
+            await bdClient.query(`update recipes set avg_rate=(select avg(cast(cast(rate as text) as integer)) from reviews where target=${itemId}) where item_id=${itemId}`)
             return
         }
 

@@ -33,6 +33,33 @@ class Reviews {
         })
     ]
 
+    public getByItemUser: Array<Middleware> = [
+        checkAuthorized,
+        checkParams(["target"]),
+        contentJson,
+        asyncErrorCatcher(async (req, res, next) => {
+            const target: ItemId = new ItemId(req.params.target)
+
+            const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
+
+            if (user instanceof Error) {
+                next(user)
+                return
+            }
+
+            const review: Review | Error = await Review.fromItemUser(target, user.id)
+
+            if (review instanceof Error) {
+                next(review)
+                return
+            }
+
+            res.send(review.toNormalView())
+
+            next()
+        })
+    ]
+
     public postCreate: Array<Middleware> = [
         checkAuthorized,
         checkBodyParams(["target", "content", "rate"]),
