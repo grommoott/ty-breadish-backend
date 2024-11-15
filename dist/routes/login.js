@@ -31,7 +31,6 @@ class Login {
                     return _entities_1.Session.fromUserDevice(user, deviceId);
                 }
                 else {
-                    console.log("Наши дела плохи это конец эпохи");
                     return _entities_1.Session.create(user);
                 }
             })();

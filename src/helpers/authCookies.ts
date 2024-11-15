@@ -1,11 +1,11 @@
 import { Response } from "express";
 import config from "../config";
-import { minute, week } from "./timeConstants";
+import { minute, week, year } from "./timeConstants";
 
 function setAuthCookies(res: Response, accessToken: string, refreshToken: string, deviceId: string) {
     res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "none", domain: config.backendDomain, maxAge: 2 * week })
     res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "none", domain: config.backendDomain, maxAge: 20 * minute })
-    res.cookie("DeviceId", deviceId, { secure: true, httpOnly: true, domain: config.backendDomain, sameSite: "none" })
+    res.cookie("DeviceId", deviceId, { secure: true, httpOnly: true, domain: config.backendDomain, sameSite: "none", maxAge: 1000 * year })
 }
 
 function clearAuthCookies(res: Response) {

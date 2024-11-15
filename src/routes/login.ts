@@ -34,7 +34,6 @@ class Login {
                 if (deviceId) {
                     return Session.fromUserDevice(user, deviceId)
                 } else {
-                    console.log("Наши дела плохи это конец эпохи")
                     return Session.create(user)
                 }
             })()
