@@ -15,6 +15,7 @@ class Review extends Entity {
     // Private fields
 
     private _review: IReview
+    private static _updates: number
 
     // Getters
 
@@ -42,13 +43,19 @@ class Review extends Entity {
         return this._review.rate
     }
 
+    public static get updates(): number {
+        return this._updates
+    }
+
     // Methods
 
     public async edit(data: { content?: string, rate?: Rate }): Promise<void | Error> {
+        Review._updates++;
         return await updateReview(this._review.id, data)
     }
 
     public async delete(): Promise<boolean | Error> {
+        Review._updates++;
         return await deleteReview(this._review.id)
     }
 
@@ -95,6 +102,7 @@ class Review extends Entity {
             return review
         }
 
+        this._updates++;
         return new Review(review)
     }
 

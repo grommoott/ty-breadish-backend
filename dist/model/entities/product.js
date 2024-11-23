@@ -12,11 +12,13 @@ const getProducts_1 = __importDefault(require("@api/get/getProducts"));
 const getProduct_1 = __importDefault(require("@api/get/getProduct"));
 const getItem_1 = __importDefault(require("@api/get/getItem"));
 const createProduct_1 = __importDefault(require("@api/post/createProduct"));
+const review_1 = require("./review");
 class Product extends item_1.Item {
     // Private fields
     _id;
     _price;
     static _products;
+    static _updates;
     // Getters
     get id() {
         return this._id;
@@ -60,9 +62,10 @@ class Product extends item_1.Item {
         return new Product(item);
     }
     static async getProducts() {
-        if (!this._products) {
+        if (!this._products || this._updates != review_1.Review.updates) {
             const products = await (0, getProducts_1.default)();
             this._products = products.map(product => new Product(product));
+            this._updates = review_1.Review.updates;
         }
         return this._products;
     }

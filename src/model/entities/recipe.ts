@@ -7,6 +7,7 @@ import getRecipes from "@api/get/getRecipes";
 import createRecipe from "@api/post/createRecipe";
 import getRecipe from "@api/get/getRecipe";
 import getItem from "@api/get/getItem";
+import { Review } from "./review";
 
 class Recipe extends Item {
 
@@ -16,6 +17,7 @@ class Recipe extends Item {
     private _recipe: string
 
     private static _recipes: Array<Recipe> | undefined
+    private static _updates: number
 
     // Getters
 
@@ -74,10 +76,11 @@ class Recipe extends Item {
     }
 
     public static async getRecipes(): Promise<Array<Recipe>> {
-        if (!this._recipes) {
+        if (!this._recipes || this._updates != Review.updates) {
             const recipes: Array<IRecipe> = await getRecipes()
 
             this._recipes = recipes.map(recipe => new Recipe(recipe))
+            this._updates = Review.updates
         }
 
         return this._recipes

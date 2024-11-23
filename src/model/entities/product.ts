@@ -1,12 +1,13 @@
-import { AvgRate, ItemId, ItemInfo, Price, ProductId } from "@primitives";
+import { ItemId, ItemInfo, Price, ProductId } from "@primitives";
 import { Item } from "./item";
-import { IItem, IProduct, isItemIsProduct, isItemIsRecipe } from "@interfaces";
+import { IItem, IProduct, isItemIsRecipe } from "@interfaces";
 import updateProduct from "@api/put/updateProduct";
 import deleteProduct from "@api/delete/deleteProduct";
 import getProducts from "@api/get/getProducts";
 import getProduct from "@api/get/getProduct";
 import getItem from "@api/get/getItem";
 import createProduct from "@api/post/createProduct";
+import { Review } from "./review";
 
 class Product extends Item {
 
@@ -16,6 +17,7 @@ class Product extends Item {
     private _price: Price
 
     private static _products: Array<Product> | undefined
+    private static _updates: number
 
     // Getters
 
@@ -75,10 +77,11 @@ class Product extends Item {
     }
 
     public static async getProducts(): Promise<Array<Product>> {
-        if (!this._products) {
+        if (!this._products || this._updates != Review.updates) {
             const products: Array<IProduct> = await getProducts()
 
             this._products = products.map(product => new Product(product))
+            this._updates = Review.updates
         }
 
         return this._products

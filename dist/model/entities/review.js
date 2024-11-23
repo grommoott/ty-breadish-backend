@@ -15,6 +15,7 @@ const getReviewByItemUser_1 = __importDefault(require("@api/get/getReviewByItemU
 class Review extends entity_1.Entity {
     // Private fields
     _review;
+    static _updates;
     // Getters
     get id() {
         return this._review.id;
@@ -34,11 +35,16 @@ class Review extends entity_1.Entity {
     get rate() {
         return this._review.rate;
     }
+    static get updates() {
+        return this._updates;
+    }
     // Methods
     async edit(data) {
+        Review._updates++;
         return await (0, updateReview_1.default)(this._review.id, data);
     }
     async delete() {
+        Review._updates++;
         return await (0, deleteReview_1.default)(this._review.id);
     }
     // Static constructors
@@ -71,6 +77,7 @@ class Review extends entity_1.Entity {
         if (review instanceof Error) {
             return review;
         }
+        this._updates++;
         return new Review(review);
     }
     toNormalView() {

@@ -12,11 +12,13 @@ const getRecipes_1 = __importDefault(require("@api/get/getRecipes"));
 const createRecipe_1 = __importDefault(require("@api/post/createRecipe"));
 const getRecipe_1 = __importDefault(require("@api/get/getRecipe"));
 const getItem_1 = __importDefault(require("@api/get/getItem"));
+const review_1 = require("./review");
 class Recipe extends item_1.Item {
     // Private fields
     _id;
     _recipe;
     static _recipes;
+    static _updates;
     // Getters
     get id() {
         return this._id;
@@ -59,9 +61,10 @@ class Recipe extends item_1.Item {
         return new Recipe(item);
     }
     static async getRecipes() {
-        if (!this._recipes) {
+        if (!this._recipes || this._updates != review_1.Review.updates) {
             const recipes = await (0, getRecipes_1.default)();
             this._recipes = recipes.map(recipe => new Recipe(recipe));
+            this._updates = review_1.Review.updates;
         }
         return this._recipes;
     }

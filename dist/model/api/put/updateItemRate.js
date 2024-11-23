@@ -14,11 +14,11 @@ async function updateItemRate(itemId) {
             return item;
         }
         if ((0, _interfaces_1.isItemIsRecipe)(item)) {
-            await bdClient_1.default.query(`update recipes set avg_rate=(select avg(cast(cast(rate as text) as integer)) from reviews where target=${itemId}) where item_id=${itemId}`);
+            await bdClient_1.default.query(`update recipes set avg_rate=(case (select count(*) from reviews where target=${itemId}) when 0 then -1 else (select avg(cast(cast(rate as text) as integer)) from reviews where target=${itemId}) end) where item_id=${itemId}`);
             return;
         }
         if ((0, _interfaces_1.isItemIsProduct)(item)) {
-            await bdClient_1.default.query(`update products set avg_rate=(select avg(cast(cast(rate as text) as integer)) from reviews where target=${itemId}) where item_id=${itemId}`);
+            await bdClient_1.default.query(`update products set avg_rate=(case (select count(*) from reviews where target=${itemId}) when 0 then -1 else (select avg(cast(cast(rate as text) as integer)) from reviews where target=${itemId}) end) where item_id=${itemId}`);
             return;
         }
         return new Error(`Item with such itemId(${itemId}) isn't exists`);
