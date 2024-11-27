@@ -15,7 +15,7 @@ class Coords {
         return new Coords(object[0], object[1]);
     }
     toString() {
-        return `[${this.longitude},${this.latitude}]`;
+        return `[${this.latitude},${this.longitude}]`;
     }
     toBDView() {
         return `'${(0, _helpers_1.pgFormat)(this.toString())}'`;
@@ -24,7 +24,7 @@ class Coords {
         return this.toString();
     }
     toNormalView() {
-        return [this.longitude, this.latitude];
+        return [this.latitude, this.longitude];
     }
     constructor(latitude, longitude) {
         this._latitude = latitude;

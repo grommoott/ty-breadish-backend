@@ -20,7 +20,7 @@ class Coords implements IBDPrimitive {
     }
 
     public toString(): string {
-        return `[${this.longitude},${this.latitude}]`
+        return `[${this.latitude},${this.longitude}]`
     }
 
     public toBDView(): string {
@@ -32,7 +32,7 @@ class Coords implements IBDPrimitive {
     }
 
     public toNormalView(): object {
-        return [this.longitude, this.latitude]
+        return [this.latitude, this.longitude]
     }
 
     public constructor(latitude: number, longitude: number) {
