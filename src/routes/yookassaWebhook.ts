@@ -35,6 +35,7 @@ class YookassaWebhook {
 
     private async setPaymentStatus(paymentId: string, paymentStatus: PaymentStatus): Promise<void | Error> {
         const order: Order | Error = await Order.fromPaymentId(paymentId)
+        console.log("paymentStatus " + paymentStatus)
 
         if (order instanceof Error) {
             return order
