@@ -4,18 +4,18 @@ import { QueryResult } from "pg"
 
 export default async function getOrderByPaymentId(paymentId: string): Promise<IOrder | Error> {
     try {
-        console.log(paymentId)
         const orders: QueryResult = await bdClient.query(`select * from orders where payment_id='${paymentId}'`)
 
         if (orders.rowCount == 0) {
             return new Error(`Order with such payment id(${paymentId}) isn't found`)
         }
 
-        console.log(orders)
         const order = orders.rows[0]
 
+        console.log("1")
         const products: QueryResult = await bdClient.query(`select * from order_products_ids where order=${order.id}`)
 
+        console.log("2")
         return queryRowsToOrder(order, products.rows)
     } catch (e) {
         const msg = "Error in getOrderByPaymentId request: " + e
