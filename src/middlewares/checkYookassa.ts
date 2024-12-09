@@ -5,7 +5,6 @@ const ips: Array<string> = new Array(
 )
 
 const checkYookassa: Middleware = (req, res, next) => {
-    console.log("yookassaWebhookRequest");
     const ip: string | undefined = req.header("true-client-ip")?.split(", ").pop()
 
     if (ips.findIndex((val) => val == ip) == -1) {
