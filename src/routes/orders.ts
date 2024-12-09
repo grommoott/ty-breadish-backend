@@ -6,7 +6,8 @@ import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware 
 import { BakeryId, CourierOrderInfo, OrderId, OrderInfo, PickUpOrderInfo, Price, ProductId, UserId } from "@primitives"
 import { maxPaymentDescriptionSize } from "./config"
 import { checkBaker } from "@middlewares"
-import config from "config"
+import config from "../config"
+
 
 class Orders {
     public get: Array<Middleware> = [

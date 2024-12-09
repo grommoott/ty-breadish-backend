@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const _entities_1 = require("@entities");
 const _enums_1 = require("@enums");
@@ -8,6 +11,7 @@ const _middlewares_1 = require("@middlewares");
 const _primitives_1 = require("@primitives");
 const config_1 = require("./config");
 const _middlewares_2 = require("@middlewares");
+const config_2 = __importDefault(require("../config"));
 class Orders {
     get = [
         _middlewares_2.checkBaker,
@@ -117,7 +121,7 @@ class Orders {
                 }
                 return builder;
             })();
-            const payment = await yookassa_1.yookassaApi.createPayment(price, description, "https://example.com");
+            const payment = await yookassa_1.yookassaApi.createPayment(price, description, `${config_2.default.frontendUrl}/`);
             if (payment instanceof Error) {
                 next(payment);
                 return;
