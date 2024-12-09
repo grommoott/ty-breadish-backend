@@ -157,7 +157,9 @@ class Order extends Entity {
             orderType: this._order.orderType,
             orderInfo: this._order.orderInfo,
             productIds: this._order.productIds.map(productId => productId.id),
-            readyMoment: this._order.readyMoment.moment
+            readyMoment: this._order.readyMoment.moment,
+            paymentId: this._order.paymentId,
+            paymentStatus: this._order.paymentStatus
         }
     }
 

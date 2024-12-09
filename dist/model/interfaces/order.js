@@ -4,15 +4,16 @@ exports.queryRowsToOrder = queryRowsToOrder;
 const _enums_1 = require("@enums");
 const _primitives_1 = require("@primitives");
 function queryRowsToOrder(orderRow, productsRows) {
-    if (!("id" in orderRow &&
+    if (orderRow.order_info == undefined || !("id" in orderRow &&
         "from" in orderRow &&
         "payment_id" in orderRow &&
         "payment_status" in orderRow &&
         "moment" in orderRow &&
         "order_type" in orderRow &&
         "order_info" in orderRow &&
-        "address" in orderRow.orderInfo &&
-        "state" in orderRow.orderInfo &&
+        "bakeryId" in orderRow.order_info &&
+        "state" in orderRow.order_info &&
+        "productCounts" in orderRow.order_info &&
         "ready_moment" in orderRow)) {
         throw new Error("Invalid order row to convert into Order");
     }
@@ -21,7 +22,7 @@ function queryRowsToOrder(orderRow, productsRows) {
             "product" in row)) {
             throw new Error("Invalid products rows to convert into Order");
         }
-        if (!row.order === orderRow.id) {
+        if (row.order !== orderRow.id) {
             throw new Error("Invalid products rows to convert into Order");
         }
     });

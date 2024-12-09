@@ -5,7 +5,6 @@ import { YookassaEvents } from "@helpers/yookassa"
 import { checkYookassa, Middleware } from "@middlewares"
 
 class YookassaWebhook {
-
     public post: Array<Middleware> = [
         checkYookassa,
         asyncErrorCatcher(async (req, res, next) => {

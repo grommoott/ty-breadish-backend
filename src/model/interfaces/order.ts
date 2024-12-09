@@ -15,7 +15,7 @@ interface IOrder {
 }
 
 function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
-    if (!(
+    if (orderRow.order_info == undefined || !(
         "id" in orderRow &&
         "from" in orderRow &&
         "payment_id" in orderRow &&
@@ -23,8 +23,9 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
         "moment" in orderRow &&
         "order_type" in orderRow &&
         "order_info" in orderRow &&
-        "address" in orderRow.orderInfo &&
-        "state" in orderRow.orderInfo &&
+        "bakeryId" in orderRow.order_info &&
+        "state" in orderRow.order_info &&
+        "productCounts" in orderRow.order_info &&
         "ready_moment" in orderRow
     )) {
         throw new Error("Invalid order row to convert into Order")
@@ -38,7 +39,7 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
             throw new Error("Invalid products rows to convert into Order")
         }
 
-        if (!row.order === orderRow.id) {
+        if (row.order !== orderRow.id) {
             throw new Error("Invalid products rows to convert into Order")
         }
     })

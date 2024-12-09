@@ -1,8 +1,7 @@
 import { Product } from "@entities"
 import { asyncErrorCatcher } from "@helpers"
-import { checkAdmin, checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
+import { checkAdmin, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
 import { ItemInfo, Price, ProductId } from "@primitives"
-import path from "path"
 import images from "./images"
 import { ImageCategories } from "@enums"
 

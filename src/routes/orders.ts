@@ -6,6 +6,7 @@ import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware 
 import { BakeryId, CourierOrderInfo, OrderId, OrderInfo, PickUpOrderInfo, Price, ProductId, UserId } from "@primitives"
 import { maxPaymentDescriptionSize } from "./config"
 import { checkBaker } from "@middlewares"
+import config from "config"
 
 class Orders {
     public get: Array<Middleware> = [
@@ -148,7 +149,7 @@ class Orders {
                 return builder
             })()
 
-            const payment: Payment | Error = await yookassaApi.createPayment(price, description, "https://example.com")
+            const payment: Payment | Error = await yookassaApi.createPayment(price, description, `${config.frontendUrl}/`)
 
             if (payment instanceof Error) {
                 next(payment)

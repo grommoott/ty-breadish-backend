@@ -45,7 +45,10 @@ async function createOrder(from, paymentId, orderType, orderInfo, productIds, mo
                 return product;
             }
         }
-        const responseOrders = await bdClient_1.default.query(`insert into orders values (default, ${from}, '${(0, _helpers_1.pgFormat)(paymentId)}', '${_enums_1.PaymentStatuses.NotSucceeded}', ${_moment}, '${(0, _helpers_1.pgFormat)(orderType)}', '${(0, _helpers_1.pgFormat)(JSON.stringify(orderInfo))}', -1) returning *`);
+        //typescript bug?
+        let validatedOrderInfo = orderInfo;
+        validatedOrderInfo.bakeryId = orderInfo.bakeryId._id;
+        const responseOrders = await bdClient_1.default.query(`insert into orders values (default, ${from}, '${(0, _helpers_1.pgFormat)(paymentId)}', '${_enums_1.PaymentStatuses.NotSucceeded}', ${_moment}, '${(0, _helpers_1.pgFormat)(orderType)}', '${(0, _helpers_1.pgFormat)(JSON.stringify(validatedOrderInfo))}', -1) returning *`);
         const order = responseOrders.rows[0];
         const responseProducts = await bdClient_1.default.query(`insert into order_products_ids values ${productIds.map(productId => `(default, ${order.id}, ${productId})`).join(", ")} returning *`);
         return (0, _interfaces_1.queryRowsToOrder)(responseOrders.rows[0], responseProducts.rows);
