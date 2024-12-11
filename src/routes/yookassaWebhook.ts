@@ -8,7 +8,6 @@ class YookassaWebhook {
     public post: Array<Middleware> = [
         checkYookassa,
         asyncErrorCatcher(async (req, res, next) => {
-            console.log("YookassaWebhookPost - 1")
             const paymentId: string = req.body.object.id
 
             let set: void | Error | object = new Object()
@@ -16,15 +15,16 @@ class YookassaWebhook {
             switch (req.body.event) {
                 case YookassaEvents.PaymentSucceeded:
                     set = await this.setPaymentStatus(paymentId, PaymentStatuses.Succeeded)
+                    break
 
                 case YookassaEvents.PaymentCanceled:
                     set = await this.setPaymentStatus(paymentId, PaymentStatuses.Canceled)
+                    break
 
                 case YookassaEvents.RefundSucceeded:
                     set = await this.setPaymentStatus(paymentId, PaymentStatuses.Refunded)
+                    break
             }
-
-            console.log("YookassaWebhook - 2")
 
             if (set instanceof Error) {
                 res.sendStatus(500)
@@ -37,9 +37,7 @@ class YookassaWebhook {
     ]
 
     private async setPaymentStatus(paymentId: string, paymentStatus: PaymentStatus): Promise<void | Error> {
-        console.log("SetPaymentStatus - 1")
         const order: Order | Error = await Order.fromPaymentId(paymentId)
-        console.log("SetPaymentStatus - 2")
 
         if (order instanceof Error) {
             return order
