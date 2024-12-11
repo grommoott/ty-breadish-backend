@@ -44,8 +44,6 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
         }
     })
 
-    console.log("3")
-
     const orderType: OrderType = orderRow.order_type
     let orderInfo: OrderInfo
 
@@ -65,8 +63,6 @@ function queryRowsToOrder(orderRow: any, productsRows: Array<any>): IOrder {
                 productCounts: orderRow.order_info.productCounts
             }
     }
-
-    console.log("4")
 
     return {
         id: new OrderId(orderRow.id),

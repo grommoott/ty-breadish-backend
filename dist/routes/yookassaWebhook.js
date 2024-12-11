@@ -28,6 +28,7 @@ class YookassaWebhook {
     ];
     async setPaymentStatus(paymentId, paymentStatus) {
         const order = await _entities_1.Order.fromPaymentId(paymentId);
+        console.log("paymentStatus " + paymentStatus);
         if (order instanceof Error) {
             return order;
         }
