@@ -12,7 +12,7 @@ export default async function getOrderByPaymentId(paymentId: string): Promise<IO
 
         const order = orders.rows[0]
 
-        const products: QueryResult = await bdClient.query(`select * from order_products_ids where order=${order.id}`)
+        const products: QueryResult = await bdClient.query(`select * from order_products_ids where "order"=${order.id}`)
 
         return queryRowsToOrder(order, products.rows)
     } catch (e) {
