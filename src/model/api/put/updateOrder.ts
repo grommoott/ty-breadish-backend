@@ -75,6 +75,8 @@ export default async function updateOrder(id: OrderId, data: { paymentStatus?: P
             return `${nameConverter(key)}=${valueConverter(key, val)}`
         }).join(", ")
 
+        console.log(setString)
+
         await bdClient.query(`update orders set ${setString} where id=${id}`)
     } catch (e) {
         const msg = "Error in updateOrder request: " + e
