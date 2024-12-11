@@ -11,7 +11,11 @@ export default async function updateOrder(id: OrderId, data: { paymentStatus?: P
             return new Error("There is nothing to do")
         }
 
+        console.log("updateOrder - 1")
+
         const orderWithId: IOrder | Error = await getOrder(id)
+
+        console.log("updateOrder - 2")
 
         if (orderWithId instanceof Error) {
             return orderWithId
@@ -38,6 +42,8 @@ export default async function updateOrder(id: OrderId, data: { paymentStatus?: P
                     }
             }
         }
+
+        console.log("updateOrder - 3")
 
         const nameConverter: (name: string) => string = (name: string): string => {
             switch (name) {
@@ -74,8 +80,6 @@ export default async function updateOrder(id: OrderId, data: { paymentStatus?: P
         const setString = Object.entries(data).filter(([_, val]) => val != undefined).map(([key, val]) => {
             return `${nameConverter(key)}=${valueConverter(key, val)}`
         }).join(", ")
-
-        console.log(setString)
 
         await bdClient.query(`update orders set ${setString} where id=${id}`)
     } catch (e) {

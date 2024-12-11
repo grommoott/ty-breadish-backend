@@ -132,7 +132,13 @@ class Orders {
                 let builder: string = ""
 
                 for (const name of names) {
-                    const tmp = builder + name
+                    let tmp = ""
+
+                    if (builder == "") {
+                        tmp = name
+                    } else {
+                        tmp = builder + ", " + name
+                    }
 
                     if (tmp.length > maxPaymentDescriptionSize - 7) {
                         builder += " и т.д."
