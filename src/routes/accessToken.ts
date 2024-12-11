@@ -1,5 +1,5 @@
 import { Session, User } from "@entities"
-import { asyncErrorCatcher } from "@helpers"
+import { asyncErrorCatcher, setAuthCookies } from "@helpers"
 import jwt, { RefreshToken } from "@helpers/jwt"
 import { minute, month } from "@helpers/timeConstants"
 import { Middleware } from "@middlewares"
@@ -49,8 +49,7 @@ class AccessToken {
                 return
             }
 
-            res.cookie("RefreshToken", newRefreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 2 * month })
-            res.cookie("AccessToken", newAccessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * minute })
+            setAuthCookies(res, newAccessToken, newRefreshToken)
 
             res.sendStatus(200)
 
