@@ -50,7 +50,7 @@ class Reviews {
             const review: Review | Error = await Review.fromItemUser(target, user.id)
 
             if (review instanceof Error) {
-                next(review)
+                res.send(null)
                 return
             }
 
