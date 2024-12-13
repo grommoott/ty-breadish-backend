@@ -39,6 +39,9 @@ class YookassaApi {
     }
 
     public async refundPayment(amount: Price, paymentId: string): Promise<boolean | Error> {
+        console.log("refundPayment")
+
+
         const response = await axios.post("https://api.yookassa.ru/v3/refunds", {
             amount: {
                 value: amount.price,
