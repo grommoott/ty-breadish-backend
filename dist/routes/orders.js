@@ -165,6 +165,11 @@ class Orders {
                 next(new Error("Error! Try again later, sorry for the inconvinience", { cause: 500 }));
                 return;
             }
+            const edit = await order.edit({ paymentStatus: _enums_1.PaymentStatuses.Refunded });
+            if (edit instanceof Error) {
+                next(edit);
+                return;
+            }
             res.sendStatus(200);
             next();
         })

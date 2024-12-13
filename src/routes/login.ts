@@ -6,7 +6,6 @@ import { emailManager, PasswordMail } from "@helpers/email"
 import { Hash } from "@primitives"
 import { clearAuthCookies, setAuthCookies } from "@helpers"
 import { Role } from "@enums"
-import cookieParser from "cookie-parser"
 
 
 class Login {

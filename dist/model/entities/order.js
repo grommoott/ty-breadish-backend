@@ -63,7 +63,8 @@ class Order extends entity_1.Entity {
     async getPrice() {
         if (!this._price) {
             const products = await this.getProducts();
-            this._price = new _primitives_1.Price(products.map(product => product.price.price).reduce((acc, cur) => acc + cur));
+            this._price = new _primitives_1.Price(products
+                .map(product => product.price.price * this.orderInfo.productCounts[product.id.id]).reduce((acc, cur) => acc + cur));
         }
         return this._price;
     }

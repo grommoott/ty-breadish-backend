@@ -15,7 +15,7 @@ async function getUserOrders(userId) {
         }
         const orders = await bdClient_1.default.query(`select * from orders where "from"=${userId}`);
         const resultPromises = orders.rows.map(async (orderRow) => {
-            const productIds = await bdClient_1.default.query(`select * from order_products_ids where order=${orderRow.id}`);
+            const productIds = await bdClient_1.default.query(`select * from order_products_ids where "order"=${orderRow.id}`);
             return (0, _interfaces_1.queryRowsToOrder)(orderRow, productIds.rows);
         });
         await Promise.all(resultPromises);

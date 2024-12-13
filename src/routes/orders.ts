@@ -1,5 +1,5 @@
 import { Order, Product, User } from "@entities"
-import { CourierOrderState, CourierOrderStates, OrderType, OrderTypes, PickUpOrderState, PickUpOrderStates } from "@enums"
+import { CourierOrderState, CourierOrderStates, OrderType, OrderTypes, PaymentStatuses, PickUpOrderState, PickUpOrderStates } from "@enums"
 import { asyncErrorCatcher, isInEnum } from "@helpers"
 import { Payment, yookassaApi } from "@helpers/yookassa"
 import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
@@ -204,6 +204,13 @@ class Orders {
 
             if (!refund) {
                 next(new Error("Error! Try again later, sorry for the inconvinience", { cause: 500 }))
+                return
+            }
+
+            const edit: void | Error = await order.edit({ paymentStatus: PaymentStatuses.Refunded })
+
+            if (edit instanceof Error) {
+                next(edit)
                 return
             }
 

@@ -15,7 +15,8 @@ class YookassaApi {
                 username: config_1.default.yookassaUsername
             },
             headers: {
-                "Idempotence-Key": (0, uuid_1.v4)()
+                "Idempotence-Key": (0, uuid_1.v4)(),
+                "Content-Type": "application/json"
             }
         };
     }
@@ -38,13 +39,14 @@ class YookassaApi {
         return response.data;
     }
     async refundPayment(amount, paymentId) {
-        const response = await axios_1.default.post("https://api.yookassa.ru/v3/refunds", {
+        const data = {
             amount: {
                 value: amount.price,
                 currency: "RUB"
             },
             paymentId
-        }, this.generateDefaultHeaders());
+        };
+        const response = await axios_1.default.post("https://api.yookassa.ru/v3/refunds", data, this.generateDefaultHeaders());
         if (response.status !== 200) {
             return new Error("Error in refundPayment request", { cause: response.status });
         }
