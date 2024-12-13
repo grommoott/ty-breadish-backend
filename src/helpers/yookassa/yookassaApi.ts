@@ -12,7 +12,8 @@ class YookassaApi {
                 username: config.yookassaUsername
             },
             headers: {
-                "Idempotence-Key": uuid()
+                "Idempotence-Key": uuid(),
+                "Content-Type": "application/json"
             }
         }
     }
@@ -39,18 +40,17 @@ class YookassaApi {
     }
 
     public async refundPayment(amount: Price, paymentId: string): Promise<boolean | Error> {
-        console.log("refundPayment")
-
-
-        const response = await axios.post("https://api.yookassa.ru/v3/refunds", {
+        const data = {
             amount: {
                 value: amount.price,
                 currency: "RUB"
             },
             paymentId
-        }, this.generateDefaultHeaders())
+        }
 
-        console.log(response)
+        console.log(data)
+
+        const response = await axios.post("https://api.yookassa.ru/v3/refunds", data, this.generateDefaultHeaders())
 
         if (response.status !== 200) {
             return new Error("Error in refundPayment request", { cause: response.status })
