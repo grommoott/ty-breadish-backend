@@ -49,6 +49,7 @@ class YookassaApi {
         }
 
         console.log(data)
+        console.log(this.generateDefaultHeaders())
 
         const response = await axios.post("https://api.yookassa.ru/v3/refunds", data, this.generateDefaultHeaders())
 
