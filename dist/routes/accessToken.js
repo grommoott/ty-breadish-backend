@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _entities_1 = require("@entities");
 const _helpers_1 = require("@helpers");
 const jwt_1 = __importDefault(require("@helpers/jwt"));
-const timeConstants_1 = require("@helpers/timeConstants");
 const _primitives_1 = require("@primitives");
 class AccessToken {
     get = [
@@ -41,8 +40,7 @@ class AccessToken {
                 next(newAccessToken);
                 return;
             }
-            res.cookie("RefreshToken", newRefreshToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 2 * timeConstants_1.month });
-            res.cookie("AccessToken", newAccessToken, { secure: true, httpOnly: true, sameSite: "strict", maxAge: 20 * timeConstants_1.minute });
+            (0, _helpers_1.setAuthCookies)(res, newAccessToken, newRefreshToken);
             res.sendStatus(200);
             next();
         })

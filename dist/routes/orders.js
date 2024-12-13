@@ -108,7 +108,13 @@ class Orders {
             const description = (() => {
                 let builder = "";
                 for (const name of names) {
-                    const tmp = builder + name;
+                    let tmp = "";
+                    if (builder == "") {
+                        tmp = name;
+                    }
+                    else {
+                        tmp = builder + ", " + name;
+                    }
                     if (tmp.length > config_1.maxPaymentDescriptionSize - 7) {
                         builder += " и т.д.";
                         break;

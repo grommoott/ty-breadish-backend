@@ -8,7 +8,7 @@ export default async function getOrdersByBakeryId(id: BakeryId): Promise<Array<I
         const orders: QueryResult = await bdClient.query(`select * from orders where bakeryId=${id}`)
 
         const resultPromises = orders.rows.map(async (orderRow) => {
-            const result = await bdClient.query(`select * from order_products_ids where order=${orderRow.id}`)
+            const result = await bdClient.query(`select * from order_products_ids where "order"=${orderRow.id}`)
 
             return queryRowsToOrder(orderRow, result.rows)
         })

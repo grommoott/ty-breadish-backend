@@ -10,7 +10,9 @@ const timeConstants_1 = require("./timeConstants");
 function setAuthCookies(res, accessToken, refreshToken, deviceId) {
     res.cookie("RefreshToken", refreshToken, { secure: true, httpOnly: true, sameSite: "none", domain: config_1.default.backendUrl, maxAge: 2 * timeConstants_1.week });
     res.cookie("AccessToken", accessToken, { secure: true, httpOnly: true, sameSite: "none", domain: config_1.default.backendUrl, maxAge: 20 * timeConstants_1.minute });
-    res.cookie("DeviceId", deviceId, { secure: true, httpOnly: true, domain: config_1.default.backendUrl, sameSite: "none", maxAge: 1000 * timeConstants_1.year });
+    if (deviceId) {
+        res.cookie("DeviceId", deviceId, { secure: true, httpOnly: true, domain: config_1.default.backendUrl, sameSite: "none", maxAge: 1000 * timeConstants_1.year });
+    }
 }
 function clearAuthCookies(res) {
     res.clearCookie("RefreshToken");

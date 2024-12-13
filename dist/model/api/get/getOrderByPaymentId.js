@@ -13,7 +13,7 @@ async function getOrderByPaymentId(paymentId) {
             return new Error(`Order with such payment id(${paymentId}) isn't found`);
         }
         const order = orders.rows[0];
-        const products = await bdClient_1.default.query(`select * from order_products_ids where order=${order.id}`);
+        const products = await bdClient_1.default.query(`select * from order_products_ids where "order"=${order.id}`);
         return (0, _interfaces_1.queryRowsToOrder)(order, products.rows);
     }
     catch (e) {

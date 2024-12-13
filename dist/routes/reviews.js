@@ -40,7 +40,7 @@ class Reviews {
             }
             const review = await _entities_1.Review.fromItemUser(target, user.id);
             if (review instanceof Error) {
-                next(review);
+                res.send(null);
                 return;
             }
             res.send(review.toNormalView());

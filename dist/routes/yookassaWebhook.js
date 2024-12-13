@@ -14,10 +14,13 @@ class YookassaWebhook {
             switch (req.body.event) {
                 case yookassa_1.YookassaEvents.PaymentSucceeded:
                     set = await this.setPaymentStatus(paymentId, _enums_1.PaymentStatuses.Succeeded);
+                    break;
                 case yookassa_1.YookassaEvents.PaymentCanceled:
                     set = await this.setPaymentStatus(paymentId, _enums_1.PaymentStatuses.Canceled);
+                    break;
                 case yookassa_1.YookassaEvents.RefundSucceeded:
                     set = await this.setPaymentStatus(paymentId, _enums_1.PaymentStatuses.Refunded);
+                    break;
             }
             if (set instanceof Error) {
                 res.sendStatus(500);
@@ -28,7 +31,6 @@ class YookassaWebhook {
     ];
     async setPaymentStatus(paymentId, paymentStatus) {
         const order = await _entities_1.Order.fromPaymentId(paymentId);
-        console.log("paymentStatus " + paymentStatus);
         if (order instanceof Error) {
             return order;
         }
