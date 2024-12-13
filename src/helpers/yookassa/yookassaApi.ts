@@ -47,6 +47,8 @@ class YookassaApi {
             paymentId
         }, this.generateDefaultHeaders())
 
+        console.log(response)
+
         if (response.status !== 200) {
             return new Error("Error in refundPayment request", { cause: response.status })
         }

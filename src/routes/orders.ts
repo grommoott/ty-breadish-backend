@@ -180,12 +180,10 @@ class Orders {
         checkAuthorized,
         checkParams(["id"]),
         asyncErrorCatcher(async (req, res, next) => {
-            console.log("delete")
             const from: UserId = new UserId(req.body.accessTokenPayload.sub)
             const id: OrderId = new OrderId(req.params.id)
 
             const order: Order | Error = await Order.fromId(id)
-            console.log("order")
 
             if (order instanceof Error) {
                 next(order)
@@ -197,9 +195,7 @@ class Orders {
                 return
             }
 
-            console.log("before refund")
             const refund: boolean | Error = await yookassaApi.refundPayment(await order.getPrice(), order.paymentId)
-            console.log("after refund")
 
             if (refund instanceof Error) {
                 next(refund)
@@ -211,7 +207,6 @@ class Orders {
                 return
             }
 
-            console.log("end")
             res.sendStatus(200)
 
             next()
