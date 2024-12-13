@@ -40,23 +40,14 @@ class YookassaApi {
     }
 
     public async refundPayment(amount: Price, paymentId: string): Promise<boolean | Error> {
-        let response
+        const response = await axios.post("https://api.yookassa.ru/v3/refunds", {
+            amount: {
+                value: amount.price,
+                currency: "RUB"
+            },
+            payment_id: paymentId
+        }, this.generateDefaultHeaders())
 
-        try {
-            response = await axios.post("https://api.yookassa.ru/v3/refunds", {
-                amount: {
-                    value: amount.price,
-                    currency: "RUB"
-                },
-                paymentId
-            }, this.generateDefaultHeaders())
-        } catch (e) {
-            console.error(e)
-        }
-
-        if (!response) {
-            return false
-        }
 
         if (response.status !== 200) {
             return new Error("Error in refundPayment request", { cause: response.status })
