@@ -40,6 +40,8 @@ class YookassaApi {
     }
 
     public async refundPayment(amount: Price, paymentId: string): Promise<boolean | Error> {
+        console.log("refundPayment")
+
         const response = await axios.post("https://api.yookassa.ru/v3/refunds", {
             amount: {
                 value: amount.price,
@@ -48,11 +50,11 @@ class YookassaApi {
             paymentId
         }, this.generateDefaultHeaders())
 
-        if (response?.data.status !== "succeeded") {
+        console.log(response)
+
+        if (response.status !== 200) {
             return new Error("Error in refundPayment request", { cause: response.status })
         }
-
-        console.log("asdlfkj")
 
         return response.data.status === "succeeded"
     }
