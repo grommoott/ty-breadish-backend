@@ -3,7 +3,7 @@ import { CourierOrderState, CourierOrderStates, OrderType, OrderTypes, PaymentSt
 import { asyncErrorCatcher, isInEnum } from "@helpers"
 import { Payment, yookassaApi } from "@helpers/yookassa"
 import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
-import { BakeryId, CourierOrderInfo, OrderId, OrderInfo, PickUpOrderInfo, Price, ProductId, UserId } from "@primitives"
+import { BakeryId, CourierOrderInfo, Moment, OrderId, OrderInfo, PickUpOrderInfo, Price, ProductId, UserId } from "@primitives"
 import { maxPaymentDescriptionSize } from "./config"
 import { checkBaker } from "@middlewares"
 import config from "../config"
@@ -284,6 +284,33 @@ class Orders {
                     })
                     break
             }
+
+            if (response instanceof Error) {
+                next(response)
+                return
+            }
+
+            res.sendStatus(200)
+
+            next()
+        })
+    ]
+
+    public putChangeReadyMoment: Array<Middleware> = [
+        checkBaker,
+        checkBodyParams(["id", "readyMoment"]),
+        asyncErrorCatcher(async (req, res, next) => {
+            const id: OrderId = new OrderId(req.body.id)
+            const readyMoment: Moment = new Moment(req.body.readyMoment)
+
+            const order: Order | Error = await Order.fromId(id)
+
+            if (order instanceof Error) {
+                next(order)
+                return
+            }
+
+            const response: void | Error = await order.edit({ readyMoment })
 
             if (response instanceof Error) {
                 next(response)
