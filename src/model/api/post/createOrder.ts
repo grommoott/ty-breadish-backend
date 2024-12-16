@@ -53,9 +53,7 @@ export default async function createOrder(from: UserId, paymentId: string, order
             }
         }
 
-        console.log(orderInfo)
-
-        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${pgFormat(paymentId)}', '${PaymentStatuses.NotSucceeded}', ${_moment}, '${pgFormat(orderType)}', '${pgFormat(JSON.stringify(orderInfoToNormalView(orderInfo).id))}', -1) returning *`)
+        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${pgFormat(paymentId)}', '${PaymentStatuses.NotSucceeded}', ${_moment}, '${pgFormat(orderType)}', '${pgFormat(JSON.stringify(orderInfoToNormalView(orderInfo)))}', -1) returning *`)
         const order = responseOrders.rows[0]
 
         const responseProducts: QueryResult = await bdClient.query(`insert into order_products_ids values ${productIds.map(productId => `(default, ${order.id}, ${productId})`).join(", ")} returning *`)
