@@ -5,6 +5,7 @@ const CourierOrderStates = {
     RequestSent: "requestSent",
     Cooking: "cooking",
     WaitingForCourier: "waitingForCourier",
-    Delivering: "delivering"
+    Delivering: "delivering",
+    Completed: "completed"
 };
 exports.CourierOrderStates = CourierOrderStates;

@@ -5,8 +5,8 @@ import getUser from "@api/get/getUser";
 import { OrderType, PaymentStatuses } from "@enums";
 import { pgFormat } from "@helpers";
 import { IOrder, IProduct, IUser, queryRowsToOrder } from "@interfaces";
-import { BakeryId, Moment, ProductId, UserId } from "@primitives";
-import { OrderInfo, orderInfoToNormalView } from "model/types/primitives/orderInfo";
+import { Moment, ProductId, UserId } from "@primitives";
+import { OrderInfo, orderInfoToNormalView } from "@primitives";
 import { QueryResult } from "pg";
 
 export default async function createOrder(from: UserId, paymentId: string, orderType: OrderType, orderInfo: OrderInfo, productIds: Array<ProductId>, moment?: Moment): Promise<IOrder | Error> {

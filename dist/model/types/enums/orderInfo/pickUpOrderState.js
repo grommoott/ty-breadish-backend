@@ -4,6 +4,7 @@ exports.PickUpOrderStates = void 0;
 const PickUpOrderStates = {
     RequestSent: "requestSent",
     Cooking: "cooking",
-    Waiting: "waiting"
+    Waiting: "waiting",
+    Completed: "completed"
 };
 exports.PickUpOrderStates = PickUpOrderStates;

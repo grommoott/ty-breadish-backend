@@ -156,6 +156,10 @@ class Orders {
                 next(new Error("Forbidden!", { cause: 403 }));
                 return;
             }
+            if (order.orderInfo.state == "completed") {
+                next(new Error("You cannot delete completed order", { cause: 404 }));
+                return;
+            }
             const refund = await yookassa_1.yookassaApi.refundPayment(await order.getPrice(), order.paymentId);
             if (refund instanceof Error) {
                 next(refund);
@@ -223,25 +227,6 @@ class Orders {
                     });
                     break;
             }
-            if (response instanceof Error) {
-                next(response);
-                return;
-            }
-            res.sendStatus(200);
-            next();
-        })
-    ];
-    putMarkAsCompleted = [
-        _middlewares_2.checkBaker,
-        (0, _middlewares_1.checkBodyParams)(["id"]),
-        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const id = new _primitives_1.OrderId(req.body.id);
-            const order = await _entities_1.Order.fromId(id);
-            if (order instanceof Error) {
-                next(order);
-                return;
-            }
-            const response = await order.delete();
             if (response instanceof Error) {
                 next(response);
                 return;

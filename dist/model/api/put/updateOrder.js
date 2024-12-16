@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = updateOrder;
 const bdClient_1 = __importDefault(require("@api/bdClient"));
 const getOrder_1 = __importDefault(require("@api/get/getOrder"));
-const _enums_1 = require("@enums");
 const _helpers_1 = require("@helpers");
 const _primitives_1 = require("@primitives");
 async function updateOrder(id, data) {
@@ -18,26 +17,27 @@ async function updateOrder(id, data) {
         if (orderWithId instanceof Error) {
             return orderWithId;
         }
-        if (data.orderInfo) {
-            const newOrderType = (() => {
-                if (data.orderType) {
-                    return data.orderType;
-                }
-                else {
-                    return orderWithId.orderType;
-                }
-            })();
-            switch (newOrderType) {
-                case _enums_1.OrderTypes.Courier:
-                    if ((0, _primitives_1.isOrderInfoIsPickUpOrderInfo)(data.orderInfo)) {
-                        throw new Error("Expected CourierOrderInfo but got PickUpOrderInfo");
-                    }
-                case _enums_1.OrderTypes.PickUp:
-                    if ((0, _primitives_1.isOrderInfoIsCourierOrderInfo)(data.orderInfo)) {
-                        throw new Error("Expected PickUpOrderInfo but got CourierOrderInfo");
-                    }
-            }
-        }
+        // if (data.orderInfo) {
+        //     const newOrderType: OrderType = (() => {
+        //         if (data.orderType) {
+        //             return data.orderType
+        //         } else {
+        //             return orderWithId.orderType
+        //         }
+        //     })()
+        //
+        //     switch (newOrderType) {
+        //         case OrderTypes.Courier:
+        //             if (isOrderInfoIsPickUpOrderInfo(data.orderInfo)) {
+        //                 throw new Error("Expected CourierOrderInfo but got PickUpOrderInfo")
+        //             }
+        //
+        //         case OrderTypes.PickUp:
+        //             if (isOrderInfoIsCourierOrderInfo(data.orderInfo)) {
+        //                 throw new Error("Expected PickUpOrderInfo but got CourierOrderInfo")
+        //             }
+        //     }
+        // }
         const nameConverter = (name) => {
             switch (name) {
                 case "orderType":
@@ -55,7 +55,7 @@ async function updateOrder(id, data) {
         const valueConverter = (key, value) => {
             switch (key) {
                 case "orderInfo":
-                    return `'${(0, _helpers_1.pgFormat)(JSON.stringify(value))}'`;
+                    return `'${(0, _helpers_1.pgFormat)(JSON.stringify((0, _primitives_1.orderInfoToNormalView)(value)))}'`;
                 case "readyMoment":
                     return value.toBDView();
                 default:
