@@ -1,9 +1,9 @@
 import bdClient from "@api/bdClient";
 import getOrder from "@api/get/getOrder";
-import { OrderType, OrderTypes, PaymentStatus } from "@enums";
+import { OrderType, PaymentStatus } from "@enums";
 import { isEmpty, pgFormat } from "@helpers";
 import { IOrder } from "@interfaces";
-import { IBDPrimitive, isOrderInfoIsCourierOrderInfo, isOrderInfoIsPickUpOrderInfo, Moment, OrderId, OrderInfo } from "@primitives";
+import { IBDPrimitive, Moment, OrderId, OrderInfo } from "@primitives";
 
 export default async function updateOrder(id: OrderId, data: { paymentStatus?: PaymentStatus, orderType?: OrderType, orderInfo?: OrderInfo, readyMoment?: Moment }): Promise<void | Error> {
     try {
@@ -17,27 +17,27 @@ export default async function updateOrder(id: OrderId, data: { paymentStatus?: P
             return orderWithId
         }
 
-        if (data.orderInfo) {
-            const newOrderType: OrderType = (() => {
-                if (data.orderType) {
-                    return data.orderType
-                } else {
-                    return orderWithId.orderType
-                }
-            })()
-
-            switch (newOrderType) {
-                case OrderTypes.Courier:
-                    if (isOrderInfoIsPickUpOrderInfo(data.orderInfo)) {
-                        throw new Error("Expected CourierOrderInfo but got PickUpOrderInfo")
-                    }
-
-                case OrderTypes.PickUp:
-                    if (isOrderInfoIsCourierOrderInfo(data.orderInfo)) {
-                        throw new Error("Expected PickUpOrderInfo but got CourierOrderInfo")
-                    }
-            }
-        }
+        // if (data.orderInfo) {
+        //     const newOrderType: OrderType = (() => {
+        //         if (data.orderType) {
+        //             return data.orderType
+        //         } else {
+        //             return orderWithId.orderType
+        //         }
+        //     })()
+        //
+        //     switch (newOrderType) {
+        //         case OrderTypes.Courier:
+        //             if (isOrderInfoIsPickUpOrderInfo(data.orderInfo)) {
+        //                 throw new Error("Expected CourierOrderInfo but got PickUpOrderInfo")
+        //             }
+        //
+        //         case OrderTypes.PickUp:
+        //             if (isOrderInfoIsCourierOrderInfo(data.orderInfo)) {
+        //                 throw new Error("Expected PickUpOrderInfo but got CourierOrderInfo")
+        //             }
+        //     }
+        // }
 
         const nameConverter: (name: string) => string = (name: string): string => {
             switch (name) {
