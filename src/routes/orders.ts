@@ -195,6 +195,11 @@ class Orders {
                 return
             }
 
+            if (order.orderInfo.state == "completed") {
+                next(new Error("You cannot delete completed order", { cause: 404 }))
+                return
+            }
+
             const refund: boolean | Error = await yookassaApi.refundPayment(await order.getPrice(), order.paymentId)
 
             if (refund instanceof Error) {
@@ -279,32 +284,6 @@ class Orders {
                     })
                     break
             }
-
-            if (response instanceof Error) {
-                next(response)
-                return
-            }
-
-            res.sendStatus(200)
-
-            next()
-        })
-    ]
-
-    public putMarkAsCompleted: Array<Middleware> = [
-        checkBaker,
-        checkBodyParams(["id"]),
-        asyncErrorCatcher(async (req, res, next) => {
-            const id: OrderId = new OrderId(req.body.id)
-
-            const order: Order | Error = await Order.fromId(id)
-
-            if (order instanceof Error) {
-                next(order)
-                return
-            }
-
-            const response: boolean | Error = await order.delete()
 
             if (response instanceof Error) {
                 next(response)
