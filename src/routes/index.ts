@@ -100,7 +100,6 @@ apiRouter.get("/orders/byBakeryId/id/:id", orders.getByBakeryId)
 apiRouter.post("/orders/create", orders.postCreate)
 apiRouter.delete("/orders/id/:id", orders.delete)
 apiRouter.put("/orders/changeOrderState", orders.putChangeState)
-apiRouter.put("/orders/markAsCompleted", orders.putMarkAsCompleted)
 
 apiRouter.post("/yookassaWebhook/4abad563-b0e3-4736-a9e6-9de220a43535", yookassaWebhook.post)
 
