@@ -5,7 +5,7 @@ import { QueryResult } from "pg";
 
 export default async function getOrdersByBakeryId(id: BakeryId): Promise<Array<IOrder> | Error> {
     try {
-        const orders: QueryResult = await bdClient.query(`select * from orders where orderInfo -> 'bakeryId'='${id}'`)
+        const orders: QueryResult = await bdClient.query(`select * from orders where order_info -> 'bakeryId'='${id}'`)
 
         const resultPromises = orders.rows.map(async (orderRow) => {
             const result = await bdClient.query(`select * from order_products_ids where "order"=${orderRow.id}`)
