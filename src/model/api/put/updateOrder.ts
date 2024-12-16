@@ -3,7 +3,7 @@ import getOrder from "@api/get/getOrder";
 import { OrderType, PaymentStatus } from "@enums";
 import { isEmpty, pgFormat } from "@helpers";
 import { IOrder } from "@interfaces";
-import { IBDPrimitive, Moment, OrderId, OrderInfo } from "@primitives";
+import { IBDPrimitive, Moment, OrderId, OrderInfo, orderInfoToNormalView } from "@primitives";
 
 export default async function updateOrder(id: OrderId, data: { paymentStatus?: PaymentStatus, orderType?: OrderType, orderInfo?: OrderInfo, readyMoment?: Moment }): Promise<void | Error> {
     try {
@@ -61,7 +61,7 @@ export default async function updateOrder(id: OrderId, data: { paymentStatus?: P
         const valueConverter: (key: string, value: any) => string = (key: string, value: any): string => {
             switch (key) {
                 case "orderInfo":
-                    return `'${pgFormat(JSON.stringify(value))}'`
+                    return `'${pgFormat(JSON.stringify(orderInfoToNormalView(value)))}'`
 
                 case "readyMoment":
                     return (value as IBDPrimitive).toBDView()

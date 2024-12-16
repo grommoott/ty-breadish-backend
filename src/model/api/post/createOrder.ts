@@ -6,7 +6,7 @@ import { OrderType, PaymentStatuses } from "@enums";
 import { pgFormat } from "@helpers";
 import { IOrder, IProduct, IUser, queryRowsToOrder } from "@interfaces";
 import { BakeryId, Moment, ProductId, UserId } from "@primitives";
-import { OrderInfo } from "model/types/primitives/orderInfo";
+import { OrderInfo, orderInfoToNormalView } from "model/types/primitives/orderInfo";
 import { QueryResult } from "pg";
 
 export default async function createOrder(from: UserId, paymentId: string, orderType: OrderType, orderInfo: OrderInfo, productIds: Array<ProductId>, moment?: Moment): Promise<IOrder | Error> {
@@ -53,11 +53,7 @@ export default async function createOrder(from: UserId, paymentId: string, order
             }
         }
 
-        //typescript bug?
-        let validatedOrderInfo: any = orderInfo
-        validatedOrderInfo.bakeryId = (orderInfo.bakeryId as any)._id
-
-        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${pgFormat(paymentId)}', '${PaymentStatuses.NotSucceeded}', ${_moment}, '${pgFormat(orderType)}', '${pgFormat(JSON.stringify(validatedOrderInfo))}', -1) returning *`)
+        const responseOrders: QueryResult = await bdClient.query(`insert into orders values (default, ${from}, '${pgFormat(paymentId)}', '${PaymentStatuses.NotSucceeded}', ${_moment}, '${pgFormat(orderType)}', '${pgFormat(JSON.stringify(orderInfoToNormalView(orderInfo)))}', -1) returning *`)
         const order = responseOrders.rows[0]
 
         const responseProducts: QueryResult = await bdClient.query(`insert into order_products_ids values ${productIds.map(productId => `(default, ${order.id}, ${productId})`).join(", ")} returning *`)

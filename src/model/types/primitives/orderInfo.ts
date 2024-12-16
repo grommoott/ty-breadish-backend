@@ -17,6 +17,12 @@ interface CourierOrderInfo {
 
 type OrderInfo = PickUpOrderInfo | CourierOrderInfo
 
+function orderInfoToNormalView(orderInfo: OrderInfo) {
+    const tmp = orderInfo as any
+    tmp.bakeryId = orderInfo.bakeryId.id
+    return tmp
+}
+
 function isOrderInfoIsPickUpOrderInfo(orderInfo: OrderInfo): orderInfo is PickUpOrderInfo {
     return isInEnum(PickUpOrderStates, (orderInfo as PickUpOrderInfo)?.state)
 }
@@ -26,4 +32,4 @@ function isOrderInfoIsCourierOrderInfo(orderInfo: OrderInfo): orderInfo is Couri
         isInEnum(CourierOrderStates, (orderInfo as CourierOrderInfo)?.state)
 }
 
-export { PickUpOrderInfo, CourierOrderInfo, isOrderInfoIsPickUpOrderInfo, isOrderInfoIsCourierOrderInfo, OrderInfo }
+export { PickUpOrderInfo, CourierOrderInfo, isOrderInfoIsPickUpOrderInfo, isOrderInfoIsCourierOrderInfo, OrderInfo, orderInfoToNormalView }
