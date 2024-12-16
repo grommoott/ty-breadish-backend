@@ -19,11 +19,8 @@ type OrderInfo = PickUpOrderInfo | CourierOrderInfo
 
 function orderInfoToNormalView(orderInfo: OrderInfo) {
     const id = (orderInfo.bakeryId as any)._id
-    console.log("id:", id)
     const tmp = { ...orderInfo } as any
-    console.log("tmp1:", tmp)
     tmp.bakeryId = id
-    console.log("tmp2:", tmp)
     return tmp
 }
 
