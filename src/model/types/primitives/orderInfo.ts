@@ -18,8 +18,9 @@ interface CourierOrderInfo {
 type OrderInfo = PickUpOrderInfo | CourierOrderInfo
 
 function orderInfoToNormalView(orderInfo: OrderInfo) {
-    const tmp = orderInfo as any
-    tmp.bakeryId = orderInfo.bakeryId.id
+    const id = orderInfo.bakeryId.id
+    const tmp = { ...orderInfo } as any
+    tmp.bakeryId = id
     return tmp
 }
 
