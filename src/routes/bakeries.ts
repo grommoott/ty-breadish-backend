@@ -65,6 +65,7 @@ class Bakeries {
         checkParams(["id"]),
         asyncErrorCatcher(async (req, res, next) => {
             const id: BakeryId = new BakeryId(req.body.id)
+            console.log(id)
 
             const bakery: Bakery | Error = await Bakery.fromId(id)
 
@@ -73,12 +74,16 @@ class Bakeries {
                 return
             }
 
+            console.log(bakery)
+
             const response: boolean | Error = await bakery.delete()
 
             if (response instanceof Error) {
                 next(response)
                 return
             }
+
+            console.log("done!")
 
             res.sendStatus(200)
 
