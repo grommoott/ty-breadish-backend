@@ -5,7 +5,7 @@ import { IBakery, queryRowToBakery } from "@interfaces";
 
 export default async function createBakery(address: string, coords: Coords): Promise<IBakery | Error> {
     try {
-        const response: QueryResult = await bdClient.query(`insert into bakeries values (default, ${address}, ${coords}) returning *`)
+        const response: QueryResult = await bdClient.query(`insert into bakeries values (default, ${address}, '${coords}') returning *`)
 
         return queryRowToBakery(response.rows[0])
     } catch (e) {
