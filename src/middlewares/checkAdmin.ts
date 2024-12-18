@@ -3,6 +3,7 @@ import { Middleware } from "./middleware";
 import { Roles } from "@enums";
 
 const checkAdmin: Middleware = (req, _, next) => {
+    console.log("checkAdming")
     const accessToken: string = req.cookies?.AccessToken
 
     if (!accessToken) {
