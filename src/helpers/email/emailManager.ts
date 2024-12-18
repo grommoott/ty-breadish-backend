@@ -1,6 +1,7 @@
 import { Email } from "@primitives"
 import nodemailer from "nodemailer"
 import { Mail } from "./mail"
+import config from "config"
 
 class EmailManager {
     private _smtp: nodemailer.Transporter
@@ -17,7 +18,7 @@ class EmailManager {
     }
 
     public constructor() {
-        this._mailPassword = process.env.MAIL_PASSWORD as string || "mV2z5Tb11DzpSBik4AXd"
+        this._mailPassword = config.mailPassword
 
         this._smtp = nodemailer.createTransport({
             host: "smtp.mail.ru",
