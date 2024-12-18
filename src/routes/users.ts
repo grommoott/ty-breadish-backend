@@ -1,19 +1,16 @@
-import { Image, User, VerificationCode } from "@entities"
+import { User, VerificationCode } from "@entities"
 import { asyncErrorCatcher } from "@helpers"
 import { checkAuthorized, checkBodyParams, checkParams, contentJson, Middleware } from "@middlewares"
-import { Email, Hash, ImageId, UserId } from "@primitives"
+import { Email, Hash, UserId } from "@primitives"
 import images from "./images"
 import { ImageCategories, Role } from "@enums"
-import bodyParser, { urlencoded } from "body-parser"
-import multer from "multer"
-import path from "path"
 
 class Users {
     public getUsernameAvailable: Array<Middleware> = [
         checkParams(["username"]),
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {
-            const username: string = atob(req.params.username)
+            const username: string = decodeURIComponent(req.params.username)
 
             const user: User | Error = await User.fromUsername(username)
 
@@ -39,7 +36,7 @@ class Users {
         checkParams(["email"]),
         contentJson,
         asyncErrorCatcher(async (req, res, next) => {
-            const email: Email = new Email(atob(req.params.email))
+            const email: Email = new Email(decodeURIComponent(req.params.email))
 
             const user: User | Error = await User.fromEmail(email)
 
@@ -65,7 +62,7 @@ class Users {
         checkAuthorized,
         checkParams(["password"]),
         asyncErrorCatcher(async (req, res, next) => {
-            const password: string = atob(req.params.password)
+            const password: string = decodeURIComponent(req.params.password)
 
             const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
 
@@ -123,7 +120,7 @@ class Users {
         checkParams(["verificationCode", "password"]),
         asyncErrorCatcher(async (req, res, next) => {
             const code: number = parseInt(req.params.verificationCode)
-            const password: string = atob(req.params.password)
+            const password: string = decodeURIComponent(req.params.password)
 
             const user: User | Error = await User.fromId(new UserId(req.body.accessTokenPayload.sub))
 
