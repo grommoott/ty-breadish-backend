@@ -62,16 +62,9 @@ class Bakeries {
 
     public delete: Array<Middleware> = [
         checkAdmin,
-        (req, res, next) => {
-            console.log("before")
-            next()
-        },
         checkParams(["id"]),
-        (req, res, next) => {
-            console.log("after")
-            next()
-        },
         asyncErrorCatcher(async (req, res, next) => {
+            console.log("delete bakery")
             const id: BakeryId = new BakeryId(req.body.id)
 
             const bakery: Bakery | Error = await Bakery.fromId(id)
