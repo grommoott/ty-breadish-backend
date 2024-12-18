@@ -69,6 +69,8 @@ class Bakeries {
 
             const bakery: Bakery | Error = await Bakery.fromId(id)
 
+            console.log("bakery: ", bakery)
+
             if (bakery instanceof Error) {
                 next(bakery)
                 return
@@ -76,10 +78,14 @@ class Bakeries {
 
             const response: boolean | Error = await bakery.delete()
 
+            console.log("deletion: ", response)
+
             if (response instanceof Error) {
                 next(response)
                 return
             }
+
+            console.log("done")
 
             res.sendStatus(200)
 
