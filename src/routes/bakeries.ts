@@ -64,12 +64,9 @@ class Bakeries {
         checkAdmin,
         checkParams(["id"]),
         asyncErrorCatcher(async (req, res, next) => {
-            console.log("delete bakery")
-            const id: BakeryId = new BakeryId(req.body.id)
+            const id: BakeryId = new BakeryId(req.params.id)
 
             const bakery: Bakery | Error = await Bakery.fromId(id)
-
-            console.log("bakery: ", bakery)
 
             if (bakery instanceof Error) {
                 next(bakery)
@@ -78,14 +75,10 @@ class Bakeries {
 
             const response: boolean | Error = await bakery.delete()
 
-            console.log("deletion: ", response)
-
             if (response instanceof Error) {
                 next(response)
                 return
             }
-
-            console.log("done")
 
             res.sendStatus(200)
 
