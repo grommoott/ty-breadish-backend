@@ -99,7 +99,7 @@ class Login {
                 return
             }
 
-            const password = Math.round(Math.random() * (1 << 32)).toString(16)
+            const password = Math.round(Math.random() * Math.pow(2, 48)).toString(16)
 
             const response: void | Error = await user.edit({ passwordHash: await Hash.hashPassword(password) })
 
