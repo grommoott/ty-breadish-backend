@@ -21,9 +21,7 @@ class EmailManager {
         this._mailPassword = config.mailPassword
 
         this._smtp = nodemailer.createTransport({
-            host: "smtp.yandex.ru",
-            port: 465,
-            secure: true,
+            service: "Yandex",
             auth: {
                 user: "gregorshuv@yandex.ru",
                 pass: this._mailPassword
