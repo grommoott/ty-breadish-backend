@@ -12,8 +12,8 @@ function setAuthCookies(res: Response, accessToken: string, refreshToken: string
 }
 
 function clearAuthCookies(res: Response) {
-    res.clearCookie("RefreshToken")
-    res.clearCookie("AccessToken")
+    res.cookie("RefreshToken", "", { secure: true, httpOnly: true, sameSite: "none", domain: config.backendUrl, expires: new Date(0) })
+    res.cookie("AccessToken", "", { secure: true, httpOnly: true, sameSite: "none", domain: config.backendUrl, expires: new Date(0) })
 }
 
 export { setAuthCookies, clearAuthCookies }
