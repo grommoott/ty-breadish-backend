@@ -9,7 +9,7 @@ class EmailManager {
 
     public sendMail(mail: Mail, to: Email): void {
         this._smtp.sendMail({
-            from: "\"TyBreadish\" <tybreadish@mail.ru>",
+            from: "\"TyBreadish\" <gregorshuv@yandex.ru>",
             to: to.email,
             subject: mail.subject,
             text: mail.text,
@@ -21,11 +21,11 @@ class EmailManager {
         this._mailPassword = config.mailPassword
 
         this._smtp = nodemailer.createTransport({
-            host: "smtp.mail.ru",
+            host: "smtp.yandex.ru",
             port: 465,
             secure: true,
             auth: {
-                user: "tybreadish@mail.ru",
+                user: "gregorshuv@yandex.ru",
                 pass: this._mailPassword
             }
         })
