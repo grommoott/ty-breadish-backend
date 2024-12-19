@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkParams = checkParams;
 function checkParams(params) {
+    console.log("checkParams");
     return (req, _, next) => {
         for (const param of params) {
             if (!(param in req.params)) {

@@ -14,7 +14,7 @@ class Users {
         (0, _middlewares_1.checkParams)(["username"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const username = atob(req.params.username);
+            const username = decodeURIComponent(req.params.username);
             const user = await _entities_1.User.fromUsername(username);
             if (user instanceof Error) {
                 if (user.message.startsWith("User with such username")) {
@@ -33,7 +33,7 @@ class Users {
         (0, _middlewares_1.checkParams)(["email"]),
         _middlewares_1.contentJson,
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const email = new _primitives_1.Email(atob(req.params.email));
+            const email = new _primitives_1.Email(decodeURIComponent(req.params.email));
             const user = await _entities_1.User.fromEmail(email);
             if (user instanceof Error) {
                 if (user.message.startsWith("User with such email")) {
@@ -52,7 +52,7 @@ class Users {
         _middlewares_1.checkAuthorized,
         (0, _middlewares_1.checkParams)(["password"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const password = atob(req.params.password);
+            const password = decodeURIComponent(req.params.password);
             const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload.sub));
             if (user instanceof Error) {
                 next(user);
@@ -96,7 +96,7 @@ class Users {
         (0, _middlewares_1.checkParams)(["verificationCode", "password"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
             const code = parseInt(req.params.verificationCode);
-            const password = atob(req.params.password);
+            const password = decodeURIComponent(req.params.password);
             const user = await _entities_1.User.fromId(new _primitives_1.UserId(req.body.accessTokenPayload.sub));
             if (user instanceof Error) {
                 next(user);

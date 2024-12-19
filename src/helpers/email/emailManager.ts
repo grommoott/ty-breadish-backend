@@ -1,7 +1,7 @@
 import { Email } from "@primitives"
 import nodemailer from "nodemailer"
 import { Mail } from "./mail"
-import config from "config"
+import config from "@config"
 
 class EmailManager {
     private _smtp: nodemailer.Transporter

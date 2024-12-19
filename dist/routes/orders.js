@@ -235,5 +235,25 @@ class Orders {
             next();
         })
     ];
+    putChangeReadyMoment = [
+        _middlewares_2.checkBaker,
+        (0, _middlewares_1.checkBodyParams)(["id", "readyMoment"]),
+        (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
+            const id = new _primitives_1.OrderId(req.body.id);
+            const readyMoment = new _primitives_1.Moment(req.body.readyMoment);
+            const order = await _entities_1.Order.fromId(id);
+            if (order instanceof Error) {
+                next(order);
+                return;
+            }
+            const response = await order.edit({ readyMoment });
+            if (response instanceof Error) {
+                next(response);
+                return;
+            }
+            res.sendStatus(200);
+            next();
+        })
+    ];
 }
 exports.default = new Orders();

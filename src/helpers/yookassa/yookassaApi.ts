@@ -2,7 +2,7 @@ import { Price } from "@primitives";
 import { Payment } from "./payment";
 import { v4 as uuid } from "uuid"
 import axios from "axios";
-import config from "../../config";
+import config from "@config";
 
 class YookassaApi {
     private generateDefaultHeaders() {

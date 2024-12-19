@@ -6,8 +6,9 @@ exports.orderInfoToNormalView = orderInfoToNormalView;
 const _helpers_1 = require("@helpers");
 const orderInfo_1 = require("../enums/orderInfo");
 function orderInfoToNormalView(orderInfo) {
-    const tmp = orderInfo;
-    tmp.bakeryId = orderInfo.bakeryId.id;
+    const id = orderInfo.bakeryId._id;
+    const tmp = { ...orderInfo };
+    tmp.bakeryId = id;
     return tmp;
 }
 function isOrderInfoIsPickUpOrderInfo(orderInfo) {

@@ -1,8 +1,6 @@
 import { Middleware } from "./middleware";
 
 function checkParams(params: Array<string>): Middleware {
-    console.log("checkParams")
-
     return (req, _, next) => {
         for (const param of params) {
             if (!(param in req.params)) {

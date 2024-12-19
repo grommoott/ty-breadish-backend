@@ -90,6 +90,7 @@ apiRouter.get("/orders/byBakeryId/id/:id", orders_1.default.getByBakeryId);
 apiRouter.post("/orders/create", orders_1.default.postCreate);
 apiRouter.delete("/orders/id/:id", orders_1.default.delete);
 apiRouter.put("/orders/changeOrderState", orders_1.default.putChangeState);
+apiRouter.put("/orders/changeReadyMoment", orders_1.default.putChangeReadyMoment);
 apiRouter.post("/yookassaWebhook/4abad563-b0e3-4736-a9e6-9de220a43535", yookassaWebhook_1.default.post);
 // User
 apiRouter.get("/users/usernameAvailable/:username", users_1.default.getUsernameAvailable);

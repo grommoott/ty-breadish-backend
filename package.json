@@ -53,7 +53,8 @@
     "@helpers": "./dist/helpers",
     "@routes": "./dist/routes",
     "@middlewares": "./dist/middlewares",
-    "@root": "./dist"
+    "@root": "./dist",
+    "@config": "./dist/config"
   },
   "devDependencies": {
     "cloc": "^2.2.0-cloc"

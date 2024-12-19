@@ -51,7 +51,7 @@ class Bakeries {
         _middlewares_1.checkAdmin,
         (0, _middlewares_1.checkParams)(["id"]),
         (0, _helpers_1.asyncErrorCatcher)(async (req, res, next) => {
-            const id = new _primitives_1.BakeryId(req.body.id);
+            const id = new _primitives_1.BakeryId(req.params.id);
             const bakery = await _entities_1.Bakery.fromId(id);
             if (bakery instanceof Error) {
                 next(bakery);
